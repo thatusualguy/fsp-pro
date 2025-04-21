@@ -1,0 +1,27 @@
+services:
+#  russian-cup-backend:
+#    container_name: "russian-cup-backend-django"
+#    build:
+#      dockerfile: Dockerfile
+#      context: ..
+#
+#    env_file:
+#        - .env
+#    ports:
+#        - "9090:9090"
+  russian-cup-pg:
+    container_name: "russian-cup-pg"
+    ports:
+      - "5433:5432"
+    image: postgres:15.0
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: b1fddce8ae427c0d
+    volumes:
+      - "../pgdata:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready -d postgres -U postgres
+      retries: 5
+      interval: 5s
+      timeout: 7s

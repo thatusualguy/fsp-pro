@@ -1,0 +1,12 @@
+.idea
+.venv
+.env
+*.pyc
+__pycache__/
+.vscode
+logs
+secrets
+**.log
+**.csv
+**.json
+**.env

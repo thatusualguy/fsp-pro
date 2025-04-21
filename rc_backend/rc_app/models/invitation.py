@@ -1,0 +1,34 @@
+# InviteCompetition Model
+import uuid
+
+from django.db import models
+from . import InviteStatusEnum, FSP, Competition, Team
+from .enums import TeamInvitationEnum
+from .profile import Profile
+
+
+class InviteCompetition(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False)
+    invitee = models.ForeignKey(FSP, on_delete=models.CASCADE)
+    creation_stamp = models.DateTimeField(auto_now_add=True)  # timestamp
+    competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=50,
+        default=InviteStatusEnum.PENDING.value
+    )
+
+    def __str__(self):
+        return f"Invite {self.id} - {self.status}"
+
+
+class TeamInvitation(models.Model):
+    invitation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    inviter_team_id = models.ForeignKey(Team, on_delete=models.CASCADE)
+    invitee = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    invitation_status = models.CharField(
+        max_length=20,
+        default=TeamInvitationEnum.PENDING
+    )
+
+    def __str__(self):
+        return f'Invitation {self.invitation_id} to {self.invitee}'
