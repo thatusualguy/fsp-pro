@@ -1,6 +1,6 @@
 from django.db import models
 
-from rc_backend.rc_app.models import Competition
+from .competition import Competition
 
 
 # Define the StrEnum for status field

@@ -2,9 +2,11 @@
 import uuid
 
 from django.db import models
-from . import InviteStatusEnum, FSP, Competition, Team
-from .enums import TeamInvitationEnum
+
+from .enums import TeamInvitationEnum, InviteStatusEnum
+from .fsp import FSP, Competition
 from .profile import Profile
+from .team import Team
 
 
 class InviteCompetition(models.Model):
@@ -15,7 +17,7 @@ class InviteCompetition(models.Model):
     competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=50,
-        default=InviteStatusEnum.PENDING.value
+        default=InviteStatusEnum.PENDING
     )
 
     def __str__(self):
