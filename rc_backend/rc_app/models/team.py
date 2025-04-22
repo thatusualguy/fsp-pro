@@ -16,11 +16,17 @@ class Team(models.Model):
 
     moderation_status = models.CharField(
         max_length=20,
-        default=ModerationEnum.PENDING
+        choices=ModerationEnum.choices,
+        default=ModerationEnum.PENDING,
+        verbose_name='Статус модерации'
     )
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        verbose_name = 'Команда'
+        verbose_name_plural = 'Команды'
 
 
 # Связь команда–участник

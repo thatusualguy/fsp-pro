@@ -1,38 +1,45 @@
-from enum import StrEnum
+from django.db import models
 
 
-class TeamInvitationEnum(StrEnum):
-    PENDING = "PENDING"
-    ACCEPTED = "ACCEPTED"
-    DECLINED = "DECLINED"
+class TeamInvitationEnum(models.TextChoices):
+    PENDING = "PENDING", "На модерации"
+    APPROVED = "APPROVED", 'Принято'
+    REJECTED = "REJECTED", 'Отказать'
 
 
-class CompetitionEnum(StrEnum):
-    NEW = 'NEW'
-    ON_MODERATION = 'ON_MODERATION'
-    ACCEPTED = 'ACCEPTED'
-    REJECTED = 'REJECTED'
+class CompetitionEnum(models.TextChoices):
+    NEW = 'NEW', "Новая"
+    ON_MODERATION = 'ON_MODERATION', "На модерации"
+    ACCEPTED = 'ACCEPTED', "Принято"
+    REJECTED = 'REJECTED', "Отказать"
 
 
-class JoinRequestEnum(StrEnum):
-    PENDING = "PENDING"
-    APPROVED = "APPROVED"
-    REJECTED = "REJECTED"
+class JoinRequestEnum(models.TextChoices):
+    PENDING = "PENDING", "На модерации"
+    APPROVED = "APPROVED", 'Принято'
+    REJECTED = "REJECTED", 'Отказать'
 
 
-class BaseStatusEnum():
-    PENDING = 'PENDING'
-    APPROVED = 'APPROVED'
-    REJECTED = 'REJECTED'
+class BaseStatusEnum(models.TextChoices):
+    PENDING = "PENDING", "На модерации"
+    APPROVED = "APPROVED", 'Принято'
+    REJECTED = "REJECTED", 'Отказать'
 
 
-class OnModerationStatus(BaseStatusEnum, StrEnum):
-    pass
+
+class OnModerationStatus(models.TextChoices):
+    PENDING = "PENDING", "На модерации"
+    APPROVED = "APPROVED", 'Принято'
+    REJECTED = "REJECTED", 'Отказать'
 
 
-class InviteStatusEnum(BaseStatusEnum, StrEnum):
-    pass
+class InviteStatusEnum(models.TextChoices):
+    PENDING = "PENDING", "На модерации"
+    APPROVED = "APPROVED", 'Принято'
+    REJECTED = "REJECTED", 'Отказать'
 
 
-class ModerationEnum(BaseStatusEnum, StrEnum):
-    pass
+class ModerationEnum(models.TextChoices):
+    PENDING = "PENDING", "На модерации"
+    APPROVED = "APPROVED", 'Принято'
+    REJECTED = "REJECTED", 'Отказать'

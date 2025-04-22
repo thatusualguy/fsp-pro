@@ -19,4 +19,8 @@ class Competition(models.Model):
     on_moderation = models.CharField(max_length=50, default=OnModerationStatus.PENDING)
     is_shown = models.BooleanField()
 
+    class Meta:
+        verbose_name = 'Соревнование'
+        verbose_name_plural = 'Соревнования'
+
 

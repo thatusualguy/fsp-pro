@@ -17,6 +17,10 @@ class FSP(models.Model):
     def __str__(self):
         return f"{self.head} ({self.region})"
 
+    class Meta:
+        verbose_name = 'Региональная ФСП'
+        verbose_name_plural = 'Региональные ФСП'
+
 
 # FSPCompetition Model
 class FSPCompetition(models.Model):
