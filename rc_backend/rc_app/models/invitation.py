@@ -24,6 +24,10 @@ class InviteCompetition(models.Model):
 
     def __str__(self):
         return f"Invite {self.id} - {self.status}"
+    
+    class Meta:
+        verbose_name = 'Приглашение соревнование'
+        verbose_name_plural = 'Приглашения на соревнования'
 
 
 class TeamInvitation(models.Model):
