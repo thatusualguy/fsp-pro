@@ -1,8 +1,9 @@
 import uuid
+
 from django.db import models
 
-from . import CompetitionEnum, OnModerationStatus
-from . import Team
+from .enums import CompetitionEnum, OnModerationStatus
+from .team import Team
 
 
 class Competition(models.Model):
@@ -31,4 +32,3 @@ class CompetitionResult(models.Model):
 
     def __str__(self):
         return f'Result {self.result_id} - Place {self.place}'
-

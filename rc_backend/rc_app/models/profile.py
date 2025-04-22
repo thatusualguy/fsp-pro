@@ -1,5 +1,8 @@
+import uuid
+
 from django.db import models
-from rc_backend.rc_app.models.enums import RoleEnum
+
+from .enums import RoleEnum
 
 
 class Profile(models.Model):

@@ -26,22 +26,19 @@ class JoinRequestEnum(StrEnum):
     REJECTED = "REJECTED"
 
 
-class BaseStatusEnum(StrEnum):
+class BaseStatusEnum():
     PENDING = 'PENDING'
     APPROVED = 'APPROVED'
     REJECTED = 'REJECTED'
 
 
-class OnModerationStatus(BaseStatusEnum):
+class OnModerationStatus(BaseStatusEnum, StrEnum):
     pass
 
 
-class InviteStatusEnum(BaseStatusEnum):
+class InviteStatusEnum(BaseStatusEnum, StrEnum):
     pass
 
 
-class ModerationEnum(BaseStatusEnum):
-   pass
-
-
-
+class ModerationEnum(BaseStatusEnum, StrEnum):
+    pass
