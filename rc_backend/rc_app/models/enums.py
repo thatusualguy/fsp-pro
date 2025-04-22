@@ -14,12 +14,6 @@ class CompetitionEnum(StrEnum):
     REJECTED = 'REJECTED'
 
 
-class RoleEnum(StrEnum):
-    MEMBER = "MEMBER"
-    LEADER = "LEADER"
-    ADMIN = "ADMIN"
-
-
 class JoinRequestEnum(StrEnum):
     PENDING = "PENDING"
     APPROVED = "APPROVED"
