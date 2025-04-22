@@ -23,7 +23,6 @@ class Team(models.Model):
         return self.title
 
 
-# Связь команда–участник
 class TeamMember(models.Model):
     team_id = models.ForeignKey(Team, on_delete=models.CASCADE)
     profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -44,3 +43,13 @@ class CompetitionResult(models.Model):
 
     def __str__(self):
         return f'Result {self.result_id} - Place {self.place}'
+
+
+class MemberSearch(models.Model):
+    search_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    team_id = models.ForeignKey(to=Team, on_delete=models.CASCADE)
+    description = models.TextField()
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Search {self.search_id} for Team {self.team_id}"
