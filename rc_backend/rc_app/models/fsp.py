@@ -26,3 +26,6 @@ class FSPCompetition(models.Model):
         related_name='fsp_competitions'
     )
     competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('fsp_id', 'competition_id')
