@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 
 from .competition import Competition
@@ -7,7 +9,7 @@ from .competition import Competition
 
 # FSP Model
 class FSP(models.Model):
-    id = models.UUIDField(primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     region = models.CharField(max_length=255)  # str
     country = models.CharField(max_length=255)  # str
     head = models.CharField(max_length=255)  # str

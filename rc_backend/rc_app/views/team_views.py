@@ -1,20 +1,19 @@
-import json
 import uuid
-from functools import wraps
+
+from django.http import HttpResponseRedirect, HttpRequest, JsonResponse, \
+    HttpResponseBadRequest
+from django.shortcuts import get_object_or_404
 
 from rc_backend.rc_app.database.repos.invitation import TeamInvitationRepo
 from rc_backend.rc_app.database.repos.join_request import JoinRequestRepo
 from rc_backend.rc_app.database.repos.profile import ProfileRepo
 from rc_backend.rc_app.database.repos.team import TeamRepo, MSRepo
 from rc_backend.rc_app.models import ModerationEnum
-from django.http import HttpResponseNotAllowed, HttpResponse, HttpResponseRedirect, HttpRequest, JsonResponse, \
-    HttpResponseBadRequest
-
 from rc_backend.rc_app.views.utils import force_post, force_get
 
 
 @force_post
-def create_team(request):
+def create_team(request) -> HttpResponseRedirect:
     name = request.POST.get("name")  # Access form field
     competition_id = request.POST.get("competition_id")
     leader_id = request.user.id
@@ -26,6 +25,8 @@ def create_team(request):
         leader_id=leader_id,
         moderation_status=ModerationEnum.PENDING
     )
+    return HttpResponseRedirect("/")
+
 
 @force_get
 def show_team(request):
@@ -33,11 +34,11 @@ def show_team(request):
     model = TeamRepo.scalar(
         team_id=team_id
     )
-    return HttpResponse(content=json.dumps(model))
+    return JsonResponse(model, safe=False)
 
 
 @force_post
-def request_to_join_team(request: HttpRequest) -> JsonResponse:
+def request_to_join_team(request: HttpRequest) -> HttpResponseBadRequest | JsonResponse:
     data = {
         "join_id": request.POST.get("join_id") or uuid.uuid4(),
         "team_id": request.POST.get("team_id"),
@@ -53,16 +54,14 @@ def request_to_join_team(request: HttpRequest) -> JsonResponse:
 
 
 @force_post
-def create_team_invitation(request: HttpRequest) -> JsonResponse:
+def create_team_invitation(request: HttpRequest) -> JsonResponse | HttpResponseBadRequest:
     team_id = request.POST.get("inviter_team_id")
     invitee_id = request.POST.get("invitee_id")
 
     if not team_id or not invitee_id:
         return HttpResponseBadRequest("Missing 'inviter_team_id' or 'invitee_id'.")
 
-    invitee = ProfileRepo.scalar(profile_id=invitee_id)
-    if invitee is None:
-        return JsonResponse({"error": "Invitee not found."}, status=404)
+    invitee = get_object_or_404(ProfileRepo.model, profile_id=invitee_id)
 
     TeamInvitationRepo.create(
         invitation_id=uuid.uuid4(),
@@ -73,7 +72,7 @@ def create_team_invitation(request: HttpRequest) -> JsonResponse:
 
 
 @force_post
-def edit_join_request(request: HttpRequest) -> JsonResponse:
+def edit_join_request(request: HttpRequest) -> JsonResponse | HttpResponseBadRequest:
     join_id = request.POST.get("join_id")
     join_status = request.POST.get("join_status")
 
@@ -92,7 +91,8 @@ def edit_join_request(request: HttpRequest) -> JsonResponse:
 
 
 @force_post
-def make_team_open_for_join_requests(request: HttpRequest) -> HttpResponseRedirect | JsonResponse:
+def make_team_open_for_join_requests(
+        request: HttpRequest) -> JsonResponse | HttpResponseRedirect | HttpResponseBadRequest:
     team_id = request.POST.get("team_id")
     desc = request.POST.get("description")
 
@@ -120,11 +120,10 @@ def list_join_requests(request: HttpRequest) -> JsonResponse:
     if profile is None:
         return JsonResponse({"error": "Profile not found"}, status=404)
 
-    teams = TeamRepo.select(leader_id=user_id)
+    teams = TeamRepo.select(leader_id=user_id).prefetch_related('joinrequest_set')
     join_requests = []
     for team in teams:
-        requests = JoinRequestRepo.select(team_id=team.team_id)
-        for r in requests:
+        for r in team.joinrequest_set.all():
             join_requests.append({
                 "join_id": str(r.join_id),
                 "team_id": str(r.team_id),
@@ -134,6 +133,3 @@ def list_join_requests(request: HttpRequest) -> JsonResponse:
             })
 
     return JsonResponse(join_requests, safe=False)
-
-
-

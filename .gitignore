@@ -9,4 +9,5 @@ secrets
 **.log
 **.csv
 **.json
-**.env
+.env
+.qodo

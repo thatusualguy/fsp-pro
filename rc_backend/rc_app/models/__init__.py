@@ -1,5 +1,7 @@
 from .competition import Competition
-from .team import Team
+from .enums import CompetitionEnum, InviteStatusEnum, OnModerationStatus, ModerationEnum
 from .fsp import FSP, FSPCompetition
 from .invitation import InviteCompetition
-from .enums import CompetitionEnum, InviteStatusEnum, OnModerationStatus, ModerationEnum
+from .profile import Profile
+from .team import CompetitionResult
+from .team import Team
