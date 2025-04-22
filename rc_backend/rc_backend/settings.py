@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rc_app'
+    'rc_backend.rc_app'
 ]
 
 MIDDLEWARE = [
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'rc_backend.urls'
+ROOT_URLCONF = 'rc_backend.rc_backend.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'rc_backend.wsgi.application'
+WSGI_APPLICATION = 'rc_backend.rc_backend.wsgi.application'
 
 
 # Database

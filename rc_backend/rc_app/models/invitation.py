@@ -11,8 +11,10 @@ from .team import Team
 
 class InviteCompetition(models.Model):
     id = models.UUIDField(primary_key=True, editable=False)
-    invitee = models.ForeignKey(FSP, on_delete=models.CASCADE)
-    inviter = models.ForeignKey(FSP, on_delete=models.CASCADE)
+    invitee = models.ForeignKey(FSP, on_delete=models.CASCADE,
+                                related_name='invites_received')
+    inviter = models.ForeignKey(FSP, on_delete=models.CASCADE,
+                                related_name='invites_sent')
     creation_stamp = models.DateTimeField(auto_now_add=True)  # timestamp
     competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
     status = models.CharField(
