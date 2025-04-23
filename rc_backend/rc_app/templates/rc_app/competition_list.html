@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Competitions</title>
+</head>
+<body>
+<h1>List of Competitions</h1>
+<ul>
+    {% for competition in competition_list %}
+        <li>
+            <h2>{{ competition.title }} {{ competition.competition_id }}</h2>
+            <p>Start Date: {{ competition.start_date }}</p>
+            <p>Finish Date: {{ competition.finish_date }}</p>
+            <p>Online: {{ competition.online|yesno:"Yes,No" }}</p>
+            <p>Place: {{ competition.place }}</p>
+            <p>Description: {{ competition.description }}</p>
+        </li>
+    {% empty %}
+        <li>No competitions available.</li>
+    {% endfor %}
+</ul>
+</body>
+</html>

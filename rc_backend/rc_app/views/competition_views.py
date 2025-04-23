@@ -1,8 +1,11 @@
 from django.http import JsonResponse
+from django.utils import timezone
 from django.utils.dateparse import parse_datetime
+from django.views.generic import ListView, DetailView
 
 from rc_backend.rc_app.database.repos.competition import CompetitionRepo
 from rc_backend.rc_app.database.repos.team import MSRepo, TeamRepo
+from rc_backend.rc_app.models import Competition
 from rc_backend.rc_app.views.utils import force_get
 
 
@@ -21,6 +24,20 @@ def find_member_search_for_competition(request):
         )
         searches.append(ms)
     return JsonResponse(searches)
+
+
+class CompetitionListView(ListView):
+    model = Competition
+    paginate_by = 20
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["now"] = timezone.now()
+        return context
+
+
+class CompetitionDetailView(DetailView):
+    model = Competition
 
 
 @force_get
@@ -63,10 +80,3 @@ def get_competition_by_criteria(request):
         'place': c.place
     } for c in competitions]
     return JsonResponse(response_data, safe=False)
-
-
-
-
-
-
-

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Competition Details</title>
+</head>
+<body>
+<h1>Competition Details</h1>
+<div>
+    <h2>{{ competition.title }}</h2>
+    <p>{{ competition.competition_id }}</p>
+    <p><strong>Start Date:</strong> {{ competition.start_date }}</p>
+    <p><strong>Finish Date:</strong> {{ competition.finish_date }}</p>
+    <p><strong>Online:</strong> {{ competition.online|yesno:"Yes,No" }}</p>
+    <p><strong>Place:</strong> {{ competition.place }}</p>
+    <p><strong>Description:</strong> {{ competition.description }}</p>
+    <p><strong>Max Participants:</strong> {{ competition.max_participants }}</p>
+    <p><strong>Min Participants:</strong> {{ competition.min_participants }}</p>
+    <p><strong>Competition Type:</strong> {{ competition.competition_type }}</p>
+    <p><strong>Is Shown:</strong> {{ competition.is_shown|yesno:"Yes,No" }}</p>
+</div>
+</body>
+</html>
