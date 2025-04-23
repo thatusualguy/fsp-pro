@@ -4,20 +4,20 @@ from .views import public
 from .views.auth import LoginUser, LogoutUser, RegisterUser
 from .views.competition_views import *
 from .views.profile_views import ProfilesListView, ProfileDetailView, EditProfileDetailView
+from .views.public import PublicCompetitionsDetailView, PublicRegionsDetailView
 from .views.team_views import *
 
 app_name = "rc_app"
 urlpatterns = [
     path("", public.index, name="index"),
-    path("competition/<slug:slug>/", public.competitions_detail, name="competition-prod-cup-may"),
-    path("region/<slug:slug>/", public.regions_detail, name="regions"),
-
-    path("competition/<slug:slug>/", public.competitions_detail, name="competition-prod-cup-may"),
-    path("region/<slug:slug>/", public.regions_detail, name="regions"),
+    path("competition/<uuid:pk>/", PublicCompetitionsDetailView.as_view(), name="public_competition_details"),
+    path("region/<uuid:pk>/", PublicRegionsDetailView.as_view(), name="public_region_details"),
 
     path('login/', LoginUser.as_view(), name='login'),
     path('logout/', LogoutUser.as_view(), name='logout'),
     path('register/', RegisterUser.as_view(), name='register'),
+
+    path('onboarding/', public.onboarding, name='onboarding'),
 
     path("competitions/", CompetitionListView.as_view(), name="competitions"),
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),

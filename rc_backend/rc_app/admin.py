@@ -10,6 +10,7 @@ from rc_backend.rc_app.models import InviteCompetition
 from rc_backend.rc_app.models import Profile
 from rc_backend.rc_app.models import Team
 from rc_backend.rc_app.models import OnModerationStatus
+from rc_backend.rc_app.models import Discipline
 
 
 # Register your models here.
@@ -51,7 +52,9 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 class TeamAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'title', 'competition', 'leader', 'get_team_members', 'moderation_status')
+    list_filter = ('competition',)
+    search_fields = ("title", 'get_team_members', 'competition')
 
 
 class FSPAdmin(admin.ModelAdmin):
@@ -62,9 +65,14 @@ class InviteCompetitionAdmin(admin.ModelAdmin):
     pass
 
 
+class DisciplineAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(Competition, CompetitionAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(CompetitionResult, CompetitionResultAdmin)
 admin.site.register(FSP, FSPAdmin)
 admin.site.register(InviteCompetition, InviteCompetitionAdmin)
+admin.site.register(Discipline, DisciplineAdmin)

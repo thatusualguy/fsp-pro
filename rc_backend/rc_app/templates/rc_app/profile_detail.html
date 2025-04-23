@@ -10,7 +10,7 @@
     <h2>{{ profile.name }} {{ profile.last_name }}</h2>
     <p><strong>Email:</strong> {{ profile.email }}</p>
     <p><strong>Description:</strong> {{ profile.description }}</p>
-    <a href="{% url 'rc_app:edit_profile' profile.profile_id %}">Edit Profile</a>
+    <a href="{% url 'rc_app:edit_profile' profile.id %}">Edit Profile</a>
 </div>
 
 <h2>Competition Results</h2>

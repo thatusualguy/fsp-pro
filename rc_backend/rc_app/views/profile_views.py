@@ -14,8 +14,8 @@ class ProfilesListView(ListView):
 
 
 def combine_profile_data(profile):
-    teams_as_leader = Team.objects.filter(leader_id=profile.profile_id)
-    teams_as_member = Team.objects.filter(team_members__profile_id=profile.profile_id)
+    teams_as_leader = Team.objects.filter(leader_id=profile.id)
+    teams_as_member = Team.objects.filter(team_members__id=profile.id)
 
     # Combine the teams
     all_teams = teams_as_leader | teams_as_member
@@ -29,11 +29,11 @@ def combine_profile_data(profile):
     print(competition_results)
     # Prepare the response data
     data = {
-        'teams': [{'id': str(team.id), 'title': team.title} for team in all_teams],
-        'competitions': [{'id': str(comp.competition), 'title': comp.title} for comp in competitions],
+        'teams': all_teams,
+        'competitions': competitions,
         'competition_results': [
             {
-                'result_id': str(result.result_id),
+                'result_id': str(result.id),
                 'competition_id': str(result.team.competition),
                 'team_id': str(result.team.id),
                 'points': result.points,

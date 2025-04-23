@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.views.generic import DetailView
+
+from rc_backend.rc_app.models import Competition, FSP
 
 
 def index(request):
@@ -154,13 +157,19 @@ def index(request):
     )
 
 
-def competitions_detail(request, slug):
-    return render(request, 'rc_app/public/competitions_detail.html')
+class PublicCompetitionsDetailView(DetailView):
+    model = Competition
+    template_name = "rc_app/public/competitions_detail.html"
 
 
-def regions_detail(request, slug):
-    return render(request, 'rc_app/public/regions_detail.html')
+
+class PublicRegionsDetailView(DetailView):
+    model = FSP
+    template_name = "rc_app/public/regions_detail.html"
 
 
 def login(request):
     return render(request, 'rc_app/login/login.html')
+
+def onboarding(request):
+    return render(request, 'rc_app/onboarding/onboarding.html')

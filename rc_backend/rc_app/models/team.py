@@ -25,6 +25,9 @@ class Team(models.Model):
     def __str__(self):
         return self.title
 
+    def get_team_members(self):
+        return "\n".join([str(member) for member in self.team_members.all()])
+
     class Meta:
         verbose_name = 'Команда'
         verbose_name_plural = 'Команды'
