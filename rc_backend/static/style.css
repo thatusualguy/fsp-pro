@@ -28,7 +28,14 @@
     height: 55.86331rem;
     background-image: url(./img/background_items.svg);
     z-index: -2;
-    /* opacity: 0.1; */
+    display: none; /* По умолчанию иконка скрыта */
+    opacity: 0;    /* Добавляем opacity для плавности */
+    transition: opacity 0.5s ease-in-out; /* Плавный переход */
+}
+
+body.section-active-about .background-icon {
+    display: block; /* Показываем блок (или другое display, если нужно) */
+    opacity: 1;    /* Делаем видимым */
 }
 
 :root {
@@ -223,17 +230,35 @@ p {
     list-style: none;
     display: flex;
     gap: 30px;
+    margin: 0;
+    padding: 0;
 }
 
-.desktop-nav a {
+.desktop-nav a { /* Базовый стиль для всех ссылок в десктопной навигации */
     color: var(--text-muted-color);
     font-weight: 500;
+    text-decoration: none;
     transition: color 0.3s ease;
-    padding: 5px 0;
+    padding: 5px 0; /* Добавим паддинг для позиционирования ::after */
+    position: relative; /* ОБЯЗАТЕЛЬНО для позиционирования ::after */
+    /* Убираем стандартное подчеркивание, если было */
+    border-bottom: 2px solid transparent; /* Прозрачная граница, чтобы текст не "прыгал" */
 }
 
-.desktop-nav a:hover, .desktop-nav a:focus-visible {
+.desktop-nav a:hover,
+.desktop-nav a:focus-visible { /* При наведении/фокусе */
     color: var(--text-color);
+     /*outline: none; !* Можно убрать outline если есть кастомный фокус *!*/
+}
+
+.desktop-nav a.active {
+    color: var(--text-color); /* Цвет текста активной ссылки */
+}
+
+.desktop-nav a.active::after {
+    content: '';
+    width: 100%;
+    background-color: var(--Blue); /* Цвет линии (акцентный синий) */
 }
 
 .header-auth .desktop-login-btn {
@@ -251,7 +276,7 @@ p {
 }
 
 .nav-toggle-btn svg {
-    /*display: block;*/
+    display: block;
 }
 
 /* Ensure SVG inside button behaves */
@@ -317,8 +342,8 @@ p {
 
 .mobile-nav-links ul {
     list-style: none;
+    padding: 0; margin: 0;
 }
-
 .mobile-nav-links li {
     margin-bottom: 25px;
 }
@@ -327,13 +352,21 @@ p {
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-color);
-    transition: color 0.3s ease;
+    text-decoration: none;
     display: inline-block;
     padding: 5px;
 }
+.mobile-nav-links a:hover,
+.mobile-nav-links a:focus-visible {
+     color: var(--primary-color);
+     outline: none;
+}
 
-.mobile-nav-links a:hover, .mobile-nav-links a:focus-visible {
-    color: var(--primary-color);
+/* Активная ссылка в мобильном меню (обычно достаточно цвета) */
+.mobile-nav-links a.active {
+    color: var(--primary-color); /* Делаем ее просто акцентного цвета */
+    /* Или добавить font-weight: 700; если еще не 600 */
+    /* Здесь не добавляем ::after, чтобы не перегружать мобильный интерфейс */
 }
 
 .mobile-nav-auth {
@@ -604,6 +637,7 @@ p {
     align-items: center;
     text-align: center;
     gap: 20px;
+    padding: 0.5rem;
 }
 
 .footer-left {
@@ -694,11 +728,11 @@ p {
     }
 
     .nav-toggle-btn {
-        /*display: none;*/
+        display: none;
     }
 
     .desktop-nav {
-        /*display: block;*/
+        display: block;
     }
 
     .header-auth .desktop-login-btn {
@@ -804,7 +838,7 @@ p {
 
 /* Скрываем все переключаемые секции по умолчанию */
 .page-section {
-    display: none;
+    /*display: none;*/
     /* Можно добавить анимацию появления, если нужно */
     animation: fadeIn 0.5s ease-in-out;
 }

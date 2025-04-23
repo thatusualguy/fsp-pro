@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ФСП PRO - Платформа для спортивного программирования</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="regions.css">
-    <link rel="stylesheet" href="region-details.css">
-    <link rel="stylesheet" href="competition_details.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'regions.css' %}">
+    <link rel="stylesheet" href="{% static 'region-details.css' %}">
+    <link rel="stylesheet" href="{% static 'competition_details.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
@@ -22,7 +23,7 @@
     <h2 id="mobileNavTitle" class="visually-hidden">Главное меню</h2> <!-- Hidden title for screen readers -->
     <div class="mobile-nav-header">
         <a href="#" class="logo">
-            <img src="./img/main_icon.svg" alt="" loading="lazy"> <!-- alt="" as text nearby describes it -->
+            <img src="{% static '/img/main_icon.svg' %}" alt=""> <!-- alt="" as text nearby describes it -->
         </a>
         <button class="nav-close-btn" id="closeNavBtn" aria-label="Закрыть меню">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"
@@ -48,7 +49,7 @@
 <header class="site-header">
     <div class="header-container">
         <a href="#" class="logo">
-            <img src="./img/main_icon.svg" alt="" loading="lazy"> <!-- alt="" -->
+            <img src="{% static '/img/main_icon.svg' %}" alt="" loading="lazy"> <!-- alt="" -->
         </a>
         <nav class="desktop-nav" aria-label="Основная навигация">
             <ul>
@@ -80,38 +81,22 @@
                     программировании</h1>
                 <a href="#join" class="btn btn-primary hero-btn">Присоединиться
                     <!-- SVG Arrow Right Icon Placeholder -->
-                    <img style="rotate: -45deg" src="./icon/icon_arrow_right.svg" alt="" loading="lazy">
+                    <img style="rotate: -45deg" src="{% static '/icon/icon_arrow_right.svg' %}" alt="" loading="lazy">
                 </a>
             </div>
         </section>
         <!-- Features Section -->
         <section class="features" id="about_fsp"> <!-- Added ID for nav link -->
             <div class="container">
-                <h2>Что умеет?</h2>
+                <h2> {{ title_feature }}</h2>
                 <div class="features-grid">
+                    {% for feature in features %}
                     <div class="feature-item">
-                        <img class="feature-icon" src="./icon/icon_cursor.svg" alt="" loading="lazy">
-                        <h3>Автоматизация заявок и регистрации</h3>
-                        <p>Платформа позволяет подавать, редактировать и отслеживать заявки на соревнования в пару
-                            кликов</p>
+                        <img class="feature-icon" src="{% static feature.icon_path %}" alt="" loading="lazy">
+                        <h3>{{ feature.title }}</h3>
+                        <p>{{ feature.description }}</p>
                     </div>
-                    <div class="feature-item">
-                        <img class="feature-icon" src="./icon/icon_collection.svg" alt="" loading="lazy">
-                        <h3>Система управления командами</h3>
-                        <p>Легко формировать команды, приглашать участников, находить команду единомышленников</p>
-                    </div>
-                    <div class="feature-item">
-                        <img class="feature-icon" src="./icon/icon_speaker.svg" alt="" loading="lazy">
-                        <h3>Прозрачные результаты и рейтинги</h3>
-                        <p>После каждого соревнования обновляется профиль спортсмена: отображаются очки, баллы, победы и
-                            история активности — формируется рейтинг</p>
-                    </div>
-                    <div class="feature-item">
-                        <img class="feature-icon" src="./icon/icon_web.svg" alt="" loading="lazy">
-                        <h3>Соревнования из любой точки России</h3>
-                        <p>Соревнования по дате, дисциплинам, в любом регионе страны. Мгновенно найти нужное событие по
-                            дате, формату и месту проведения</p>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>
@@ -119,24 +104,21 @@
         <!-- Upcoming Events Section -->
         <section class="upcoming-events" id="competitions_small"> <!-- Added ID for nav link -->
             <div class="container">
-                <h2>Скоро</h2>
+                <h2>{{ title_soon }}</h2>
                 <div class="events-list">
-                    <a href="#event1" class="event-item">
-                        <h2 class="event-date">12 <span>мая</span></h2>
-                        <div class="event-title">Кубок России по продуктовому программированию</div>
-                        <img class="event-arrow" src="./icon/icon_arrow_right.svg" alt="" loading="lazy">
+                    {% for event in soon_events %}
+                    <a href="{{ event.link }}" class="event-item">
+                        <h2 class="event-date">{{ event.date | safe }}</h2>
+                        <div class="event-title">{{ event.title }}</div>
+                        <img class="event-arrow" src="{% static '/icon/icon_arrow_right.svg' %}" alt="" loading="lazy">
                     </a>
-                    <a href="#event2" class="event-item">
-                        <h2 class="event-date">23 <span>мая</span></h2>
-                        <div class="event-title">Финал Кубка России по продуктовому программированию</div>
-                        <img class="event-arrow" src="./icon/icon_arrow_right.svg" alt="" loading="lazy">
-                    </a>
+                    {% endfor %}
                     <a href="#event2" class="event-item">
                         <div class="event-date"
                              style="display: flex; align-items: center; justify-content: center; background-color: transparent; padding: 0; margin:4px">
-                            <img class="event-add" src="./icon/icon_plus.svg" alt="" loading="lazy">
-                            <img class="event-add" src="./icon/icon_plus.svg" alt="" loading="lazy">
-                            <img class="event-add" src="./icon/icon_plus.svg" alt="" loading="lazy">
+                            <img class="event-add" src="{% static '/icon/icon_plus.svg' %}" alt="" loading="lazy">
+                            <img class="event-add" src="{% static '/icon/icon_plus.svg' %}" alt="" loading="lazy">
+                            <img class="event-add" src="{% static '/icon/icon_plus.svg' %}" alt="" loading="lazy">
                         </div>
                         <div class="event-title">Создать соревнование</div>
                     </a>
@@ -156,28 +138,20 @@
                         тебя опыт — <strong>важно, что ты хочешь попробовать</strong></p>
 
                     <div class="no-team-actions">
-                        <a href="#find-competition" class="action-link">
-                            <img class="feature-icon" style="margin: 0" src="./icon/icon_world.svg" alt=""
+                        {% for action in actions %}
+                        <a href="{{ action.link }}" class="action-link">
+                            <img class="feature-icon" style="margin: 0" src="{% static action.icon %}" alt=""
                                  loading="lazy">
-                            Найти открытые соревнования
+                            {{ action.title }}
                         </a>
-                        <a href="#join-team" class="action-link">
-                            <img class="feature-icon" style="margin: 0" src="./icon/icon_add_person.svg" alt=""
-                                 loading="lazy">
-                            Присоединиться к команде
-                        </a>
-                        <a href="#create-team" class="action-link">
-                            <img class="feature-icon" style="margin: 0" src="./icon/icon_teams.svg" alt=""
-                                 loading="lazy">
-                            Создать команду
-                        </a>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
             <div class="container">
                 <a href="#join" class="btn btn-primary hero-btn">Присоединиться
                     <!-- SVG Arrow Right Icon Placeholder -->
-                    <img style="rotate: -45deg" src="./icon/icon_arrow_right.svg" alt="" loading="lazy">
+                    <img style="rotate: -45deg" src="{% static '/icon/icon_arrow_right.svg' %}" alt="" loading="lazy">
                 </a>
             </div>
         </section>
@@ -189,102 +163,54 @@
             <div class="container">
                 <h1 class="regions-title">Округа</h1>
                 <div class="regions-grid">
-
-                    <!-- Region Card 1: Москва -->
-                    <a href="#region-details" class="region-card">
-                        <h3>МОСКВА</h3>
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
+                    {% for region in regions %}
+                    <a href="{{ region.link }}" class="region-card">
+                        <h3>{{ region.title }}</h3>
+                        <p class="region-oblast-count">{{ region.description }}</p>
+                        <img class="region-card-arrow" src="{% static '/icon/icon_arrow.svg' %}" alt="Перейти"
+                             loading="lazy">
                     </a>
-
-                    <!-- Region Card 2: Центральный -->
-                    <a href="#" class="region-card">
-                        <h3>ЦЕНТРАЛЬНЫЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</h3>
-                        <p class="region-oblast-count">17 областей</p>
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
-
-                    <!-- Region Card 3: Южный -->
-                    <a href="#" class="region-card">
-                        <h3>ЮЖНЫЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</h3>
-                        <p class="region-oblast-count">8 областей</p>
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
-
-                    <!-- Region Card 4: Северо-Западный -->
-                    <a href="#" class="region-card">
-                        <h3>СЕВЕРО-ЗАПАДНЫЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</h3>
-                        <p class="region-oblast-count">17 областей</p> <!-- Corrected based on image re-check -->
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
-
-                    <!-- Region Card 5: Дальневосточный -->
-                    <a href="#" class="region-card">
-                        <h3>ДАЛЬНЕВОСТОЧНЫЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</h3>
-                        <!-- Corrected based on image re-check; Mobile showed 8, Desktop shows 17? Let's use 8 as per mobile-->
-                        <!-- Update: Double checking desktop shows 17 областей too, let's use 17 -->
-                        <p class="region-oblast-count">17 областей</p>
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
-
-                    <!-- Region Card 6: Северо-Кавказский -->
-                    <a href="#" class="region-card">
-                        <h3>СЕВЕРО-КАВКАЗСКИЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</h3>
-                        <p class="region-oblast-count">17 областей</p> <!-- Corrected based on image re-check -->
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
-
-                    <!-- Additional Cards from Desktop View -->
-
-                    <!-- Region Card 7: Южный (Repeated? Assume typo in design, use different region or unique data) -->
-                    <!-- Let's assume this was meant to be ПРИВОЛЖСКИЙ based on standard districts, adjusting count -->
-                    <a href="#" class="region-card">
-                        <h3>ПРИВОЛЖСКИЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</h3>
-                        <p class="region-oblast-count">14 областей</p> <!-- Placeholder count -->
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
-
-                    <!-- Region Card 8: Северо-Западный (Repeated? Assume typo, use УРАЛЬСКИЙ) -->
-                    <a href="#" class="region-card">
-                        <h3>УРАЛЬСКИЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</h3>
-                        <p class="region-oblast-count">6 областей</p> <!-- Placeholder count -->
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
-
-                    <!-- Region Card 9: Дальневосточный (Repeated? Assume typo, use СИБИРСКИЙ) -->
-                    <a href="#" class="region-card">
-                        <h3>СИБИРСКИЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</h3>
-                        <p class="region-oblast-count">10 областей</p> <!-- Placeholder count -->
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
-
-                    <a href="#" class="region-card">
-                        <h3>НОВЫЕ РЕГИОНЫ</h3>
-                        <p class="region-oblast-count">4 области</p>
-                        <img class="region-card-arrow" src="./icon/icon_arrow.svg" alt="Перейти" loading="lazy">
-                    </a>
+                    {% endfor %}
                 </div>
             </div>
         </section>
     </section>
+
     <!-- ======================== -->
     <!-- Competitions Section -->
     <!-- ======================== -->
+    {# --- Начало секции Соревнований --- #}
     <section class="page-section" id="competitions">
-        <div class="container competitions-page"> <!-- Добавляем класс competitions-page и container -->
+        <div class="container competitions-page">
 
+            {# --- Строка с Заголовком и Фильтрами --- #}
             <div class="competitions-header-row">
                 <h1 class="competitions-main-title">Соревнования</h1>
-                <!-- Блок фильтров теперь ВНУТРИ competitions-header-row -->
+                {# -- Блок фильтров (оставлен статическим в этом примере, но можно сделать динамическим) -- #}
                 <div class="competitions-filters">
                     <div class="filter-toggles">
-                        <button class="btn btn-filter active" data-filter="online">Онлайн</button>
-                        <button class="btn btn-filter" data-filter="offline">Офлайн</button>
+                        {# Предполагаем, что класс 'active' управляется JS или контекстом бэкенда #}
+                        <button class="btn btn-filter {% if competitions_data.current_filters.type == 'online' %} active{% endif %}"
+                                data-filter="online">Онлайн
+                        </button>
+                        <button class="btn btn-filter {% if competitions_data.current_filters.type == 'offline' %}active{% endif %}"
+                                data-filter="offline">Офлайн
+                        </button>
                     </div>
                     <div class="filter-select-wrapper">
                         <select name="region-filter" id="region-filter" class="filter-select">
-                            <option value="all">Все регионы</option>
-                            <option value="msk">Москва</option>
-                            <option value="spb">Санкт-Петербург</option>
+                            <option value="all" {% if competitions_data.current_filters.region == 'all' %}selected{% endif %}
+                            >Все регионы</option>
+                            <option value="msk"
+                                    {% if competitions_data.current_filters.region == 'msk' %}selected{% endif %}
+                            >Москва</option>
+                            <option value="spb"
+                                    {% if competitions_data.current_filters.region == 'spb' %}selected{% endif %}
+                            >Санкт-Петербург</option>
+                            {# {% for region in competitions_data.regions_for_filter %}
+                            <option value="{{ region.value }}" {% if competitions_data.current_filters.region == region.value %}selected{% endif %}>{{ region.name }}
+                            </option>
+                            {% endfor %}
                         </select>
                         <svg class="filter-select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                              fill="currentColor" width="18" height="18">
@@ -300,56 +226,40 @@
                     </button>
                 </div>
             </div>
-            <!-- Competition List Area -->
+
+
             <div class="competitions-list">
-
-                <!-- Month Group: Май -->
+                {% if competitions_by_month %}
+                {% for month_group in competitions_by_month %}
                 <div class="competitions-month-group">
-                    <h2 class="month-title">Май</h2>
+                    <h2 class="month-title">{{ month_group.name }}</h2> {# Название месяца #}
                     <div class="month-events">
-                        <!-- Event 1 -->
-                        <a href="#competition-detail" class="competition-item">
-                            <div class="competition-date">12</div>
+                        {% if month_group.events %}
+                        {% for event in month_group.events %}
+                        <a href="{{ event.url }}" class="competition-item">
+                            <div class="competition-date">{{ event.day }}</div>
                             <div class="competition-details">
-                                <!-- Обертка для Заголовка и Тегов -->
                                 <div class="competition-info-line">
-                                    <span class="competition-title">Кубок России по продуктовому программированию</span>
-                                    <!-- Контейнер для одного или нескольких тегов -->
-                                    <div class="competition-badges-container">
-                                        <span class="competition-badge status-registration">Регистрация началась</span>
-                                        <span class="competition-badge type-online">Онлайн</span>
-                                        <!-- Пример 2-го тега -->
-                                    </div>
-                                </div>
-                                <!-- Здесь можно добавить доп. инфо, если нужно (напр. город), сейчас пусто -->
-                                <!-- <div class="competition-meta"> Город: Москва </div> -->
-                            </div>
-                            <img class="competition-arrow" src="./icon/icon_arrow_right.svg" alt="Перейти">
-                        </a>
-                        <a href="#" class="competition-item">
-                            <div class="competition-date">23</div>
-                            <div class="competition-details">
-                                <!-- Обертка для Заголовка и Тегов -->
-                                <div class="competition-info-line">
-                                    <span class="competition-title">Финал Кубка России по продуктовому программированию</span>
-                                    <!-- Контейнер для одного или нескольких тегов -->
-                                    <div class="competition-badges-container">
-                                    </div>
-                                </div>
-                                <!-- Здесь можно добавить доп. инфо, если нужно (напр. город), сейчас пусто -->
-                                <!-- <div class="competition-meta"> Город: Москва </div> -->
-                            </div>
-                            <img class="competition-arrow" src="./icon/icon_arrow_right.svg" alt="Перейти">
-                        </a>
-                    </div>
-                </div>
+                                    <span class="competition-title">{{ event.title }}</span>
 
-                <!-- Month Group: Июнь (No events) -->
-                <div class="competitions-month-group">
-                    <h2 class="month-title">Июнь</h2>
-                    <div class="month-events">
+                                    {% if event.badges %}
+                                    <div class="competition-badges-container">
+                                        {% for badge in event.badges %}
+                                        <span class="competition-badge {{ badge.type }}">{{ badge.text }}</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+                            <img class="competition-arrow" src="{% static '/icon/icon_arrow_right.svg' %}"
+                                 alt="Перейти">
+                        </a>
+                        {% endfor %}
+                        {# --- Конец Цикла по Событиям --- #}
+
+                        {% else %}
                         <div class="competition-item-empty">
-                            <!-- Иконка 'Грустное лицо' (пример SVG) -->
                             <svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
                                  width="24px" fill="currentColor">
                                 <path d="M0 0h24v24H0V0z" fill="none"/>
@@ -357,27 +267,13 @@
                             </svg>
                             <span>Нет запланированных соревнований</span>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
-
-                <!-- Month Group: Июль -->
-                <div class="competitions-month-group">
-                    <h2 class="month-title">Июль</h2>
-                    <div class="month-events">
-                        <a href="#" class="competition-item">
-                            <div class="competition-date">23</div>
-                            <div class="competition-details">
-                                <span class="competition-title">Финал Кубка России по продуктовому программированию</span>
-                            </div>
-                            <img class="competition-arrow" src="./icon/icon_arrow_right.svg" alt="Перейти">
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Добавьте другие месяцы по аналогии -->
-
-            </div> <!-- /.competitions-list -->
-        </div> <!-- /.container -->
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
     </section>
     <!-- ======================== -->
     <!-- End Competitions Section -->
@@ -389,7 +285,8 @@
 
             <!-- Region Header Row (остается как было) -->
             <div class="region-details-header">
-                <img class="back-button" src="./icon/icon_back_arrow.svg" alt="" loading="lazy" id="backToRegionsBtn">
+                <img class="back-button" src="{% static '/icon/icon_back_arrow.svg' %}" alt="" loading="lazy"
+                     id="backToRegionsBtn">
                 <h1 class="region-details-title">СЗФО</h1>
                 <a href="#join-team" class="btn btn-secondary join-team-btn">Вступить в команду</a>
             </div>
@@ -398,22 +295,22 @@
                 <div class="stat-card">
                     <h2 class="stat-number">4</h2>
                     <span class="stat-label">В Сборной РФ</span>
-                    <img class="stat-arrow" src="./icon/icon_arrow.svg" alt="">
+                    <img class="stat-arrow" src="{% static '/icon/icon_arrow.svg' %}" alt="">
                 </div>
                 <div class="stat-card">
                     <h2 class="stat-number">4</h2>
                     <span class="stat-label">Мастера Спорта</span>
-                    <img class="stat-arrow" src="./icon/icon_arrow.svg" alt="">
+                    <img class="stat-arrow" src="{% static '/icon/icon_arrow.svg' %}" alt="">
                 </div>
                 <div class="stat-card">
                     <h2 class="stat-number">9</h2>
                     <span class="stat-label">КМС</span>
-                    <img class="stat-arrow" src="./icon/icon_arrow.svg" alt="">
+                    <img class="stat-arrow" src="{% static '/icon/icon_arrow.svg' %}" alt="">
                 </div>
                 <div class="stat-card stat-card--highlighted">
                     <h2 class="stat-number">3</h2>
                     <span class="stat-label">Мероприятия</span>
-                    <img class="stat-arrow stat-arrow--large-diamond" src="./icon/icon_arrow.svg" alt="">
+                    <img class="stat-arrow stat-arrow--large-diamond" src="{% static '/icon/icon_arrow.svg' %}" alt="">
                 </div>
             </div>
 
@@ -431,7 +328,8 @@
                     </div>
                     <div class="subject-item__details">
                         <div class="subject-contact-info">
-                            <img src="./img/placeholder_avatar.png" alt="Фото Кувиков Денис" class="contact-photo">
+                            <img src="{% static '/img/placeholder_avatar.png' %}" alt="Фото Кувиков Денис"
+                                 class="contact-photo">
                             <div class="contact-text">
                                 <span class="contact-name">Кувиков Денис</span>
                                 <span class="contact-title">президент ФСП СПб</span>
@@ -478,7 +376,8 @@
                     </div>
                     <div class="subject-item__details">
                         <div class="subject-contact-info">
-                            <img src="./img/placeholder_avatar.png" alt="Placeholder" class="contact-photo">
+                            <img src="{% static '/img/placeholder_avatar.png' %}" alt="Placeholder"
+                                 class="contact-photo">
                             <div class="contact-text">
                                 <span class="contact-name">Председатель</span>
                                 <span class="contact-title">регионального отделения</span>
@@ -530,7 +429,8 @@
                 <div class="competition-left-column">
                     <!-- Competition Banner -->
                     <div class="competition-banner">
-                        <img src="./img/moko_image_banner.png" alt="Баннер Кубок России по спортивному программированию"
+                        <img src="{% static '/img/moko_image_banner.png' %}"
+                             alt="Баннер Кубок России по спортивному программированию"
                              class="competition-banner-img" loading="lazy">
                         <!-- Добавь реальное изображение баннера в ./img/ -->
                         <div class="banner-tags">
@@ -558,7 +458,7 @@
                 <!-- Info Blocks -->
                 <div class="info-blocks-grid">
                     <div class="info-block">
-                        <img src="./icon/icon_format.svg" alt="" class="info-icon" loading="lazy">
+                        <img src="{% static '/icon/icon_format.svg' %}" alt="" class="info-icon" loading="lazy">
                         <div class="info-content">
                             <h3 class="info-heading">Формат</h3>
                             <p>Онлайн — Всероссийский этап</p>
@@ -566,7 +466,7 @@
                         </div>
                     </div>
                     <div class="info-block">
-                        <img src="./icon/icon_calendar.svg" alt="" class="info-icon" loading="lazy">
+                        <img src="{% static '/icon/icon_calendar.svg' %}" alt="" class="info-icon" loading="lazy">
                         <div class="info-content">
                             <h3 class="info-heading">Даты проведения</h3>
                             <ul>
@@ -576,7 +476,7 @@
                         </div>
                     </div>
                     <div class="info-block">
-                        <img src="./icon/icon_participants.svg" alt="" class="info-icon" loading="lazy">
+                        <img src="{% static '/icon/icon_participants.svg' %}" alt="" class="info-icon" loading="lazy">
                         <div class="info-content">
                             <h3 class="info-heading">Участники</h3>
                             <ul>
@@ -591,12 +491,13 @@
             <!-- Sponsor Logos -->
             <div class="sponsor-logos">
                 <!-- Добавь логотипы спонсоров как img -->
-                <img src="./img/logo_fsp.png" alt="Федерация Спортивного Программирования России"
+                <img src="{% static '/img/logo_fsp.png' %}" alt="Федерация Спортивного Программирования России"
                      class="sponsor-logo">
-                <img src="./img/logo_minsport.png" alt="Министерство Спорта Российской Федерации"
+                <img src="{% static '/img/logo_minsport.png' %}" alt="Министерство Спорта Российской Федерации"
                      class="sponsor-logo">
-                <img src="./img/logo_smolensk.png" alt="Правительство Смоленской Области" class="sponsor-logo">
-                <img src="./img/logo_stoloto.png" alt="Столото" class="sponsor-logo">
+                <img src="{% static '/img/logo_smolensk.png' %}" alt="Правительство Смоленской Области"
+                     class="sponsor-logo">
+                <img src="{% static '/img/logo_stoloto.png' %}" alt="Столото" class="sponsor-logo">
                 <!-- И так далее... -->
             </div>
         </div>
@@ -610,7 +511,7 @@
 <footer class="site-footer">
     <div class="footer-container">
         <a href="#" class="logo">
-            <img src="./img/main_icon.svg" alt="" loading="lazy"> <!-- alt="" -->
+            <img src="{% static '/img/main_icon.svg' %}" alt="" loading="lazy"> <!-- alt="" -->
             <span class="copyright">©2025</span>
         </a>
         <div class="footer-right">
@@ -677,6 +578,6 @@
     </div>
 </div>
 <!-- ===== End Login Modal ===== -->
-<script src="script.js"></script>
+<script src="{% static 'script.js' %}"></script>
 </body>
 </html>

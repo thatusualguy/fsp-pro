@@ -9,6 +9,8 @@ from .views.team_views import *
 app_name = "rc_app"
 urlpatterns = [
     path("", public.index, name="index"),
+    path("competition/<slug:slug>/", public.competitions_detail, name="competition-prod-cup-may"),
+    path("region/<slug:slug>/", public.regions_detail, name="regions"),
 
     path('login/', LoginUser.as_view(), name='login'),
     path('logout/', LogoutUser.as_view(), name='logout'),
