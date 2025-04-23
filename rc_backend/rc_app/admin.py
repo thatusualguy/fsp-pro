@@ -64,11 +64,37 @@ class FSPAdmin(admin.ModelAdmin):
 class InviteCompetitionAdmin(admin.ModelAdmin):
     pass
 
+class CompetitionModerationProxy(Competition):
+    class Meta:
+        proxy = True
+        verbose_name = "Заявка на модерацию"
+        verbose_name_plural = "Заявки на модерацию"
 
-class DisciplineAdmin(admin.ModelAdmin):
-    pass
+class ModerationCompetitionAdmin(admin.ModelAdmin):    
+    list_display = ('title', 'start_date', 'finish_date', 'place', 'on_moderation', 'competition_type', 'get_fsps')
+    list_filter = ('fsps', 'on_moderation')
+    search_fields = ("title", 'place')
+    actions = ["approve", "reject"]
+
+    def get_fsps(self, obj):
+        return "\n".join([str(fsp) for fsp in obj.fsps.all()])
+
+    # Фильтруем queryset
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(on_moderation=OnModerationStatus.PENDING)
+
+    # Кнопки действий
+    def approve(self, request, queryset):
+        queryset.update(on_moderation=OnModerationStatus.APPROVED)
+    approve.short_description = "Одобрить выбранные заявки"
+
+    def reject(self, request, queryset):
+        queryset.update(on_moderation=OnModerationStatus.REJECTED)
+    reject.short_description = "Отклонить выбранные заявки"
 
 
+# admin.site.register(CompetitionModerationProxy, ModerationCompetitionAdmin)
 admin.site.register(Competition, CompetitionAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Profile, ProfileAdmin)
