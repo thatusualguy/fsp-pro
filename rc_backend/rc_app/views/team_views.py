@@ -1,15 +1,34 @@
+from annoying.functions import get_object_or_None
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView
 
 from rc_backend.rc_app.models import Team
 from rc_backend.rc_app.models.invitation import TeamInvitation
 from rc_backend.rc_app.models.join_request import JoinRequest
-from rc_backend.rc_app.models.team import MemberSearch
+from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
 
 ##  TEAM
 
 class TeamDetailsView(DetailView):
     model = Team
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        team = self.get_object()
+
+        members = team.team_members.all()
+        leader = team.leader_id
+        leader_fsp = leader.fsp_set.all()
+        competition = team.competition_set.first()
+        competition_result = get_object_or_None(CompetitionResult, team=team)
+
+        context['members'] = members
+        context['leader'] = leader
+        context['competition'] = competition
+        context['region'] = leader_fsp
+        context['competition_result'] = competition_result
+
+        return context
 
 
 class TeamCreateView(CreateView):
