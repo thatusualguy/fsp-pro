@@ -10,9 +10,10 @@ PROJECT_DIR = Path(__file__).parent
 load_dotenv(Path(PROJECT_DIR, ".env"))
 
 
-@dataclass(frozen=True)
-class Config(TypedDict):
-    pass
+# @dataclass(frozen=True)
+# class Config(TypedDict):
+#     name: str
+#     pass
 
 
 @dataclass(frozen=True)
