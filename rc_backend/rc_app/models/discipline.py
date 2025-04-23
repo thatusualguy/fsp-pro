@@ -10,3 +10,6 @@ class Discipline(models.Model):
         choices=DisciplineEnum.choices,
         verbose_name='Тип дисциплины'
     )
+
+    def __str__(self):
+        return self.discipline
