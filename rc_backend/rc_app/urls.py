@@ -14,5 +14,4 @@ urlpatterns = [
     path("profiles/", ProfilesListView.as_view(), name="profiles"),
     path("profiles/<uuid:pk>/", ProfileDetailView.as_view(), name="profile_details"),
     path("profiles/<uuid:pk>/edit/", EditProfileDetailView.as_view(), name="edit_profile"),
-
 ]
