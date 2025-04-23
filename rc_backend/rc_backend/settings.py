@@ -31,13 +31,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "admin_interface",
+    "colorfield",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rc_backend.rc_app'
+    'rc_backend.rc_app',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +132,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+X_FRAME_OPTIONS = "SAMEORIGIN"  # allows you to use modals insated of popups
+SILENCED_SYSTEM_CHECKS = ["security.W019"]  # ignores redundant warning messages

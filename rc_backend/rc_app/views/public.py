@@ -5,6 +5,66 @@ from rc_backend.rc_app.models import Competition, FSP
 
 
 def index(request):
+    data = {
+        "title_feature": str,
+        "features": [
+            {
+                "icon_path": str,
+                "title": str,
+                "description": str
+            }
+        ],
+        "title_soon": str,
+        "soon_events": [
+            {
+                "link": str,
+                "date": str,
+                "title": str
+            }
+        ],
+        "actions": [
+            {
+                "link": str,
+                "icon": str,
+                "title": str
+            }
+        ],
+        "regions": [
+            {
+                "link": str,
+                "title": str,
+                "description": str
+            }
+        ],
+        "current_filters": {
+            "type": str,
+            "region": str,
+            "date": str | None
+        },
+        "competitions_by_month": [
+            {
+                "name": str,
+                "events": [
+                    {
+                        "id": str,
+                        "day": int,
+                        "title": str,
+                        "url": str,
+                        "badges": [
+                            {
+                                "text": str,
+                                "type": str
+                            }
+                        ],
+                        "meta": str | None,
+                        "event_type": str,
+                        "event_region": str
+                    }
+                ]
+            }
+        ]
+    }
+
     return render(
         request,
         "rc_app/public/index.html",
@@ -170,6 +230,7 @@ class PublicRegionsDetailView(DetailView):
 
 def login(request):
     return render(request, 'rc_app/login/login.html')
+
 
 def onboarding(request):
     return render(request, 'rc_app/onboarding/onboarding.html')
