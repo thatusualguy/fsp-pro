@@ -2,7 +2,7 @@ import uuid
 
 from django.db import models
 
-from .enums import CompetitionEnum, OnModerationStatus
+from .enums import CompetitionEnum, OnModerationStatus, CompetitionTypeEnum
 from .fsp import FSP
 
 
@@ -18,11 +18,24 @@ class Competition(models.Model):
     registration_start = models.DateTimeField()
     max_participants = models.IntegerField()
     min_participants = models.IntegerField()
-    competition_type = models.CharField(max_length=50, default=CompetitionEnum.NEW)
-    on_moderation = models.CharField(max_length=50, default=OnModerationStatus.PENDING)
+    competition_type = models.CharField(
+        max_length=50,
+        choices=CompetitionTypeEnum.choices,
+        default=CompetitionTypeEnum.OPEN,
+        verbose_name="Тип соревнования"
+    )
+    on_moderation = models.CharField(
+        max_length=50,
+        choices=OnModerationStatus.choices,
+        default=OnModerationStatus.NEW,
+        verbose_name="На модерации"
+    )
     is_shown = models.BooleanField()
 
     fsps = models.ManyToManyField(FSP)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = 'Соревнование'

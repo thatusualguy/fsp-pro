@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+import logging
 
 from rc_backend.rc_app.models import Competition
 from rc_backend.rc_app.models import CompetitionResult
@@ -6,6 +9,7 @@ from rc_backend.rc_app.models import FSP
 from rc_backend.rc_app.models import InviteCompetition
 from rc_backend.rc_app.models import Profile
 from rc_backend.rc_app.models import Team
+from rc_backend.rc_app.models import OnModerationStatus
 
 
 # Register your models here.
@@ -15,7 +19,31 @@ class CompetitionResultAdmin(admin.ModelAdmin):
 
 
 class CompetitionAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('title', 'start_date', 'finish_date', 'place', 'on_moderation', 'competition_type', 'get_fsps')
+    list_filter = ('fsps', 'on_moderation')
+    search_fields = ("title", 'place')
+
+    def get_fsps(self, obj):
+        return "\n".join([str(fsp) for fsp in obj.fsps.all()])
+
+    def response_change(self, request, obj):
+        if "_send_to_moderation" in request.POST:
+            if obj.on_moderation == OnModerationStatus.PENDING:
+                self.message_user(request, "Соревнование уже на модерации!", messages.ERROR)
+            elif obj.on_moderation == OnModerationStatus.APPROVED:
+                self.message_user(request, "Соревнование уже принято!", messages.ERROR)
+            else:
+                obj.on_moderation = OnModerationStatus.PENDING
+                obj.save()
+                self.message_user(request, "Запись отправлена на модерацию!", messages.SUCCESS)
+            return HttpResponseRedirect(".")  # Обновляем страницу
+        return super().response_change(request, obj)
+
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.groups.filter(name='Федеральное ФСП').exists() or request.user.is_superuser:
+            return super().get_readonly_fields(request, obj)
+        return ('on_moderation', )
+
 
 
 class ProfileAdmin(admin.ModelAdmin):

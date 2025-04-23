@@ -1,0 +1,14 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls %}
+
+{% block submit_buttons_bottom %}
+    <div class="submit-row">
+        <input 
+            type="submit" 
+            value="Отправить на модерацию" 
+            name="_send_to_moderation"
+            style="background:rgb(150, 198, 28);"
+        >
+    </div>
+    {{ block.super }}  {# Стандартные кнопки #}
+{% endblock %}
