@@ -32,10 +32,10 @@ class Team(models.Model):
 
 class CompetitionResult(models.Model):
     result_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    # competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
     points = models.FloatField()
     place = models.IntegerField()
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    team = models.OneToOneField(Team, on_delete=models.CASCADE)
 
     def __str__(self):
         return f'Result {self.result_id} - Place {self.place}'

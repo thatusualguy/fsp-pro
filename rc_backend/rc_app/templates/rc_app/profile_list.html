@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profiles List</title>
+</head>
+<body>
+<h1>List of Profiles</h1>
+<ul>
+    {% for profile in profile_list %}
+        <li>
+            <a href="{% url 'rc_app:profile_details' profile.profile_id %}">
+                {{ profile.name }} {{ profile.last_name }}
+            </a>
+        </li>
+    {% empty %}
+        <li>No profiles available.</li>
+    {% endfor %}
+</ul>
+</body>
+</html>
