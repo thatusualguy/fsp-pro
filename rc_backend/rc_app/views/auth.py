@@ -10,10 +10,10 @@ from rc_backend.rc_app.models import Profile, FSP
 
 
 class LoginUser(LoginView):
-    template_name = 'login.html'
+    template_name = 'rc_app/login/login.html'
     form_class = AuthenticationForm
-    redirect_authenticated_user = True
-    success_url = reverse_lazy('/')
+    # redirect_authenticated_user = True
+    # success_url = reverse_lazy('/')
 
     def form_valid(self, form):
         username = form.cleaned_data.get('username')
