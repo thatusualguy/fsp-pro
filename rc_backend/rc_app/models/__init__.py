@@ -5,3 +5,4 @@ from .invitation import InviteCompetition
 from .profile import Profile
 from .team import CompetitionResult
 from .team import Team
+from .discipline import Discipline
