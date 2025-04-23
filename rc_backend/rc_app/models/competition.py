@@ -7,7 +7,7 @@ from .fsp import FSP
 
 
 class Competition(models.Model):
-    competition_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     start_date = models.DateTimeField()
     finish_date = models.DateTimeField()
     title = models.TextField()

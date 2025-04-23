@@ -17,7 +17,7 @@ class InviteCompetition(models.Model):
     inviter = models.ForeignKey(FSP, on_delete=models.CASCADE,
                                 related_name='invites_sent')
     creation_stamp = models.DateTimeField(auto_now_add=True)  # timestamp
-    competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
+    competition = models.ForeignKey(Competition, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=50,
         default=InviteStatusEnum.PENDING
@@ -32,8 +32,8 @@ class InviteCompetition(models.Model):
 
 
 class TeamInvitation(models.Model):
-    invitation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    inviter_team_id = models.ForeignKey(Team, on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    inviter_team = models.ForeignKey(Team, on_delete=models.CASCADE)
     invitee = models.ForeignKey(Profile, on_delete=models.CASCADE)
     invitation_status = models.CharField(
         max_length=20,
@@ -41,4 +41,4 @@ class TeamInvitation(models.Model):
     )
 
     def __str__(self):
-        return f'Invitation {self.invitation_id} to {self.invitee}'
+        return f'Invitation {self.id} to {self.invitee}'

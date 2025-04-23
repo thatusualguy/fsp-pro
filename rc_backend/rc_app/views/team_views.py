@@ -1,7 +1,9 @@
+from pprint import pprint
+
 from annoying.functions import get_object_or_None
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView
 
-from rc_backend.rc_app.models import Team
+from rc_backend.rc_app.models import Team, Profile
 from rc_backend.rc_app.models.invitation import TeamInvitation
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
@@ -17,9 +19,9 @@ class TeamDetailsView(DetailView):
         team = self.get_object()
 
         members = team.team_members.all()
-        leader = team.leader_id
-        leader_fsp = leader.fsp_set.all()
-        competition = team.competition_set.first()
+        leader = team.leader
+        leader_fsp = leader.fsp
+        competition = team.competition
         competition_result = get_object_or_None(CompetitionResult, team=team)
 
         context['members'] = members
@@ -51,6 +53,12 @@ class MemberSearchListView(ListView):
     model = MemberSearch
     fields = "__all__"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ms = MemberSearch.objects.filter(team__competition__id=context["competition_id"])
+        context['member_search'] = ms
+        return context
+
 
 class MemberSearchCreateView(CreateView):
     model = MemberSearch
@@ -67,10 +75,20 @@ class MemberSearchDetailView(DetailView):
     fields = "__all__"
 
 
-# user invited to team
 
-class PendingTeamInvitationsDetailView(ListView):
+# user invited to team
+class PendingTeamInvitationsListView(ListView):
     model = TeamInvitation
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get Profile of the current user
+        profile = Profile.objects.get(user=self.request.user)
+        # Get TeamInvitations where the current user is invited
+        invitations = TeamInvitation.objects.filter(invitee=profile)
+
+        context['invitations'] = invitations
+        return context
 
 
 # user asks to join team
@@ -80,9 +98,21 @@ class WannabePendingJoinRequestsListView(ListView):
     """request that i sent to other teams"""
     model = JoinRequest
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get Profile of the current user
+        profile = Profile.objects.get(user=self.request.user)
+        # Get TeamInvitations where the current user is invited
+        invitations = JoinRequest.objects.filter(invitee=profile)
+
+        context['invitations'] = invitations
+        return context
+
+
 
 class WannabePendingJoinRequestCreateView(CreateView):
     model = JoinRequest
+
 
 
 class WannabePendingJoinRequestDeleteView(DeleteView):
@@ -95,6 +125,16 @@ class WannabePendingJoinRequestDeleteView(DeleteView):
 class LeaderPendingJoinRequestsListView(ListView):
     """request that other people have sent to my team"""
     model = JoinRequest
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        team_id = kwargs.get("team_id")
+        team = Team.objects.get(id=team_id)
+        requests = JoinRequest.objects.filter(
+            team=team
+        )
+        context['join_requests'] = requests
+        return context
 
 
 class LeaderPendingJoinRequestUpdateView(UpdateView):

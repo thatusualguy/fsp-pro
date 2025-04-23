@@ -20,7 +20,7 @@ def find_member_search_for_competition(request):
     searches = []
     for team in teams:
         ms = MSRepo.select(
-            team_id=team.team_id
+            team_id=team.id
         )
         searches.append(ms)
     return JsonResponse(searches)
@@ -72,7 +72,7 @@ def get_competition_by_criteria(request):
 
     # For simplicity, returning basic competition info as JSON
     response_data = [{
-        'id': str(c.competition_id),
+        'id': str(c.competition),
         'title': c.title,
         'start_date': c.start_date,
         'finish_date': c.finish_date,

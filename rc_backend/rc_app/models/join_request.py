@@ -7,8 +7,8 @@ from rc_backend.rc_app.models.profile import Profile
 
 
 class JoinRequest(models.Model):
-    join_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    team_id = models.ForeignKey(Team, on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     description = models.TextField()
     join_status = models.CharField(
@@ -17,4 +17,4 @@ class JoinRequest(models.Model):
     )
 
     def __str__(self):
-        return f'JoinRequest by {self.profile} to team {self.team_id}'
+        return f'JoinRequest by {self.profile} to team {self.team}'

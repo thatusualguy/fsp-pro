@@ -29,13 +29,13 @@ def combine_profile_data(profile):
     print(competition_results)
     # Prepare the response data
     data = {
-        'teams': [{'id': str(team.team_id), 'title': team.title} for team in all_teams],
-        'competitions': [{'id': str(comp.competition_id), 'title': comp.title} for comp in competitions],
+        'teams': [{'id': str(team.id), 'title': team.title} for team in all_teams],
+        'competitions': [{'id': str(comp.competition), 'title': comp.title} for comp in competitions],
         'competition_results': [
             {
                 'result_id': str(result.result_id),
-                'competition_id': str(result.team.competition_id),
-                'team_id': str(result.team.team_id),
+                'competition_id': str(result.team.competition),
+                'team_id': str(result.team.id),
                 'points': result.points,
                 'place': result.place
             } for result in competition_results if result is not None
