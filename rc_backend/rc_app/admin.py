@@ -38,6 +38,7 @@ class CompetitionAdmin(admin.ModelAdmin):
                 obj.save()
                 self.message_user(request, "Запись отправлена на модерацию!", messages.SUCCESS)
             return HttpResponseRedirect(".")  # Обновляем страницу
+        # if request.user.groups.filter(name='Федеральное ФСП').exists() or request.user.is_superuser:
         return super().response_change(request, obj)
 
     def get_readonly_fields(self, request, obj=None):
@@ -84,6 +85,11 @@ class ModerationCompetitionAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.filter(on_moderation=OnModerationStatus.PENDING)
 
+    def has_view_permission(self, request, obj=None):
+        if request.user.groups.filter(name='Федеральное ФСП').exists() or request.user.is_superuser:
+            return request.user.has_perm('rc_app.view_competition')
+        return False
+
     # Кнопки действий
     def approve(self, request, queryset):
         queryset.update(on_moderation=OnModerationStatus.APPROVED)
@@ -94,8 +100,8 @@ class ModerationCompetitionAdmin(admin.ModelAdmin):
     reject.short_description = "Отклонить выбранные заявки"
 
 
-# admin.site.register(CompetitionModerationProxy, ModerationCompetitionAdmin)
 admin.site.register(Competition, CompetitionAdmin)
+admin.site.register(CompetitionModerationProxy, ModerationCompetitionAdmin)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(CompetitionResult, CompetitionResultAdmin)
