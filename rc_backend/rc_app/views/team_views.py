@@ -81,6 +81,18 @@ class MemberSearchUpdateView(UpdateView):
     model = MemberSearch
     fields = "__all__"
 
+    def dispatch(self, request, *args, **kwargs):
+        ms: MemberSearch = self.get_object()
+        # Get current user's profile
+        profile = get_object_or_404(Profile, user=self.request.user)
+        team = get_object_or_404(Team, team)
+        # Check if current user is the team leader
+        if team.leader_id != profile:
+            raise PermissionDenied("You do not have permission to delete this team.")
+
+        return super().dispatch(request, *args, **kwargs)
+
+
 
 class MemberSearchDetailView(DetailView):
     model = MemberSearch
