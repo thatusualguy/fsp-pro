@@ -5,14 +5,13 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView
 
-from rc_backend.rc_app.models import Team, Profile
+from rc_backend.rc_app.models import Team, Profile, Competition
 from rc_backend.rc_app.models.invitation import TeamInvitation
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
 
 ##  TEAM
-
 class TeamDetailsView(DetailView):
     model = Team
 
@@ -68,7 +67,6 @@ class TeamDeleteView(DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 
-
 ## MEMBER SEARCH
 
 class MemberSearchListView(ListView):
@@ -77,7 +75,8 @@ class MemberSearchListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        ms = MemberSearch.objects.filter(team__competition__id=context["competition_id"])
+        competition = get_object_or_404(Competition, pk=context["competition_id"])
+        ms = MemberSearch.objects.filter(team__competition=competition)
         context['member_search'] = ms
         return context
 

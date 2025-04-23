@@ -157,8 +157,10 @@ def index(request):
 def competitions_detail(request, slug):
     return render(request, 'rc_app/public/competitions_detail.html')
 
+
 def regions_detail(request, slug):
     return render(request, 'rc_app/public/regions_detail.html')
+
 
 def login(request):
     return render(request, 'rc_app/login/login.html')
