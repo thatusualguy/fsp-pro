@@ -1,0 +1,1439 @@
+/* == Basic Reset & Defaults == */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family), sans-serif;
+}
+
+.backgroundImage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background-image: url(./img/frame-125.svg);
+    background-size: cover;
+    /*opacity: 0.8;*/
+    z-index: -4;
+    animation: pulse 6s infinite ease-in-out;
+}
+
+.background-icon {
+    position: absolute;
+    top: -10vh;
+    right: 0;
+    width: 58.32425rem;
+    height: 55.86331rem;
+    background-image: url(./img/background_items.svg);
+    z-index: -2;
+    /* opacity: 0.1; */
+}
+
+:root {
+    --background-color: #1A1A2E;
+    --primary-color: #4A4AFF;
+    --secondary-color: #2A2A4A;
+    --text-color: #FFFFFF;
+    --text-muted-color: #B0B0D0;
+    --border-color: #3A3A5A;
+    --hover-primary: #6A6AFF;
+    --hover-secondary-bg: #3A3A5A;
+    --focus-outline-color: #8A8AFF; /* Slightly lighter blue for focus */
+    --font-family: 'Jetbrains Mono', sans-serif;
+    --Blue: #402FFF;
+}
+
+/* Recommendation: Perform WCAG contrast checks on color combinations */
+
+body {
+    font-family: var(--font-family), sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    font-size: 16px;
+    /* Prevent horizontal scroll caused by transforms */
+    overflow-x: hidden;
+}
+
+.container {
+    width: 90%;
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    border-radius: 2px; /* Slight radius for focus outline */
+}
+
+a:hover {
+    color: var(--hover-primary);
+}
+
+/* Add clear focus states */
+a:focus-visible,
+button:focus-visible,
+.event-item:focus-visible,
+.action-link:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(74, 74, 255, 0.3); /* Optional: outer glow */
+}
+
+/* Remove default outline when custom visible is applied */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible),
+.event-item:focus:not(:focus-visible),
+.action-link:focus:not(:focus-visible) {
+    outline: none;
+}
+
+
+h1, h2, h3 {
+    margin-bottom: 0.75em;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5em;
+    text-align: center;
+}
+
+p {
+    margin-bottom: 1em;
+    color: var(--text-color);
+}
+
+/* == Logo == */
+.logo {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.logo img {
+    height: 36px;
+    margin-right: 8px;
+    width: auto;
+}
+
+.logo-pro {
+    background-color: var(--primary-color);
+    border-radius: 0.25rem;
+    padding: 0 1.01175rem;
+}
+
+.logo:hover {
+    color: var(--text-color);
+}
+
+/* == Buttons == */
+.btn {
+    display: inline-flex; /* Use flex for icon alignment */
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em; /* Space between text and icon */
+    padding: 0.8em 1.5em;
+    border-radius: 8px;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    border: 1px solid transparent;
+    font-size: 1rem;
+    line-height: 1.2; /* Ensure consistent line height */
+}
+
+.btn svg { /* Basic styling for SVG icons in buttons */
+    width: 1.1em;
+    height: 1.1em;
+    /* vertical-align: middle; /* Handled by flex align-items */
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover, .btn-primary:focus-visible {
+    background-color: var(--hover-primary);
+    border-color: var(--hover-primary);
+    color: var(--text-color);
+    transform: translateY(-2px); /* Subtle lift */
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover, .btn-secondary:focus-visible {
+    background-color: var(--hover-secondary-bg);
+    border-color: var(--hover-secondary-bg);
+    color: var(--text-color);
+    transform: translateY(-2px); /* Subtle lift */
+}
+
+/* == Header == */
+.site-header {
+    padding: 15px 0;
+    background-color: rgba(26, 26, 46, 0.8);
+    position: sticky;
+    top: 0;
+    margin: 2rex;
+    z-index: 100;
+    border-radius: 0.375rem;
+    backdrop-filter: blur(5px);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.desktop-nav {
+    display: none;
+}
+
+.desktop-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+}
+
+.desktop-nav a {
+    color: var(--text-muted-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 5px 0;
+}
+
+.desktop-nav a:hover, .desktop-nav a:focus-visible {
+    color: var(--text-color);
+}
+
+.header-auth .desktop-login-btn {
+    display: none;
+}
+
+.nav-toggle-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: block;
+    padding: 5px;
+}
+
+.nav-toggle-btn svg {
+    /*display: block;*/
+}
+
+/* Ensure SVG inside button behaves */
+
+/* == Mobile Navigation == */
+.mobile-nav {
+    position: fixed;
+    /* top: 0; */ /* Убираем top: 0 */
+    bottom: 0; /* Прикрепляем к низу */
+    left: 0;
+    width: 100%;
+    height: 100dvh; /* Оставляем полную высоту */
+    background-color: var(--background-color);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    /* transform: translateX(-100%); */ /* Убираем горизонтальный сдвиг */
+    transform: translateY(100%); /* Сдвигаем вниз за пределы экрана */
+    transition: transform 0.3s ease-in-out, visibility 0s 0.3s; /* Добавляем задержку для visibility */
+    visibility: hidden; /* Скрыто по умолчанию */
+}
+
+.mobile-nav[hidden] {
+    display: flex; /* Keep display flex for calculation before showing */
+}
+
+.mobile-nav.active {
+    /* transform: translateX(0); */ /* Убираем */
+    transform: translateY(0); /* Возвращаем в нормальное положение (сдвиг 0 по Y) */
+    visibility: visible; /* Показываем при активации */
+    transition: transform 0.3s ease-in-out, visibility 0s 0s; /* Убираем задержку visibility */
+}
+
+/* Остальные стили для .mobile-nav-header, .nav-close-btn, и т.д. остаются прежними */
+.mobile-nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.nav-close-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.nav-close-btn svg {
+    display: block;
+}
+
+.mobile-nav-links {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.mobile-nav-links ul {
+    list-style: none;
+}
+
+.mobile-nav-links li {
+    margin-bottom: 25px;
+}
+
+.mobile-nav-links a {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+    display: inline-block;
+    padding: 5px;
+}
+
+.mobile-nav-links a:hover, .mobile-nav-links a:focus-visible {
+    color: var(--primary-color);
+}
+
+.mobile-nav-auth {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: auto; /* Может понадобиться прижать кнопки к низу */
+}
+
+.mobile-nav-auth .btn {
+    width: 100%;
+}
+
+/* == Hero Section == */
+.hero {
+    padding: 60px 0;
+    text-align: start;
+}
+
+.hero h1 {
+    margin-bottom: 0.5em;
+}
+
+.hero p {
+    max-width: 600px;
+    font-size: 1.1rem;
+    color: var(--text-muted-color);
+}
+
+.hero-btn {
+    display: inline-flex;
+    padding: 1.0375rem 2rem;
+    justify-content: center;
+    align-items: center;
+    gap: 1.25rem;
+    border-radius: 0.5rem;
+    background: var(--Blue);
+    /* drop-shadow/button-primary */
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+    color: #FFF;
+    text-align: center;
+    font-size: 2.25rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1.5rem; /* 66.667% */
+}
+
+/* == Features Section == */
+.features {
+    padding: 60px 0;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+
+.feature-item {
+    display: flex;
+    padding: 1rem;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+    flex: 1 0 0;
+    border-radius: 0.375rem;
+    border: 1px solid var(--Blue, #402FFF);
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.feature-item:hover, .feature-item:focus-within { /* Apply hover on focus within */
+    /*background-color: var(--hover-secondary-bg);*/
+    background-color: rgba(26, 26, 46, 0.8);
+    transform: translateY(-3px);
+}
+
+.feature-icon {
+    font-size: 1.8rem; /* Base size */
+    width: 32px; /* Explicit size for SVG */
+    height: 32px; /* Explicit size for SVG */
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    display: block;
+}
+
+.feature-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.feature-item p {
+    font-size: 0.95rem;
+    margin-bottom: 0;
+    color: var(--text-muted-color);
+}
+
+/* == Upcoming Events Section == */
+.upcoming-events {
+    padding: 60px 0;
+}
+
+.events-list {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    color: var(--text-color);
+    border-radius: 0.375rem;
+    border: 1px solid var(--Blue, #402FFF);
+    box-shadow: 0 2px 0 0 rgba(0, 0, 0, 0.04);
+}
+
+.event-item:hover, .event-item:focus-visible {
+    background-color: var(--hover-secondary-bg);
+    color: var(--text-color);
+    transform: translateY(-2px); /* Subtle lift */
+}
+
+.event-date {
+    background-color: var(--Blue, #402FFF);
+    color: var(--text-color);
+    padding: 10px;
+    text-align: center;
+    margin-right: 20px;
+    margin-bottom: 0;
+    border-radius: 0.3rem 0 0 0.3rem;
+}
+
+.event-date span {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.event-title {
+    flex-grow: 1;
+    font-weight: 500;
+    padding: 10px;
+}
+
+.event-arrow {
+    margin-right: 15px;
+    color: var(--text-muted-color);
+    transition: transform 0.3s ease;
+    flex-shrink: 0; /* Prevent shrinking */
+    width: 2.03906rem;
+    height: 2.25rem;
+}
+
+.event-add {
+    width: 2.875rem;
+    height: 2.875rem;
+    flex-shrink: 0;
+}
+
+.event-item:hover .event-arrow, .event-item:focus-visible .event-arrow {
+    transform: translateX(5px);
+}
+
+.create-event-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.create-event-btn svg {
+    vertical-align: middle;
+}
+
+/* Align plus icons */
+.create-event-btn .plus-offset {
+    transform: translateX(-3px);
+}
+
+.create-event-btn .plus-offset-double {
+    transform: translateX(-6px);
+}
+
+/* == No Team Section == */
+.no-team {
+    padding: 60px 0;
+}
+
+.no-team-container {
+
+    flex-direction: column;
+    gap: 30px;
+}
+
+.no-team-content h2 {
+
+    text-align: left;
+}
+
+.no-team-content strong {
+    color: var(--text-color);
+}
+
+.no-team-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    border-left: none;
+    padding-left: 0;
+}
+
+.action-link {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    border: 1px solid var(--Blue, #402FFF);
+    border-radius: 8px;
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    padding: 0.375rem 1.125rem;
+    gap: 1rem;
+    align-self: stretch;
+}
+
+.action-link:hover, .action-link:focus-visible {
+    background-color: var(--hover-secondary-bg);
+    color: var(--text-color);
+    transform: translateY(-2px); /* Subtle lift */
+}
+
+.action-icon {
+    width: 24px; /* Explicit size for SVG */
+    height: 24px; /* Explicit size for SVG */
+    color: var(--primary-color);
+    margin-right: 15px;
+    flex-shrink: 0; /* Prevent icon shrinking */
+}
+
+.no-team-join-btn-mobile {
+    display: block;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.no-team-join-btn-desktop {
+    display: none;
+}
+
+/* == Footer == */
+.site-footer {
+    background-color: rgba(27, 28, 33);
+    position: sticky;
+    top: 0;
+    margin: 2rex;
+    z-index: 100;
+    border-radius: 0.375rem;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-logo {
+    font-size: 1rem;
+}
+
+.footer-logo img {
+    height: 20px;
+}
+
+.copyright {
+    color: var(--text-muted-color);
+}
+
+.footer-center {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-center a {
+    color: var(--text-muted-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.footer-center a:hover, .footer-center a:focus-visible {
+    color: var(--text-color);
+}
+
+.footer-right {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.footer-right a {
+    color: var(--text-muted-color);
+    transition: color 0.3s ease;
+    padding: 5px;
+}
+
+.footer-right a:hover, .footer-right a:focus-visible {
+    color: var(--text-color);
+}
+
+/* == Utility Classes == */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+/* == Desktop Styles (Media Queries) == */
+@media (max-width: 768px) {
+    .hero-btn {
+        margin-top: 2rem;
+        padding: 0.5375rem 1rem;
+        font-size: 1.5rem;
+        line-height: 1.5rem; /* 66.667% */
+        width: 100%;
+    }
+}
+
+@media (min-width: 768px) {
+    h1 {
+        font-size: 3rem;
+    }
+
+    h2 {
+        font-size: 2.2rem;
+        text-align: start;
+    }
+
+    .container {
+        width: 85%;
+    }
+
+    .nav-toggle-btn {
+        /*display: none;*/
+    }
+
+    .desktop-nav {
+        /*display: block;*/
+    }
+
+    .header-auth .desktop-login-btn {
+        display: inline-flex;
+    }
+
+    /* Use flex */
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .create-event-btn {
+        width: auto;
+        display: inline-flex;
+    }
+
+    .no-team-container {
+        /*flex-direction: row;*/
+        align-items: flex-start;
+        gap: 40px;
+    }
+
+    .no-team-content {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+        text-align: left;
+        color: var(--text-color, #402FFF);
+    }
+
+    .no-team-content h2 {
+        text-align: left;
+        align-self: stretch;
+        /*color: #FFF;*/
+        font-size: 3.375rem;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 120%; /* 4.05rem */
+    }
+
+    .no-team-actions {
+        flex-basis: 320px;
+        flex-shrink: 0;
+        padding-left: 30px;
+        flex-direction: column;
+    }
+
+    .no-team-join-btn-mobile {
+        display: none;
+    }
+
+    .no-team-join-btn-desktop {
+        display: inline-flex;
+        margin-top: 10px;
+    }
+
+    .footer-container {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .footer-left {
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .footer-right {
+        flex-direction: row;
+        gap: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    h1 {
+        font-size: 3.5rem;
+    }
+
+    .container {
+        width: 80%;
+    }
+
+    .hero {
+        padding: 80px 0;
+    }
+
+    .features, .upcoming-events, .no-team {
+        padding: 80px 0;
+    }
+
+    .site-footer {
+        margin-top: 110px;
+        margin-bottom: 0;
+        padding: 10px;
+    }
+}
+
+/* == SPA Section Visibility Control == */
+
+/* Скрываем все переключаемые секции по умолчанию */
+.page-section {
+    display: none;
+    /* Можно добавить анимацию появления, если нужно */
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Показываем только АКТИВНУЮ секцию */
+.page-section.active {
+    display: block; /* или 'grid', 'flex', в зависимости от исходного display секции */
+}
+
+/* Пример анимации (опционально) */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* == Обновляем стили активной ссылки навигации == */
+
+/* Убираем псевдоэлемент ::after, будем управлять классом active через JS */
+.desktop-nav li a.active::after {
+    /* content: none; /* Можно просто убрать селектор выше */
+    display: none; /* Скрываем линию */
+}
+
+/* Общий стиль для активных ссылок (Desktop & Mobile) - сделаем их просто синими/яркими */
+.desktop-nav li a.active,
+.mobile-nav-links a.active {
+    color: var(--primary-color); /* Или var(--text-color) для белого */
+    font-weight: 700; /* Делаем активную ссылку жирнее */
+}
+
+/* == Competitions Page Styles == */
+
+.competitions-page {
+    padding: 60px 0; /* Отступы для всей секции */
+}
+
+.competitions-header-row {
+    display: flex; /* Включаем flexbox */
+    justify-content: space-between; /* Заголовок слева, фильтры справа */
+    align-items: center; /* Вертикальное выравнивание по центру */
+    flex-wrap: wrap; /* Разрешаем перенос на маленьких экранах */
+    gap: 20px; /* Отступ между заголовком и фильтрами (особенно при переносе) */
+    margin-bottom: 1.5em; /* Отступ снизу до списка соревнований */
+    padding-bottom: 1.5em; /* Внутренний отступ вниз перед границей */
+}
+
+.competitions-main-title {
+    /* Убираем или сильно уменьшаем нижний отступ, он теперь у .competitions-header-row */
+    margin-bottom: 0; /* Можно оставить небольшой (напр. 0.2em) если нужно при переносе */
+    font-size: 2.5rem; /* Размер как был */
+    font-weight: 700;
+    text-align: left;
+    color: var(--text-color);
+    /* Заголовок не должен растягиваться, даем место фильтрам */
+    flex-grow: 0;
+    flex-shrink: 0; /* Не сжиматься сильно */
+}
+
+.competitions-filters {
+    /* Убираем внешние отступы и границу, они теперь у .competitions-header-row */
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+
+    /* Остальные внутренние стили .competitions-filters остаются: */
+    display: flex;
+    flex-wrap: nowrap; /* Стараемся не переносить фильтры внутри себя */
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 1; /* Разрешаем блоку фильтров сжиматься, если нужно */
+    flex-grow: 0; /* Не растягивать блок фильтров больше его содержимого */
+}
+
+.filter-toggles {
+    display: flex;
+    gap: 10px; /* Отступ между кнопками Онлайн/Офлайн */
+}
+
+.btn-filter {
+    /* Наследует стили .btn, но переопределяем */
+    padding: 0.5em 1.2em;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background-color: transparent; /* Неактивная - прозрачная */
+    color: var(--text-muted-color); /* Неактивная - бледный текст */
+    border: 1px solid var(--border-color); /* Неактивная - рамка */
+    min-width: 100px; /* Минимальная ширина для кнопок */
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.btn-filter.active {
+    background-color: var(--Blue); /* Активная - синий фон */
+    color: var(--text-color); /* Активная - белый текст */
+    border-color: var(--Blue); /* Активная - синяя рамка */
+}
+
+/* Обертка для Select + Стрелка */
+.filter-select-wrapper {
+    position: relative;
+    display: inline-block; /* Или block на моб */
+    flex-grow: 1; /* Позволяем селекту растягиваться */
+    min-width: 150px; /* Чтобы не схлопывался */
+    max-width: 250px; /* Макс. ширина */
+}
+
+.filter-select {
+    display: block;
+    width: 100%; /* Занять всю ширину обертки */
+    padding: 0.6em 2.5em 0.6em 1em; /* Отступы (право для стрелки) */
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+    background-color: transparent; /* Прозрачный фон */
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    appearance: none; /* Убираем стандартную стрелку */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+/* Стилизация Options (ограниченно) */
+.filter-select option {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Кастомная стрелка */
+.filter-select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted-color);
+    pointer-events: none; /* Чтобы не мешала клику на select */
+}
+
+.btn-icon.filter-calendar {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted-color);
+    padding: 0.5em; /* Паддинг вокруг иконки */
+    border-radius: 8px;
+    line-height: 0; /* Убрать лишнюю высоту */
+    cursor: pointer;
+    flex-shrink: 0; /* Не сжиматься */
+}
+
+.btn-icon.filter-calendar:hover,
+.btn-icon.filter-calendar:focus-visible {
+    background-color: var(--hover-secondary-bg);
+    color: var(--text-color);
+}
+
+/* --- Список соревнований --- */
+.competitions-list {
+    /* Нет особых стилей, контейнер для групп */
+}
+
+.competitions-month-group {
+    margin-bottom: 2.5em; /* Отступ между месяцами */
+}
+
+.month-title {
+    font-size: 1.5rem; /* Размер заголовка месяца */
+    font-weight: 600;
+    margin-bottom: 1em; /* Отступ до списка событий */
+    text-align: left;
+    color: var(--text-color);
+}
+
+.month-events {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Отступ между карточками соревнований */
+}
+
+.competition-item, .competition-item-empty {
+    display: flex;
+    align-items: stretch; /* Выравнивание по всей высоте */
+    gap: 0; /* Убираем gap, будем через margin/padding у дочерних */
+    border: 1px solid var(--Blue);
+    border-radius: 8px;
+    overflow: hidden; /* Чтобы скруглить углы даты */
+    text-decoration: none;
+    color: var(--text-color);
+    background-color: rgba(31, 31, 51, 0.6); /* Полупрозрачный темный фон */
+    transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+}
+
+.competition-item:hover, .competition-item:focus-visible {
+    background-color: rgba(42, 42, 74, 0.8);
+    border-color: var(--hover-primary);
+    transform: translateY(-2px);
+    color: var(--text-color);
+}
+
+
+.competition-date {
+    flex: 0 0 65px; /* Фиксированная ширина, не расти, не сжиматься */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--Blue);
+    color: var(--text-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0 5px; /* Вертикальные и небольшие горизонтальные отступы */
+}
+
+.competition-details {
+    flex-grow: 1;
+    padding: 12px 15px; /* Немного уменьшил паддинг для компактности */
+    display: flex;
+    flex-direction: column; /* Внешний details остается колонкой */
+    justify-content: center;
+    gap: 4px; /* Отступ между info-line и meta-данными (если будут) */
+    overflow: hidden; /* Скрыть возможное выпирание текста */
+}
+
+.competition-info-line {
+    display: flex; /* Делаем flex-строку для заголовка и тегов */
+    flex-wrap: wrap; /* Разрешаем перенос тегов */
+    align-items: center; /* Вертикальное выравнивание */
+    gap: 8px; /* Горизонтальный отступ между заголовком и блоком тегов */
+    /* Также этот gap будет работать как вертикальный, если теги перенесутся */
+}
+
+.competition-title {
+    flex-grow: 1; /* Заголовок старается занять макс. место */
+    flex-shrink: 1; /* Разрешаем ему сжиматься */
+    font-size: 1rem; /* Как было */
+    font-weight: 500;
+    line-height: 1.4;
+    min-width: 100px; /* Предотвращаем схлопывание заголовка */
+    margin-right: auto; /* Отодвигаем контейнер с тегами вправо */
+}
+
+.competition-badges-container {
+    display: flex;
+    flex-wrap: wrap; /* Теги внутри контейнера тоже могут переноситься */
+    gap: 6px; /* Отступ между самими тегами */
+    flex-shrink: 0; /* Не позволяем контейнеру сжиматься */
+    align-items: center;
+}
+
+/* Если нет тегов, скрываем контейнер */
+.competition-badges-container:empty {
+    display: none;
+}
+
+.competition-badge {
+    /* Базовые стили тега (размер, отступы, скругление) */
+    display: inline-flex; /* Чтобы иконки внутри (если будут) центрировались */
+    align-items: center;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 12px;
+    line-height: 1.2;
+    white-space: nowrap; /* Запрещаем перенос текста ВНУТРИ тега */
+}
+
+/* Специфичные стили для разных тегов (примеры) */
+.competition-badge.status-registration {
+    background-color: #00A86B; /* Зеленый */
+}
+
+.competition-badge.type-online {
+    background-color: var(--primary-color); /* Синий */
+}
+.competition-badge.type-offline {
+    background-color: #8A94A6; /* Серый */
+}
+.competition-badge.status-soon {
+    background-color: #FFA500; /* Оранжевый */
+}
+
+.competition-arrow {
+    flex-shrink: 0; /* Не сжиматься */
+    width: 24px; /* Размер стрелки */
+    height: 24px;
+    margin: auto 20px auto 15px; /* Центрируем стрелку вертикально + отступы L/R */
+    color: var(--text-muted-color);
+    transition: transform 0.3s ease;
+}
+
+.competition-item:hover .competition-arrow,
+.competition-item:focus-visible .competition-arrow {
+    transform: translateX(5px);
+    color: var(--text-color);
+}
+
+/* --- Строка "Нет соревнований" --- */
+.competition-item-empty {
+    /* Наследует базовые стили (border, radius, bg) от .competition-item */
+    color: var(--text-muted-color); /* Бледный текст */
+    justify-content: center; /* Центрируем содержимое */
+    align-items: center; /* Центрируем вертикально */
+    gap: 15px; /* Отступ между иконкой и текстом */
+    padding: 25px 20px; /* Увеличим паддинг для пустой строки */
+    min-height: 80px; /* Минимальная высота */
+    cursor: default;
+}
+
+.competition-item-empty:hover { /* Убрать ховер-эффекты */
+    background-color: rgba(31, 31, 51, 0.6);
+    border-color: var(--Blue);
+    transform: none;
+}
+
+.empty-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    opacity: 0.7; /* Слегка приглушить иконку */
+}
+
+/* --- Адаптивность --- */
+
+@media (max-width: 768px) {
+    .competition-info-line {
+        /* flex-wrap: wrap; уже есть */
+    }
+    .competition-title {
+        font-size: 0.9rem; /* Как было */
+    }
+    .competition-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    .competition-arrow {
+        margin: auto 15px auto 10px; /* Как было */
+    }
+    .competitions-main-title {
+        font-size: 2rem; /* Уменьшаем H1 на мобильных */
+    }
+
+    .month-title {
+        font-size: 1.3rem; /* Уменьшаем H2 месяцев */
+    }
+
+    /* Переносим фильтры в столбик, если нужно */
+    .competitions-filters {
+        /* gap: 15px; Уже есть */
+        padding-bottom: 1em;
+    }
+
+    .filter-toggles {
+        width: 100%; /* Кнопки Онлайн/Офлайн во всю ширину */
+        justify-content: space-between; /* Распределить кнопки */
+    }
+
+    .btn-filter {
+        flex-grow: 1; /* Пусть делят ширину */
+    }
+
+    .filter-select-wrapper {
+        width: calc(100% - 60px); /* Примерная ширина: вся ширина минус кнопка календаря */
+        max-width: none;
+        flex-grow: 0; /* Не нужно расти */
+    }
+
+    .competition-date {
+        flex-basis: 50px; /* Можно чуть уменьшить блок даты */
+        font-size: 1.2rem;
+    }
+
+    .competition-details {
+        padding: 10px 15px; /* Уменьшаем паддинги */
+    }
+
+    .competition-title {
+        font-size: 0.9rem;
+    }
+
+    .competition-badge {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+
+    .competition-arrow {
+        margin: auto 15px auto 10px; /* Уменьшаем отступы стрелки */
+    }
+}
+
+@media (max-width: 480px) {
+    /* Дополнительные стили для очень маленьких экранов, если нужно */
+    .competitions-filters {
+        gap: 12px;
+        border-bottom: none; /* Можно убрать линию на совсем мелких */
+    }
+
+    .filter-select-wrapper {
+        width: 100%; /* Селект на всю ширину */
+    }
+
+    .btn-icon.filter-calendar {
+        position: absolute; /* Или другой способ позиционировать */
+        right: 10px; /* Пример, если фильтры друг под другом */
+        top: 75px; /* Пример */
+        /* Или оставить как есть в потоке */
+    }
+
+    .competition-date {
+        flex-basis: 45px;
+        font-size: 1.1rem;
+    }
+
+    .competition-arrow {
+        display: none; /* Можно скрыть стрелку на очень маленьких экранах */
+    }
+}
+/* =====================
+   Login Form Styles (Общие)
+   ===================== */
+
+.login-form-wrapper {
+    background-color: rgba(26, 26, 46, 0.9); /* Полупрозрачный фон формы */
+    padding: 30px 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 400px; /* Ограничиваем ширину формы */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(58, 58, 90, 0.5); /* Тонкая граница */
+    backdrop-filter: blur(5px); /* Блюр фона под формой */
+    box-sizing: border-box; /* Учитываем padding в ширине */
+}
+
+/* Отдельные стили для обертки внутри модалки - без фона/тени */
+.login-form-wrapper.modal-variant {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    width: 100%;
+    max-width: none;
+    box-shadow: none;
+    border: none;
+    backdrop-filter: none;
+}
+/* А вот сама форма внутри модалки получает стиль обертки */
+.modal-content {
+    background-color: rgba(26, 26, 46, 0.9); /* Фон для контента модалки */
+    padding: 40px; /* Увеличены отступы для модалки */
+    border-radius: 12px;
+    width: 90%;
+    max-width: 420px; /* Чуть шире обертки формы */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(58, 58, 90, 0.5);
+    backdrop-filter: blur(5px);
+    position: relative; /* Для позиционирования кнопок закрытия/назад */
+    text-align: center;
+}
+
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Отступ между группами */
+}
+
+.login-title {
+    font-size: 1.8rem; /* Размер заголовка */
+    margin-bottom: 15px; /* Отступ снизу */
+    text-align: center;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.form-group {
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: rgba(42, 42, 74, 0.5); /* Полупрозрачный фон поля */
+    color: var(--text-color);
+    font-size: 1rem;
+    font-family: var(--font-family), sans-serif;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: var(--primary-color);
+    background-color: rgba(42, 42, 74, 0.8);
+    outline: none; /* Убираем стандартный outline */
+    box-shadow: 0 0 0 3px rgba(74, 74, 255, 0.3); /* Focus glow */
+}
+/* Стиль для плейсхолдера */
+.form-group input::placeholder {
+    color: var(--text-muted-color);
+    opacity: 0.7;
+}
+
+.login-submit-btn {
+    width: 100%;
+    padding: 14px; /* Немного выше стандартной кнопки */
+    font-size: 1.1rem;
+    margin-top: 10px; /* Отступ сверху кнопки */
+    background: var(--Blue, #402FFF); /* Новый синий цвет */
+    border: none;
+}
+.login-submit-btn:hover {
+    background: var(--hover-primary);
+    transform: translateY(-2px);
+}
+
+.login-links-footer {
+    display: flex;
+    justify-content: center; /* Центрирование на десктопной стр */
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+.login-links-footer.modal-variant {
+    justify-content: space-between; /* Разделение ссылок в модалке */
+}
+
+.login-links-footer a {
+    color: var(--text-muted-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    margin: 0 10px; /* Небольшие отступы */
+}
+.login-links-footer a:hover {
+    color: var(--text-color);
+}
+
+/* =====================
+   Modal Window Styles
+   ===================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 15, 0.8); /* Темный фон для модалки */
+    backdrop-filter: blur(8px); /* Сильный блюр фона под модалкой */
+    display: flex; /* Скрыт по умолчанию, JS меняет на flex */
+    align-items: center;
+    justify-content: center;
+    z-index: 1100; /* Выше хедера */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Убрали лишние стили для modal-content выше, он теперь фон/рамка */
+/* .modal-content { ... убрано ... } */
+
+
+.modal-close-btn, .modal-back-btn {
+    position: absolute;
+    top: 15px;
+    background: none;
+    border: none;
+    color: var(--text-muted-color);
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+.modal-close-btn:hover, .modal-back-btn:hover {
+    color: var(--text-color);
+}
+.modal-close-btn {
+    right: 15px; /* Закрыть справа */
+}
+.modal-back-btn {
+    top: 0; /* Назад слева */
+    /* По умолчанию скрываем на десктопе, показываем на мобильных */
+}
+
+
+/* Responsive Modal & Mobile */
+@media (max-width: 768px) {
+    /* Стиль для .modal-content уже делает его адаптивным */
+    .modal-content {
+        padding: 30px 25px; /* Уменьшаем паддинги на мобилке */
+        width: 95%; /* Еще чуть шире */
+    }
+    /* Показываем кнопку "Назад" в модалке на мобильных */
+    /* Скрываем кнопку "Закрыть (X)" на мобильных, если есть "Назад" */
+    .modal-close-btn {
+        display: none;
+    }
+
+    /* Расположение ссылок внизу формы */
+    .login-links-footer.modal-variant {
+        flex-direction: column; /* Ссылки друг под другом */
+        align-items: center;
+        gap: 10px;
+    }
+    .login-links-footer.modal-variant a {
+        margin: 0;
+    }
+    /* Отступы формы в модалке на мобилке */
+    .modal-variant .login-form {
+        gap: 15px;
+    }
+    .modal-variant .login-title {
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+        margin-top: 25px; /* Отодвинуть от кнопки назад */
+    }
+}
