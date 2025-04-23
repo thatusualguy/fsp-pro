@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import public
+from .views.auth import LoginUser, LogoutUser, RegisterUser
 from .views.competition_views import *
 from .views.profile_views import ProfilesListView, ProfileDetailView, EditProfileDetailView
 from .views.team_views import *
@@ -8,6 +9,10 @@ from .views.team_views import *
 app_name = "rc_app"
 urlpatterns = [
     path("", public.index, name="index"),
+
+    path('login/', LoginUser.as_view(), name='login'),
+    path('logout/', LogoutUser.as_view(), name='logout'),
+    path('register/', RegisterUser.as_view(), name='register'),
 
     path("competitions/", CompetitionListView.as_view(), name="competitions"),
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),
