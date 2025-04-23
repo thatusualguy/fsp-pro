@@ -80,48 +80,138 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Навигация SPA ---
 
+    const backgroundIcons = document.querySelectorAll('.background-icon');
     const navLinks = document.querySelectorAll('.nav-link'); // Все ссылки навигации с этим классом
     const sections = document.querySelectorAll('.page-section'); // Все секции контента
     const mobileNav = document.getElementById('mobileNav'); // Мобильное меню
     const closeNavBtn = document.getElementById('closeNavBtn'); // Кнопка закрытия моб. меню
 
-    // Функция для показа нужной секции
     function showSection(sectionId) {
-
-        // Нормализуем ID (убираем # если он есть)
+        // Нормализуем ID (убираем #)
         const targetId = sectionId.startsWith('#') ? sectionId.substring(1) : sectionId;
+        if (!targetId) return; // Выходим, если ID пустой
 
-        let sectionFound = false;
-        sections.forEach(section => {
-            if (section.id === targetId) {
-                section.classList.add('active'); // Показываем нужную секцию
-                sectionFound = true;
-            } else {
-                section.classList.remove('active'); // Скрываем остальные
+        // Находим контейнер секции
+        const sectionContainer = document.getElementById(targetId);
+        if (!sectionContainer) {
+            console.warn("Section container not found:", targetId);
+            // Можно показать дефолтную секцию или ошибку
+            // showSection('#hero'); // Как вариант
+            return;
+        }
+
+        // Скрываем все остальные секции .page-section (или ваш главный селектор секций)
+        document.querySelectorAll('.page-section').forEach(sec => {
+            if (sec.id !== targetId) {
+                sec.classList.remove('active');
+                sec.hidden = true;
             }
         });
 
-        // Если секция не найдена (например, плохой хеш), показать стартовую
-        if (!sectionFound && sections.length > 0) {
-            // Пытаемся показать 'hero', если ее нет - первую секцию из списка
-            const defaultSection = document.getElementById('hero') || sections[0];
-            if (defaultSection) {
-                defaultSection.classList.add('active');
-                updateNavActiveState('#' + defaultSection.id); // Обновляем и нав. ссылки
+        // -- Начало добавления/изменения --
+
+        // 1. Очищаем предыдущие классы состояния с <body>
+        // Находим все классы на body, которые начинаются с 'section-active-'
+        const bodyClassesToRemove = [];
+        document.body.classList.forEach(className => {
+            if (className.startsWith('section-active-')) {
+                bodyClassesToRemove.push(className);
             }
-        } else if (sectionFound) {
-            updateNavActiveState('#' + targetId); // Обновляем состояние нав. ссылок
+        });
+        // Удаляем их
+        if (bodyClassesToRemove.length > 0) {
+            document.body.classList.remove(...bodyClassesToRemove);
         }
 
-        window.scrollTo(0, 0); // Прокрутка вверх при смене секции
-        updateSvgHeight()
+
+        // 3. Показываем целевую секцию И добавляем класс состояния на <body>
+        // if (loadedTemplates[targetId]) { // <-- если используете fetch
+        sectionContainer.hidden = false;
+        sectionContainer.classList.add('active');
+
+        // Создаем и добавляем класс на body: например, 'section-active-about'
+        const bodyStateClass = `section-active-${targetId}`;
+        document.body.classList.add(bodyStateClass);
+
+        // (Ваша существующая логика прокрутки, обновления URL и т.д.)
+        window.scrollTo(0, 0);
+        try {
+            history.pushState(null, '', `#${targetId}`);
+        } catch (e) { /* ... */
+
+        }
+
+        closeMobileMenuIfNeeded();
+        updateSvgHeight();
     }
 
+    function closeMobileMenuIfNeeded() {
+         const mobileNav = document.getElementById('mobileNav');
+         const openNavBtn = document.getElementById('openNavBtn');
+         if (mobileNav && mobileNav.classList.contains('active')) {
+              mobileNav.classList.remove('active');
+              document.body.style.overflow = '';
+             openNavBtn?.setAttribute('aria-expanded', 'false');
+              mobileNav.addEventListener('transitionend', () => {
+                 mobileNav.hidden = true;
+             }, { once: true });
+         }
+    }
+
+     function handleLocationChange() {
+        const currentHash = window.location.hash || '#hero'; // Определяем стартовую секцию
+        showSection(currentHash); // Вызываем обновленную функцию
+    }
+    window.addEventListener('popstate', handleLocationChange);
+    handleLocationChange(); // Показать секцию при первой загрузке
+
+    // Функция для показа нужной секции
+    // function showSection(sectionId) {
+    //
+    //     Нормализуем ID (убираем # если он есть)
+        // const targetId = sectionId.startsWith('#') ? sectionId.substring(1) : sectionId;
+        //
+        // let sectionFound = false;
+        // sections.forEach(section => {
+        //     if (section.id === targetId) {
+        //         section.classList.add('active'); // Показываем нужную секцию
+        //         sectionFound = true;
+        //     } else {
+        //         section.classList.remove('active'); // Скрываем остальные
+        //     }
+        // });
+        //
+        // Если секция не найдена (например, плохой хеш), показать стартовую
+        // if (!sectionFound && sections.length > 0) {
+        //     Пытаемся показать 'hero', если ее нет - первую секцию из списка
+            // const defaultSection = document.getElementById('hero') || sections[0];
+            // if (defaultSection) {
+            //     defaultSection.classList.add('active');
+            //     updateNavActiveState('#' + defaultSection.id); // Обновляем и нав. ссылки
+            // }
+        // } else if (sectionFound) {
+        //     updateNavActiveState('#' + targetId); // Обновляем состояние нав. ссылок
+        // }
+        //
+        // window.scrollTo(0, 0); // Прокрутка вверх при смене секции
+        // if (targetId === "about")
+        //     backgroundIcons.forEach(link => {
+        //         link.classList.add('hidden');
+        //     })
+        // updateSvgHeight()
+    // })
+
     // Функция для обновления активного состояния ссылок навигации
-    function updateNavActiveState(targetHref) {
+    function updateNavActiveState(targetSectionId) {
+        // Нормализуем ID, если он с хешем
+        const normalizedId = targetSectionId.startsWith('#') ? targetSectionId : `#${targetSectionId}`;
+
         navLinks.forEach(link => {
-            // Сравниваем href ссылки с целевым хешем
-            if (link.getAttribute('href') === targetHref) {
+            const linkHref = link.getAttribute('href');
+            // Сравниваем href ссылки с целевым ID (нормализованным с #)
+            console.log(linkHref, normalizedId, linkHref === normalizedId);
+            if (linkHref === normalizedId) {
+                console.log(linkHref, normalizedId);
                 link.classList.add('active');
             } else {
                 link.classList.remove('active');
@@ -134,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', (event) => {
             const targetHref = link.getAttribute('href');
             console.log('target href', targetHref);
+            updateNavActiveState(targetHref);
             // Обрабатываем только внутренние hash-ссылки
             if (targetHref && targetHref.startsWith('#')) {
                 event.preventDefault(); // Отменяем стандартный переход по якорю
@@ -173,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Определяем какую секцию показать: из URL#hash или по умолчанию 'hero'
         const currentHash = window.location.hash || '#hero'; // По умолчанию #hero
         showSection(currentHash);
+        updateNavActiveState(currentHash);
     }
 
     // Обработчик для событий popstate (назад/вперед в браузере)
@@ -400,6 +492,96 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }
     });
+
+    // --- Competition Filtering Logic ---
+    const competitionsSection = document.getElementById('competitions');
+
+    // Убедимся, что мы на странице/секции соревнований, прежде чем выполнять код фильтрации
+    // (Если вы используете SPA, этот код может выполняться каждый раз при показе секции)
+    // Простой вариант: проверять наличие элемента, специфичного для секции
+    const filterTogglesContainer = competitionsSection?.querySelector('.filter-toggles');
+
+    if (filterTogglesContainer) { // Запускаем логику фильтров, только если они есть на странице
+        const filterButtons = filterTogglesContainer.querySelectorAll('.btn-filter');
+        const regionSelect = competitionsSection.querySelector('#region-filter');
+        const competitionItems = competitionsSection.querySelectorAll('.competition-item');
+        const monthGroups = competitionsSection.querySelectorAll('.competitions-month-group');
+
+        let currentTypeFilter = 'all'; // 'all', 'online', 'offline'
+        let currentRegionFilter = 'all'; // 'all', 'msk', 'spb', ...
+
+        // Функция для применения фильтров
+        function applyCompetitionFilters() {
+            // Обновляем состояние из активных элементов (на случай инициализации)
+            const activeTypeButton = filterTogglesContainer.querySelector('.btn-filter.active');
+            currentTypeFilter = activeTypeButton ? activeTypeButton.dataset.filter : 'all';
+            currentRegionFilter = regionSelect ? regionSelect.value : 'all';
+
+            competitionItems.forEach(item => {
+                const itemType = item.dataset.eventType || 'unknown';
+                const itemRegion = item.dataset.eventRegion || 'all';
+
+                // Проверка соответствия фильтрам
+                const typeMatch = (currentTypeFilter === 'all' || itemType === currentTypeFilter);
+                // Регион "all" совпадает с любым регионом фильтра 'all',
+                // также событие с регионом 'all' должно показываться для любого выбранного региона в фильтре (кроме случая когда тип - 'offline'?)
+                // Упрощенная логика: событие видно если регион совпадает ИЛИ фильтр 'all' ИЛИ регион события 'all'
+                // (Эта логика может потребовать уточнений под ваши бизнес-требования!)
+                const regionMatch = (currentRegionFilter === 'all' || itemRegion === currentRegionFilter || itemRegion === 'all');
+
+                // Показываем или скрываем элемент
+                if (typeMatch && regionMatch) {
+                    item.style.display = ''; // Показать (вернуть display по умолчанию)
+                } else {
+                    item.style.display = 'none'; // Скрыть
+                }
+            });
+
+            updateEmptyMonthMessages();
+        }
+
+        // Функция для обновления сообщений "Нет соревнований"
+        function updateEmptyMonthMessages() {
+            monthGroups.forEach(group => {
+                const visibleItems = group.querySelectorAll('.competition-item:not([style*="display: none"])'); // Ищем видимые элементы
+                const emptyMessage = group.querySelector('.competition-item-empty');
+
+                if (emptyMessage) {
+                    if (visibleItems.length > 0) {
+                        emptyMessage.style.display = 'none'; // Скрыть сообщение, если есть видимые события
+                    } else {
+                        emptyMessage.style.display = ''; // Показать сообщение, если видимых событий нет
+                    }
+                }
+            });
+        }
+
+        // Обработчики событий для кнопок типа (Онлайн/Офлайн)
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Убираем класс active со всех кнопок
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Добавляем класс active к нажатой кнопке
+                button.classList.add('active');
+                // Обновляем и применяем фильтры
+                applyCompetitionFilters();
+            });
+        });
+
+        // Обработчик событий для селекта региона
+        if (regionSelect) {
+            regionSelect.addEventListener('change', () => {
+                // Обновляем и применяем фильтры
+                applyCompetitionFilters();
+            });
+        }
+
+        // --- Инициализация ---
+        // Применить фильтры один раз при загрузке/показе секции
+        applyCompetitionFilters();
+
+    } // Конец if (filterTogglesContainer)
+
 
 }); // Конец DOMContentLoaded
 

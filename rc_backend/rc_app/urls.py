@@ -7,6 +7,8 @@ from .views.profile_views import ProfilesListView, ProfileDetailView, EditProfil
 app_name = "rc_app"
 urlpatterns = [
     path("", public.index, name="index"),
+    path("competition/<slug:slug>/", public.competitions_detail, name="competition-prod-cup-may"),
+    path("region/<slug:slug>/", public.regions_detail, name="regions"),
 
     path("competitions/", CompetitionListView.as_view(), name="competitions"),
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),

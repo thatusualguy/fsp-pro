@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ФСП PRO - Платформа для спортивного программирования</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'regions.css' %}">
+    <link rel="stylesheet" href="{% static 'region-details.css' %}">
+    <link rel="stylesheet" href="{% static 'competition_details.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
+</head>
+
+<body>
+<main>
+    <div class="backgroundImage"></div>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle" hidden>
+        <h2 id="mobileNavTitle" class="visually-hidden">Главное меню</h2> <!-- Hidden title for screen readers -->
+        <div class="mobile-nav-header">
+            <a href="#" class="logo">
+                <img src="{% static '/img/main_icon.svg' %}" alt=""> <!-- alt="" as text nearby describes it -->
+            </a>
+            <button class="nav-close-btn" id="closeNavBtn" aria-label="Закрыть меню">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"
+                     aria-hidden="true">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+        <nav class="mobile-nav-links">
+            <ul>
+                <li><a href="/app#about" class="nav-link">123О ФСП</a></li>
+                <li><a href="/app#regions" class="nav-link">Регионы</a></li>
+                <li><a href="/app#competitions" class="nav-link">Соревнования</a></li>
+            </ul>
+        </nav>
+        <div class="mobile-nav-auth">
+            <a href="#login" class="btn btn-secondary">Войти в личный кабинет</a>
+            <a href="#register" class="btn btn-primary">Зарегистрироваться</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <img src="{% static '/img/main_icon.svg' %}" alt="" loading="lazy"> <!-- alt="" -->
+            </a>
+            <nav class="desktop-nav" aria-label="Основная навигация">
+                <ul>
+                    <li><a href="/app#about" class="nav-link">О ФСП</a></li>
+                    <li><a href="/app#regions" class="nav-link">Регионы</a></li>
+                    <li><a href="/app#competitions" class="nav-link">Соревнования</a></li>
+                </ul>
+            </nav>
+            <div class="header-auth">
+                <a href="#login" class="btn btn-primary desktop-login-btn">Войти</a>
+            </div>
+            <button class="nav-toggle-btn" id="openNavBtn" aria-label="Открыть меню" aria-controls="mobileNav"
+                    aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24"
+                     aria-hidden="true">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="container region-details-page">
+
+        <!-- Region Header Row (остается как было) -->
+        <div class="region-details-header">
+            <img class="back-button" src="{% static '/icon/icon_back_arrow.svg' %}" alt="" loading="lazy"
+                 id="backToRegionsBtn">
+            <h1 class="region-details-title">СЗФО</h1>
+            <a href="#join-team" class="btn btn-secondary join-team-btn">Вступить в команду</a>
+        </div>
+
+        <div class="region-stats-grid">
+            <div class="stat-card">
+                <h2 class="stat-number">4</h2>
+                <span class="stat-label">В Сборной РФ</span>
+                <img class="stat-arrow" src="{% static '/icon/icon_arrow.svg' %}" alt="">
+            </div>
+            <div class="stat-card">
+                <h2 class="stat-number">4</h2>
+                <span class="stat-label">Мастера Спорта</span>
+                <img class="stat-arrow" src="{% static '/icon/icon_arrow.svg' %}" alt="">
+            </div>
+            <div class="stat-card">
+                <h2 class="stat-number">9</h2>
+                <span class="stat-label">КМС</span>
+                <img class="stat-arrow" src="{% static '/icon/icon_arrow.svg' %}" alt="">
+            </div>
+            <div class="stat-card stat-card--highlighted">
+                <h2 class="stat-number">3</h2>
+                <span class="stat-label">Мероприятия</span>
+                <img class="stat-arrow stat-arrow--large-diamond" src="{% static '/icon/icon_arrow.svg' %}" alt="">
+            </div>
+        </div>
+
+        <h2 class="subjects-list-title">Субъекты</h2>
+        <div class="subjects-list">
+            <div class="subject-item expandable" tabindex="0">
+                <div class="subject-item__header">
+                    <span class="subject-code">78</span>
+                    <span class="subject-name">Г. САНКТ-ПЕТЕРБУРГ</span>
+                    <span class="expand-indicator" aria-hidden="true">
+                               <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px"
+                                    fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path
+                                       d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                           </span>
+                </div>
+                <div class="subject-item__details">
+                    <div class="subject-contact-info">
+                        <img src="{% static '/img/placeholder_avatar.png' %}" alt="Фото Кувиков Денис"
+                             class="contact-photo">
+                        <div class="contact-text">
+                            <span class="contact-name">Кувиков Денис</span>
+                            <span class="contact-title">президент ФСП СПб</span>
+                        </div>
+                        <a href="mailto:saint-petersburg@fsp-russia.com" class="contact-email">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px"
+                                 fill="currentColor">
+                                <path d="M0 0h24v24H0V0z" fill="none"/>
+                                <path d="M22 4H2.01L2 20h20V4zm-2 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+                            </svg>
+                            saint-petersburg@fsp-russia.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="subject-item">
+                <div class="subject-item__header">
+                    <span class="subject-code">10</span>
+                    <span class="subject-name">Республика Карелия</span>
+                </div>
+            </div>
+
+            <div class="subject-item">
+                <div class="subject-item__header">
+                    <span class="subject-code">11</span>
+                    <span class="subject-name">Республика Коми</span>
+                </div>
+            </div>
+            <div class="subject-item">
+                <div class="subject-item__header">
+                    <span class="subject-code">29</span>
+                    <span class="subject-name">Архангельская область</span>
+                </div>
+            </div>
+            <div class="subject-item expandable" tabindex="0">
+                <div class="subject-item__header">
+                    <span class="subject-code">39</span>
+                    <span class="subject-name">Калининградская область</span>
+                    <span class="expand-indicator" aria-hidden="true">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px"
+                                     fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"/><path
+                                        d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                            </span>
+                </div>
+                <div class="subject-item__details">
+                    <div class="subject-contact-info">
+                        <img src="{% static '/img/placeholder_avatar.png' %}" alt="Placeholder"
+                             class="contact-photo">
+                        <div class="contact-text">
+                            <span class="contact-name">Председатель</span>
+                            <span class="contact-title">регионального отделения</span>
+                        </div>
+                        <a href="mailto:kaliningrad@fsp-russia.com" class="contact-email">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px"
+                                 fill="currentColor">
+                                <path d="M0 0h24v24H0V0z" fill="none"/>
+                                <path d="M22 4H2.01L2 20h20V4zm-2 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+                            </svg>
+                            kaliningrad@fsp-russia.com
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="subject-item">
+                <div class="subject-item__header">
+                    <span class="subject-code">47</span>
+                    <span class="subject-name">Ленинградская область</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+</body>
+
+<!-- Footer -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <a href="#" class="logo">
+            <img src="{% static '/img/main_icon.svg' %}" alt="" loading="lazy"> <!-- alt="" -->
+            <span class="copyright">©2025</span>
+        </a>
+        <div class="footer-right">
+            <a href="https://vk.com" target="_blank" rel="noopener noreferrer" aria-label="ФСП ВКонтакте">vk</a>
+            <a href="https://telegram.org" target="_blank" rel="noopener noreferrer" aria-label="ФСП в Telegram">tg</a>
+            <a href="tel:+74996780305">+7 (499) 678-03-05</a>
+            <a href="mailto:info@fsp-russia.ru">info@fsp-russia.ru</a>
+        </div>
+    </div>
+</footer>
+
+<style>.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}</style>
+
+<!-- ===== Login Modal ===== -->
+<div class="modal-overlay" id="loginModal" aria-modal="true" role="dialog" aria-labelledby="loginModalTitle" hidden>
+    <div class="modal-content">
+        <!-- Добавляем кнопку Назад для модального окна, особенно на мобильных -->
+
+
+        <!-- ** Используем ТУ ЖЕ Обертку для формы, что и на странице входа ** -->
+        <div class="login-form-wrapper modal-variant"> <!-- Добавлен класс modal-variant -->
+            <!-- Сама форма - идентичная структура -->
+            <form class="login-form" action="#" method="post">
+
+                <button class="modal-back-btn" aria-label="Назад">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24"
+                         height="24">
+                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                    </svg>
+                </button>
+                <!-- Скрытый заголовок для скринридеров, т.к. видимый в модалке есть выше-->
+                <h2 class="login-title" id="loginModalTitle">Вход</h2> <!-- Изменен для модалки, ID для aria -->
+
+                <div class="form-group">
+                    <label for="login-email-modal">Логин</label>
+                    <input type="email" id="login-email-modal" name="email" required value="123@mail.ru">
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password-modal">Пароль</label>
+                    <input type="password" id="login-password-modal" name="password" placeholder="Пароль" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary login-submit-btn">Войти</button>
+
+                <!-- Ссылки в футере для модалки -->
+                <div class="login-links-footer modal-variant"> <!-- Класс modal-variant -->
+                    <a href="#register" class="register-link">Нет аккаунта?</a>
+                    <a href="#forgot" class="forgot-password-link">Забыли пароль?</a>
+                </div>
+            </form>
+            <!-- Конец формы -->
+        </div>
+        <!-- ** Конец Обертки для формы ** -->
+    </div>
+</div>
+<!-- ===== End Login Modal ===== -->
+<script src="{% static 'script.js' %}"></script>
+</html>
