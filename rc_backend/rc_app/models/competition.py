@@ -1,6 +1,9 @@
 import uuid
+
 from django.db import models
+
 from .enums import CompetitionEnum, OnModerationStatus
+from .fsp import FSP
 
 
 class Competition(models.Model):
@@ -19,8 +22,8 @@ class Competition(models.Model):
     on_moderation = models.CharField(max_length=50, default=OnModerationStatus.PENDING)
     is_shown = models.BooleanField()
 
+    fsps = models.ManyToManyField(FSP)
+
     class Meta:
         verbose_name = 'Соревнование'
         verbose_name_plural = 'Соревнования'
-
-

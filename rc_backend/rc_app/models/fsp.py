@@ -2,8 +2,6 @@ import uuid
 
 from django.db import models
 
-from .competition import Competition
-
 
 # Define the StrEnum for status field
 
@@ -22,16 +20,3 @@ class FSP(models.Model):
     class Meta:
         verbose_name = 'Региональная ФСП'
         verbose_name_plural = 'Региональные ФСП'
-
-
-# FSPCompetition Model
-class FSPCompetition(models.Model):
-    fsp_id = models.ForeignKey(
-        FSP,
-        on_delete=models.CASCADE,
-        related_name='fsp_competitions'
-    )
-    competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ('fsp_id', 'competition_id')

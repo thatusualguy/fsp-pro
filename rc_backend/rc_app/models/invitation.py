@@ -3,8 +3,9 @@ import uuid
 
 from django.db import models
 
+from .competition import Competition
 from .enums import TeamInvitationEnum, InviteStatusEnum
-from .fsp import FSP, Competition
+from .fsp import FSP
 from .profile import Profile
 from .team import Team
 
@@ -24,7 +25,7 @@ class InviteCompetition(models.Model):
 
     def __str__(self):
         return f"Invite {self.id} - {self.status}"
-    
+
     class Meta:
         verbose_name = 'Приглашение соревнование'
         verbose_name_plural = 'Приглашения на соревнования'

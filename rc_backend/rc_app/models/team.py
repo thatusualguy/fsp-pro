@@ -7,12 +7,13 @@ from .enums import ModerationEnum
 from .profile import Profile
 
 
-
 class Team(models.Model):
     team_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
-    competition_id =  models.ForeignKey(Competition, on_delete=models.CASCADE)  # Можно заменить на ForeignKey, если есть модель Competition
-    leader_id = models.ForeignKey(Profile, on_delete=models.CASCADE)  # Можно заменить на ForeignKey, если есть модель User/Leader
+    competition_id = models.ForeignKey(Competition,
+                                       on_delete=models.CASCADE)  # Можно заменить на ForeignKey, если есть модель Competition
+    leader_id = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='leader_teams')
+    team_members = models.ManyToManyField(Profile, related_name='member_teams')
 
     moderation_status = models.CharField(
         max_length=20,
@@ -23,21 +24,10 @@ class Team(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     class Meta:
         verbose_name = 'Команда'
         verbose_name_plural = 'Команды'
-
-
-class TeamMember(models.Model):
-    team_id = models.ForeignKey(Team, on_delete=models.CASCADE)
-    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ('team_id', 'profile_id')  # составной первичный ключ
-
-    def __str__(self):
-        return f'Profile {self.profile_id} in Team {self.team_id}'
 
 
 class CompetitionResult(models.Model):
