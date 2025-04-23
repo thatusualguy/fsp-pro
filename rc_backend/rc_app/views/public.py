@@ -162,3 +162,6 @@ def regions_detail(request, slug):
 
 def login(request):
     return render(request, 'rc_app/login/login.html')
+
+def onboarding(request):
+    return render(request, 'rc_app/onboarding/onboarding.html')

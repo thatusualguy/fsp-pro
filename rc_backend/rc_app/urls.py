@@ -19,6 +19,8 @@ urlpatterns = [
     path('logout/', LogoutUser.as_view(), name='logout'),
     path('register/', RegisterUser.as_view(), name='register'),
 
+    path('onboarding/', public.onboarding, name='onboarding'),
+
     path("competitions/", CompetitionListView.as_view(), name="competitions"),
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),
 
