@@ -14,6 +14,12 @@ class CompetitionEnum(models.TextChoices):
     REJECTED = 'REJECTED', "Отказать"
 
 
+class CompetitionTypeEnum(models.TextChoices):
+    OPEN = "OPEN", "Открытые"
+    REGIONAL = "REGIONAL", "Региональные"
+    FEDERAL = "FEDERAL", "Всероссийские"
+
+
 class JoinRequestEnum(models.TextChoices):
     PENDING = "PENDING", "На модерации"
     APPROVED = "APPROVED", 'Принято'
@@ -28,6 +34,7 @@ class BaseStatusEnum(models.TextChoices):
 
 
 class OnModerationStatus(models.TextChoices):
+    NEW = "NEW", "Новое"
     PENDING = "PENDING", "На модерации"
     APPROVED = "APPROVED", 'Принято'
     REJECTED = "REJECTED", 'Отказать'
