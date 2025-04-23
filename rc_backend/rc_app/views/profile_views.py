@@ -14,8 +14,8 @@ class ProfilesListView(ListView):
 
 
 def combine_profile_data(profile):
-    teams_as_leader = Team.objects.filter(leader_id=profile.profile_id)
-    teams_as_member = Team.objects.filter(team_members__profile_id=profile.profile_id)
+    teams_as_leader = Team.objects.filter(leader=profile.profile)
+    teams_as_member = Team.objects.filter(team_members__profile=profile.profile)
 
     # Combine the teams
     all_teams = teams_as_leader | teams_as_member
