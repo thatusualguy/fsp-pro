@@ -1,5 +1,7 @@
 import uuid
+
 from django.db import models
+
 from rc_backend.rc_app.models.enums import DisciplineEnum
 
 
@@ -8,7 +10,8 @@ class Discipline(models.Model):
     discipline = models.CharField(
         max_length=100,
         choices=DisciplineEnum.choices,
-        verbose_name='Тип дисциплины'
+        verbose_name='Тип дисциплины',
+        unique=True,
     )
 
     def __str__(self):
