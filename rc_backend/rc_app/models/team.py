@@ -15,7 +15,6 @@ class Team(models.Model):
     leader = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='leader_teams')
     team_members = models.ManyToManyField(Profile, related_name='member_teams')
 
-
     moderation_status = models.CharField(
         max_length=20,
         choices=ModerationEnum.choices,

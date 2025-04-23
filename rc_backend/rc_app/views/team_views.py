@@ -1,6 +1,8 @@
 from pprint import pprint
 
 from annoying.functions import get_object_or_None
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView
 
 from rc_backend.rc_app.models import Team, Profile
@@ -29,7 +31,6 @@ class TeamDetailsView(DetailView):
         context['competition'] = competition
         context['region'] = leader_fsp
         context['competition_result'] = competition_result
-
         return context
 
 
@@ -45,6 +46,17 @@ class TeamUpdateView(UpdateView):
 
 class TeamDeleteView(DeleteView):
     model = Team
+
+    def dispatch(self, request, *args, **kwargs):
+        team = self.get_object()
+        # Get current user's profile
+        profile = get_object_or_404(Profile, user=request.user)
+        # Check if current user is the team leader
+        if team.leader_id != profile:
+            raise PermissionDenied("You do not have permission to delete this team.")
+
+        return super().dispatch(request, *args, **kwargs)
+
 
 
 ## MEMBER SEARCH

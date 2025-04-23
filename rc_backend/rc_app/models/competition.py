@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 
+from .discipline import Discipline
 from .enums import CompetitionEnum, OnModerationStatus, CompetitionTypeEnum
 from .fsp import FSP
 
@@ -31,7 +32,7 @@ class Competition(models.Model):
         verbose_name="На модерации"
     )
     is_shown = models.BooleanField()
-
+    discipline = models.ForeignKey(Discipline, on_delete=models.CASCADE)
     fsps = models.ManyToManyField(FSP)
 
     def __str__(self):

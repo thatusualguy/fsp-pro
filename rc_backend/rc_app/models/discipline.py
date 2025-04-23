@@ -1,0 +1,12 @@
+import uuid
+from django.db import models
+from rc_backend.rc_app.models.enums import DisciplineEnum
+
+
+class Discipline(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    discipline = models.CharField(
+        max_length=20,
+        choices=DisciplineEnum.choices,
+        verbose_name='Тип дисциплины'
+    )
