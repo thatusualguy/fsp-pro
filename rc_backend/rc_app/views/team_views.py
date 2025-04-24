@@ -3,7 +3,6 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied, ValidationError
-from django.db.models import Q
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -12,9 +11,8 @@ from django.views import View
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
-from rc_backend.rc_app.models.enums import JoinRequestEnum, CompetitionTypeEnum, ModerationEnum
 from rc_backend.rc_app.models.enums import JoinRequestEnum, CompetitionTypeEnum
-from rc_backend.rc_app.models.invitation import TeamInvitation
+from rc_backend.rc_app.models.enums import ModerationEnum
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
@@ -90,6 +88,10 @@ class TeamCreateForm(forms.ModelForm):
         if not is_create:
             # Если идёт редактирование, делаем поле названия только для чтения (например, нельзя менять)
             self.fields['title'].disabled = True
+
+        if competition and competition.max_participants == 1:
+            # Disable invitees field for single-member competitions
+            self.fields['invitees'].disabled = True
 
         # Ограничить доступные для приглашения пользователей одной областью (FSP)
         if leader:
@@ -322,13 +324,17 @@ class MemberSearchCreateView(CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         ms: MemberSearch = self.get_object()
-        # Get current user's profile
-        profile = get_object_or_404(Profile, user=self.request.user)
         team: Team = ms.team
+        profile = get_object_or_404(Profile, user=self.request.user)
 
         # Check if current user is the team leader
         if team.leader != profile:
             raise PermissionDenied("You do not have permission to create member search.")
+
+        # Prevent member search creation if competition max team size is 1
+        if team.competition.max_participants == 1:
+            raise PermissionDenied("Cannot create member searches for competitions with max team size of 1.")
+
         return super().dispatch(request, *args, **kwargs)
 
 

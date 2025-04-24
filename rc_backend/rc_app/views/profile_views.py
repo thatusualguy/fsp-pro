@@ -125,6 +125,15 @@ class AcceptInvitationView(LoginRequiredMixin, View):
     def post(self, request, invitation_id):
         invitation = get_object_or_404(TeamInvitation, id=invitation_id)
 
+        # Check team size limit before accepting the invitation
+        team = invitation.inviter_team
+        competition = team.competition
+        current_team_size = team.team_members.count() + 1  # +1 for leader
+        max_team_size = competition.max_participants
+
+        if current_team_size >= max_team_size:
+            return HttpResponseForbidden("Cannot accept invitation. Team size limit reached.")
+
         # Ensure the current user is the invitee
         if invitation.invitee != request.user.profile:
             return HttpResponseForbidden("You are not authorized to accept this invitation.")
@@ -161,6 +170,15 @@ class DeclineInvitationView(LoginRequiredMixin, View):
 class AcceptJoinRequestView(LoginRequiredMixin, View):
     def post(self, request, request_id):
         join_request = get_object_or_404(JoinRequest, id=request_id)
+
+        # Check team size limit before accepting the join request
+        team = join_request.team
+        competition = team.competition
+        current_team_size = team.team_members.count() + 1  # +1 for leader
+        max_team_size = competition.max_participants
+
+        if current_team_size >= max_team_size:
+            return HttpResponseForbidden("Cannot accept join request. Team size limit reached.")
 
         # Ensure the current user is the leader of the team
         if join_request.team.leader != request.user.profile:
