@@ -16,3 +16,7 @@ class Discipline(models.Model):
 
     def __str__(self):
         return self.discipline
+
+    class Meta:
+        verbose_name = "Дисциплина"
+        verbose_name_plural = "Дисциплины"

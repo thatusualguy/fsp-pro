@@ -48,7 +48,11 @@ class CompetitionResult(models.Model):
     team = models.OneToOneField(Team, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'Result {self.id} - Place {self.place}'
+        return f'Результат {self.id} - Place {self.place}'
+    
+    class Meta:
+        verbose_name = "Результат соревнования"
+        verbose_name_plural = "Результаты соревнования"
 
 
 class MemberSearch(models.Model):

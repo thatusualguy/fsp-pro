@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-import logging
 
 from rc_backend.rc_app.models import Competition
 from rc_backend.rc_app.models import CompetitionResult
@@ -12,14 +11,27 @@ from rc_backend.rc_app.models import Team
 from rc_backend.rc_app.models import OnModerationStatus
 from rc_backend.rc_app.models import Discipline
 
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
 
 # Register your models here.
+class CompetitionResultResourse(resources.ModelResource):
+    class Meta:
+        model = CompetitionResult
 
-class CompetitionResultAdmin(admin.ModelAdmin):
-    pass
+
+class CompetitionResultAdmin(ImportExportModelAdmin):
+    list_display = ("team__competition__title", 'team', "place", "points")
+    list_filter = ("team", "team__competition__title", "place", "points")
+    search_fields = ("team", 'team__competition__title')
+    resource_classes = [CompetitionResultResourse]
 
 
-class CompetitionAdmin(admin.ModelAdmin):
+class CompetitionResourse(resources.ModelResource):
+    class Meta:
+        model = Competition
+
+class CompetitionAdmin(ImportExportModelAdmin):
     list_display = ('title', 'start_date', 'finish_date', 'place', 'on_moderation', 'competition_type', 'get_fsps')
     list_filter = ('fsps', 'on_moderation')
     search_fields = ("title", 'place')
@@ -46,16 +58,26 @@ class CompetitionAdmin(admin.ModelAdmin):
             return super().get_readonly_fields(request, obj)
         return ('on_moderation', )
 
+class ProfileResource(resources.ModelResource):
+    class Meta:
+        model = Profile
+
+class ProfileAdmin(ImportExportModelAdmin):
+    list_display = ("__str__", "email", "fsp")
+    search_fields = ("__str__", "email")
+    list_filter = ("fsp", )
+    resource_classes = [ProfileResource]
 
 
-class ProfileAdmin(admin.ModelAdmin):
-    pass
+class TeamResource(resources.ModelResource):
+    class Meta:
+        model = Team
 
-
-class TeamAdmin(admin.ModelAdmin):
+class TeamAdmin(ImportExportModelAdmin):
     list_display = ('id', 'title', 'competition', 'leader', 'get_team_members', 'moderation_status')
     list_filter = ('competition',)
     search_fields = ("title", 'get_team_members', 'competition')
+    resource_classes = [TeamResource]
 
 
 class FSPAdmin(admin.ModelAdmin):
@@ -101,7 +123,7 @@ class ModerationCompetitionAdmin(admin.ModelAdmin):
 
 
 class DisciplineAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("discipline", )
 
 
 admin.site.register(Competition, CompetitionAdmin)
