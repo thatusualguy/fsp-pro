@@ -45,6 +45,7 @@ urlpatterns = [
     path("team/<uuid:pk>/delete", TeamDeleteView.as_view(), name="team_details_delete"),
     path("competitions/<uuid:competition_id>/new_team", TeamCreateView.as_view(), name="team_details_new"),
     path("team/<uuid:team_id>/disband", DisbandTeamView.as_view(), name="team_disband"),
+    path("team/<uuid:team_id>/leave", TeamLeaveView.as_view(), name="team_leave"),
 
     path("team/<uuid:pk>/request", MemberSearchDetailView.as_view(), name="member_search_details"),
     path("team/<uuid:pk>/request/edit", MemberSearchUpdateView.as_view(), name="member_search_edit"),
