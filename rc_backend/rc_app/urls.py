@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import public
+from .views import public, team_views
 from .views.auth import LoginUser, LogoutUser, RegisterUser
 from .views.competition_views import *
 from .views.profile_views import ProfilesListView, ProfileDetailView, ProfileUpdateView, PendingTeamInvitationsListView, \
@@ -46,6 +46,8 @@ urlpatterns = [
     path("competitions/<uuid:competition_id>/new_team", TeamCreateView.as_view(), name="team_details_new"),
     path("team/<uuid:team_id>/disband", DisbandTeamView.as_view(), name="team_disband"),
     path("team/<uuid:team_id>/leave", TeamLeaveView.as_view(), name="team_leave"),
+
+    path('team/<uuid:team_id>/send_to_moderation/', team_views.send_team_to_moderation, name='send_team_to_moderation'),
 
     path("team/<uuid:pk>/request", MemberSearchDetailView.as_view(), name="member_search_details"),
     path("team/<uuid:pk>/request/edit", MemberSearchUpdateView.as_view(), name="member_search_edit"),
