@@ -1,7 +1,7 @@
 from annoying.functions import get_object_or_None
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -50,13 +50,28 @@ class TeamCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         leader = kwargs.pop('leader', None)
+        user = kwargs.pop('user', None)
         competition = kwargs.pop('competition', None)
         super().__init__(*args, **kwargs)
+
+        if user != leader:
+            raise PermissionDenied
+
+        if self.instance and self.instance.pk:
+            # If the form is being used to edit an existing team, make the title field read-only
+            self.fields['title'].disabled = True
+
         if leader:
             # Filter invitees to only include profiles from the same region as the leader
             self.fields['invitees'].queryset = Profile.objects.filter(fsp=leader.fsp).filter(~Q(id=leader.id))
         else:
             raise PermissionDenied
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if Team.objects.filter(title=title).exists():
+            raise ValidationError("A team with this title already exists.")
+        return title
 
 
 class TeamCreateView(LoginRequiredMixin, FormView):
@@ -68,6 +83,7 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         # Pass the leader to the form
         competition_id = self.kwargs.get('competition_id')
         kwargs['leader'] = self.request.user.profile
+        kwargs['user'] = self.request.user.profile
         kwargs['competition'] = get_object_or_404(Competition, id=competition_id)
         return kwargs
 
