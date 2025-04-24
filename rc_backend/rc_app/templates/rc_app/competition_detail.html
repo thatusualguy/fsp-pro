@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{% static 'competition_details.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
 </head>
 
@@ -70,6 +71,14 @@
             </button>
         </div>
     </header>
+
+    <div class="mt-4">
+        <a href="{% url 'rc_app:competition_teams_list' competition.id %}" class="btn btn-primary">View
+            Teams</a>
+        <a href="{% url 'rc_app:team_details_new' competition.id %}" class="btn btn-success">Create Team</a>
+        <a href="{% url 'rc_app:member_searches' competition.id %}" class="btn btn-info">View Member
+            Searches</a>
+    </div>
 
     <div class="container competition-details-page"> {# Добавляем класс для страницы и общий контейнер #}
         <!-- Header: Back Button & Title -->
@@ -246,6 +255,9 @@
 </div>
 
 <script src="{% static 'script.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 </html>

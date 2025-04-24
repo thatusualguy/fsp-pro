@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, DetailView
 
-from rc_backend.rc_app.models import Competition
+from rc_backend.rc_app.models import Competition, Team
 from rc_backend.rc_app.models.discipline import Discipline
 
 
@@ -205,3 +205,18 @@ class CompetitionDetailView(DetailView):
         discipline = Competition.discipline
         context["discipline"] = discipline
         return context
+
+
+class TeamsForCompetitionListView(ListView):
+    model = Team
+    template_name = 'rc_app/team_list.html'
+
+    def get_queryset(self):
+        competition_id = self.kwargs.get('competition_id')
+        competition = get_object_or_404(Competition, id=competition_id)
+        teams = Team.objects.filter(competition=competition)
+        pprint(competition)
+        pprint(teams)
+        pprint(teams[0].team_members.all())
+        pprint(teams[0].competitionresult)
+        return teams
