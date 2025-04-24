@@ -40,8 +40,10 @@ def combine_profile_data(profile):
         'competition_results': [
             {
                 'result_id': str(result.id),
-                'competition_id': str(result.team.competition),
+                'competition_id': str(result.team.competition.id),
+                'competition_name': str(result.team.competition.title),
                 'team_id': str(result.team.id),
+                'team_title': str(result.team.title),
                 'points': result.points,
                 'place': result.place
             } for result in competition_results if result is not None
@@ -65,6 +67,15 @@ class MyProfileDetailView(DetailView):
         # Return the profile of the currently logged-in user
         return self.request.user.profile
 
+    def get_context_data(self, *args, **kwargs):
+        self.object = self.get_object()
+        context = super().get_context_data(**kwargs)
+        profile = self.get_object()
+        data = combine_profile_data(profile)
+        context["data"] = data
+        pprint(context)
+        return context
+
 
 class ProfileDetailView(DetailView):
     model = Profile
@@ -75,6 +86,7 @@ class ProfileDetailView(DetailView):
         profile = self.get_object()
         data = combine_profile_data(profile)
         context["data"] = data
+        pprint(context)
         return context
         # return render(request, self.template_name, context)
 
