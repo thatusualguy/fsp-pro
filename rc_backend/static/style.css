@@ -6,7 +6,19 @@
     font-family: var(--font-family), sans-serif;
 }
 
-.backgroundImage {
+body { /* Или .page-wrapper */
+    display: flex; /* Включаем Flexbox */
+    flex-direction: column; /* Располагаем элементы в колонку (header, main, footer) */
+    min-height: 100vh; /* Минимальная высота равна высоте видимой области экрана */
+    margin: 0; /* Убираем отступы по умолчанию у body */
+}
+
+main { /* Или .main-content-area */
+    flex-grow: 1; /* Разрешаем этому блоку растягиваться и занимать всё доступное пространство */
+    /* или сокращенно: flex: 1; */
+}
+
+.backgroundImageLogin {
     position: absolute;
     top: 0;
     right: 0;
@@ -19,6 +31,22 @@
     animation: pulse 6s infinite ease-in-out;
 }
 
+.backgroundImage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    background-image: url(./img/background_main.svg);
+    background-size: cover; /* Растягивает изображение, сохраняя пропорции, обрезая излишки */
+    background-position: center; /* Центрирует изображение */
+    background-repeat: no-repeat; /* Отключает повторение фона */
+    /*opacity: 0.8;*/
+    z-index: -4;
+    animation: pulse 6s infinite ease-in-out;
+}
+
 .background-icon {
     position: absolute;
     top: -10vh;
@@ -26,7 +54,7 @@
     width: 58.32425rem;
     height: 55.86331rem;
     background-image: url(./img/background_items.svg);
-    z-index: -2;
+    z-index: -3;
     display: none; /* По умолчанию иконка скрыта */
     opacity: 0;    /* Добавляем opacity для плавности */
     transition: opacity 0.5s ease-in-out; /* Плавный переход */

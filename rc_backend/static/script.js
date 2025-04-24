@@ -68,8 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Динамически обновляем высоту SVG, чтобы соответствовать высоте контента
 function updateSvgHeight() {
-    const svgContainer = document.querySelector('.backgroundImage');
     const bodyHeight = document.body.scrollHeight;
+    console.log(bodyHeight);
+    const svgContainer = document.querySelector('.backgroundImage');
     svgContainer.style.height = `${bodyHeight}px`;
 }
 
@@ -77,7 +78,6 @@ window.addEventListener('resize', updateSvgHeight);
 window.addEventListener('load', updateSvgHeight);
 
 document.addEventListener('DOMContentLoaded', () => {
-
     // --- Навигация SPA ---
 
     const backgroundIcons = document.querySelectorAll('.background-icon');
@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeNavBtn = document.getElementById('closeNavBtn'); // Кнопка закрытия моб. меню
 
     function showSection(sectionId) {
+        updateSvgHeight();
         // Нормализуем ID (убираем #)
         const targetId = sectionId.startsWith('#') ? sectionId.substring(1) : sectionId;
         if (!targetId) return; // Выходим, если ID пустой
@@ -265,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentHash = window.location.hash || '#hero'; // По умолчанию #hero
         showSection(currentHash);
         updateNavActiveState(currentHash);
+        updateSvgHeight();
     }
 
     // Обработчик для событий popstate (назад/вперед в браузере)
@@ -612,3 +614,40 @@ backButton?.addEventListener('click', () => {
     // showSection('#regions'); // Ваша функция показа секции
     // history.pushState(null, '', '#regions'); // Обновить URL, если нужно
 });
+
+function debounce(func, wait) {
+  let timeout;
+  return function() {
+    const context = this;
+    const args = arguments;
+    const later = function() {
+      timeout = null; // Очищаем ID таймера
+      func.apply(context, args); // Выполняем исходную функцию
+    };
+    clearTimeout(timeout); // Сбрасываем предыдущий таймер, если он был
+    timeout = setTimeout(later, wait); // Устанавливаем новый таймер
+  };
+}
+
+
+function throttle(func, limit) {
+  let inThrottle;
+  let lastResult;
+  return function() {
+    const context = this;
+      if (!inThrottle) {
+      // Вызываем функцию сразу при первом событии в цикле
+      lastResult = func.apply(context, arguments);
+      inThrottle = true;
+      // Устанавливаем таймаут, чтобы снова разрешить вызов через limit мс
+      setTimeout(() => inThrottle = false, limit);
+    }
+    // Возвращаем результат последнего удачного вызова
+    return lastResult;
+  }
+}
+
+// Добавляем throttled-обработчик
+// Будет выполняться не чаще одного раза каждые 150 мс
+const throttledScrollHandler = debounce(updateSvgHeight, 150);
+window.addEventListener('scroll', throttledScrollHandler);

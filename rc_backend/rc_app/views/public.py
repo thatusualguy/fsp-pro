@@ -222,6 +222,7 @@ class PublicCompetitionsDetailView(DetailView):
     template_name = "rc_app/public/competitions_detail.html"
 
 
+
 class PublicRegionsDetailView(DetailView):
     model = FSP
     template_name = "rc_app/public/regions_detail.html"
