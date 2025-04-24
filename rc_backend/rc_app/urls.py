@@ -21,6 +21,8 @@ urlpatterns = [
 
     path("competitions/", CompetitionListView.as_view(), name="competitions"),
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),
+    path("competitions/<uuid:competition_id>/teams", TeamsForCompetitionListView.as_view(),
+         name="competition_teams_list"),
 
     path("profiles/", ProfilesListView.as_view(), name="profiles"),
     path("profiles/<uuid:pk>/", ProfileDetailView.as_view(), name="profile_detail"),
