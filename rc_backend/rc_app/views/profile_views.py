@@ -117,6 +117,10 @@ class AcceptInvitationView(LoginRequiredMixin, View):
         if invitation.invitee != request.user.profile:
             return HttpResponseForbidden("You are not authorized to accept this invitation.")
 
+        # Ensure the invitee is from the same FSP as the leader
+        if invitation.invitee.fsp != invitation.inviter_team.leader.fsp:
+            return HttpResponseForbidden("Invitee must be from the same FSP as the team leader.")
+
         # Update the invitation status and add the user to the team
         invitation.invitation_status = 'ACCEPTED'
         invitation.save()
@@ -149,6 +153,10 @@ class AcceptJoinRequestView(LoginRequiredMixin, View):
         # Ensure the current user is the leader of the team
         if join_request.team.leader != request.user.profile:
             return HttpResponseForbidden("You are not authorized to accept this join request.")
+
+        # Ensure the invitee is from the same FSP as the leader
+        if join_request.profile.fsp != join_request.team.leader.fsp:
+            return HttpResponseForbidden("Must be from the same FSP as the team leader.")
 
         # Update the join request status and add the user to the team
         join_request.join_status = 'ACCEPTED'
