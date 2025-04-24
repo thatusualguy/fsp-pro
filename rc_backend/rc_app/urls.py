@@ -25,6 +25,9 @@ urlpatterns = [
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),
     path("competitions/<uuid:competition_id>/teams", TeamsForCompetitionListView.as_view(),
          name="competition_teams_list"),
+    path("competitions/<uuid:competition_id>/member_search", MemberSearchListView.as_view(), name="competition_ms"),
+
+    path('apply_for_position/<uuid:search_id>/', ApplyForPositionView.as_view(), name='apply_for_position'),
 
     path("profile/", MyProfileDetailView.as_view(), name="profile"),
     path("profiles/", ProfilesListView.as_view(), name="profiles"),
@@ -39,6 +42,7 @@ urlpatterns = [
     path("team/<uuid:pk>/edit", TeamUpdateView.as_view(), name="team_details_update"),
     path("team/<uuid:pk>/delete", TeamDeleteView.as_view(), name="team_details_delete"),
     path("competitions/<uuid:competition_id>/new_team", TeamCreateView.as_view(), name="team_details_new"),
+    path("team/<uuid:team_id>/disband", DisbandTeamView.as_view(), name="team_disband"),
 
     path("team/<uuid:pk>/request", MemberSearchDetailView.as_view(), name="member_search_details"),
     path("team/<uuid:pk>/request/edit", MemberSearchUpdateView.as_view(), name="member_search_edit"),
@@ -53,8 +57,6 @@ urlpatterns = [
     path('accept_join_request/<uuid:request_id>/', AcceptJoinRequestView.as_view(), name='accept_join_request'),
     path('decline_join_request/<uuid:request_id>/', DeclineJoinRequestView.as_view(), name='decline_join_request'),
 
-    path("competitions/<uuid:competition_id>/member_searches", MemberSearchListView.as_view(),
-         name="member_searches"),
     # path("competitions/<uuid:competition_id>/member_searches/<uuid:team_id>/new",
     #      WannabePendingJoinRequestCreateView.as_view(),
     #      name="join_request_new"),
