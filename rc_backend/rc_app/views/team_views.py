@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
+from rc_backend.rc_app.models.enums import JoinRequestEnum
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
@@ -263,16 +264,27 @@ class WannabePendingJoinRequestDeleteView(DeleteView):
 class LeaderPendingJoinRequestsListView(ListView):
     """request that other people have sent to my team"""
     model = JoinRequest
+    template_name = 'rc_app/leader_join_requests_list.html'
+    context_object_name = 'join_requests'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        team_id = kwargs.get("team_id")
-        team = Team.objects.get(id=team_id)
-        requests = JoinRequest.objects.filter(
-            team=team
-        )
-        context['join_requests'] = requests
-        return context
+    def get_queryset(self):
+        # Get the current user's profile
+        profile = self.request.user.profile
+
+        # Filter join requests for teams where the current user is the leader
+        return (JoinRequest.objects
+                .filter(team__leader=profile)
+                .filter(join_status=JoinRequestEnum.PENDING))
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     team_id = kwargs.get("team_id")
+    #     team = Team.objects.get(id=team_id)
+    #     requests = JoinRequest.objects.filter(
+    #         team=team
+    #     )
+    #     context['join_requests'] = requests
+    #     return context
 
 
 class LeaderPendingJoinRequestUpdateView(UpdateView):

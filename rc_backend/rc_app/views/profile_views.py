@@ -10,6 +10,7 @@ from django.views.generic import ListView, DetailView, UpdateView
 from rc_backend.rc_app.models import Team, Competition, CompetitionResult, FSP
 from rc_backend.rc_app.models.enums import TeamInvitationEnum
 from rc_backend.rc_app.models.invitation import TeamInvitation
+from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.profile import Profile
 
 
@@ -139,3 +140,36 @@ class DeclineInvitationView(LoginRequiredMixin, View):
         invitation.save()
 
         return redirect('rc_app:profile_my_invites')
+
+
+class AcceptJoinRequestView(LoginRequiredMixin, View):
+    def post(self, request, request_id):
+        join_request = get_object_or_404(JoinRequest, id=request_id)
+
+        # Ensure the current user is the leader of the team
+        if join_request.team.leader != request.user.profile:
+            return HttpResponseForbidden("You are not authorized to accept this join request.")
+
+        # Update the join request status and add the user to the team
+        join_request.join_status = 'ACCEPTED'
+        join_request.save()
+
+        # Add the requester to the team members
+        join_request.team.team_members.add(join_request.profile)
+
+        return redirect('rc_app:leader_pending_join_update')
+
+
+class DeclineJoinRequestView(LoginRequiredMixin, View):
+    def post(self, request, request_id):
+        join_request = get_object_or_404(JoinRequest, id=request_id)
+
+        # Ensure the current user is the leader of the team
+        if join_request.team.leader != request.user.profile:
+            return HttpResponseForbidden("You are not authorized to decline this join request.")
+
+        # Update the join request status
+        join_request.join_status = 'DECLINED'
+        join_request.save()
+
+        return redirect('rc_app:leader_pending_join_update')
