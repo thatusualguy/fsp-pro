@@ -18,7 +18,7 @@ class Team(models.Model):
     moderation_status = models.CharField(
         max_length=20,
         choices=ModerationEnum.choices,
-        default=ModerationEnum.PENDING,
+        default=ModerationEnum.NOT_SENT,
         verbose_name='Статус модерации'
     )
 

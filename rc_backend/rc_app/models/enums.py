@@ -46,6 +46,7 @@ class InviteStatusEnum(models.TextChoices):
 
 
 class ModerationEnum(models.TextChoices):
+    NOT_SENT = "NOT_SENT", "Не отправлено"
     PENDING = "PENDING", "На модерации"
     APPROVED = "APPROVED", 'Принято'
     REJECTED = "REJECTED", 'Отказать'
