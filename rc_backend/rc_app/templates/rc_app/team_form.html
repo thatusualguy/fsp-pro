@@ -24,6 +24,24 @@
         /* =========================================== */
         /* === STYLES FROM YOUR PROVIDED base.html === */
         /* =========================================== */
+        .select2 {
+            background-color: #00A86B;
+        }
+        .select2-results__option {
+            color: #222;
+        }
+
+        /* Цвет фона при наведении и выборе */
+        .select2-results__option--highlighted {
+            background-color: #007bff !important;
+            color: #fff !important;
+        }
+
+        /* Выбранный элемент (в мультиселекте) */
+        .select2-selection__choice {
+            background: #007bff !important;
+            color: #fff !important;
+        }
 
         /* Define variables if not in style.css */
         :root {
@@ -732,7 +750,7 @@
                     <!-- Team Composition (Search & Add) -->
                     <div class="form-group-custom position-relative">
                         <label for="id_invitees">Invite Members</label>
-                        <select id="id_invitees" name="invitees" class="form-control" multiple="multiple">
+                        <select id="id_invitees" name="invitees" class="form-control select2 select2-results__option" multiple="multiple">
                             {% for member in form.fields.invitees.queryset %}
                             <option value="{{ member.id }}">{{ member.name }}</option>
                             {% endfor %}
@@ -776,7 +794,8 @@
                     </div>
 
                     <div class="radio-group-item">
-                        <input class="custom-radio-input" type="checkbox" id="option1" name="my_radio_group" value="value1">
+                        <input class="custom-radio-input" type="checkbox" id="option1" name="my_radio_group"
+                               value="value1">
                         <label class="custom-radio-label" for="option1">
                             <span class="custom-radio-button"></span> <!-- Визуальная замена -->
                             Вариант первый
@@ -822,21 +841,18 @@
 <!-- Custom Page JS (For Form Logic) -->
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
-<script>
-    // $(document).ready(function () {
-    //     $('#id_invitees').select2({
-    //         placeholder: "Select members",
-    //         maximumSelectionLength: {
-    //     {
-    //         competition.max_participants
-    //     }
-    // }
-    // });
-    // });
-</script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.jQuery && $('#id_invitees').length && typeof $('#id_invitees').select2 === 'function') {
+            $('#id_invitees').select2({
+                placeholder: 'Выберите участников',
+                width: '100%',
+            });
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function () {
 
         // --- Image Preview Logic ---

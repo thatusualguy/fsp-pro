@@ -56,13 +56,13 @@ main { /* Или .main-content-area */
     background-image: url(./img/background_items.svg);
     z-index: -3;
     display: none; /* По умолчанию иконка скрыта */
-    opacity: 0;    /* Добавляем opacity для плавности */
+    opacity: 0; /* Добавляем opacity для плавности */
     transition: opacity 0.5s ease-in-out; /* Плавный переход */
 }
 
 body.section-active-about .background-icon {
     display: block; /* Показываем блок (или другое display, если нужно) */
-    opacity: 1;    /* Делаем видимым */
+    opacity: 1; /* Делаем видимым */
 }
 
 :root {
@@ -275,7 +275,7 @@ p {
 .desktop-nav a:hover,
 .desktop-nav a:focus-visible { /* При наведении/фокусе */
     color: var(--text-color);
-     /*outline: none; !* Можно убрать outline если есть кастомный фокус *!*/
+    /*outline: none; !* Можно убрать outline если есть кастомный фокус *!*/
 }
 
 .desktop-nav a.active {
@@ -369,8 +369,10 @@ p {
 
 .mobile-nav-links ul {
     list-style: none;
-    padding: 0; margin: 0;
+    padding: 0;
+    margin: 0;
 }
+
 .mobile-nav-links li {
     margin-bottom: 25px;
 }
@@ -383,10 +385,11 @@ p {
     display: inline-block;
     padding: 5px;
 }
+
 .mobile-nav-links a:hover,
 .mobile-nav-links a:focus-visible {
-     color: var(--primary-color);
-     outline: none;
+    color: var(--primary-color);
+    outline: none;
 }
 
 /* Активная ссылка в мобильном меню (обычно достаточно цвета) */
@@ -1144,9 +1147,11 @@ p {
 .competition-badge.type-online {
     background-color: var(--primary-color); /* Синий */
 }
+
 .competition-badge.type-offline {
     background-color: #8A94A6; /* Серый */
 }
+
 .competition-badge.status-soon {
     background-color: #FFA500; /* Оранжевый */
 }
@@ -1197,16 +1202,20 @@ p {
     .competition-info-line {
         /* flex-wrap: wrap; уже есть */
     }
+
     .competition-title {
         font-size: 0.9rem; /* Как было */
     }
+
     .competition-badge {
         font-size: 0.7rem;
         padding: 3px 8px;
     }
+
     .competition-arrow {
         margin: auto 15px auto 10px; /* Как было */
     }
+
     .competitions-main-title {
         font-size: 2rem; /* Уменьшаем H1 на мобильных */
     }
@@ -1286,6 +1295,7 @@ p {
         display: none; /* Можно скрыть стрелку на очень маленьких экранах */
     }
 }
+
 /* =====================
    Login Form Styles (Общие)
    ===================== */
@@ -1313,6 +1323,7 @@ p {
     border: none;
     backdrop-filter: none;
 }
+
 /* А вот сама форма внутри модалки получает стиль обертки */
 .modal-content {
     background-color: rgba(26, 26, 46, 0.9); /* Фон для контента модалки */
@@ -1375,6 +1386,7 @@ p {
     outline: none; /* Убираем стандартный outline */
     box-shadow: 0 0 0 3px rgba(74, 74, 255, 0.3); /* Focus glow */
 }
+
 /* Стиль для плейсхолдера */
 .form-group input::placeholder {
     color: var(--text-muted-color);
@@ -1389,6 +1401,7 @@ p {
     background: var(--Blue, #402FFF); /* Новый синий цвет */
     border: none;
 }
+
 .login-submit-btn:hover {
     background: var(--hover-primary);
     transform: translateY(-2px);
@@ -1400,6 +1413,7 @@ p {
     margin-top: 15px;
     font-size: 0.9rem;
 }
+
 .login-links-footer.modal-variant {
     justify-content: space-between; /* Разделение ссылок в модалке */
 }
@@ -1410,6 +1424,7 @@ p {
     transition: color 0.3s ease;
     margin: 0 10px; /* Небольшие отступы */
 }
+
 .login-links-footer a:hover {
     color: var(--text-color);
 }
@@ -1454,12 +1469,15 @@ p {
     padding: 5px;
     transition: color 0.3s ease;
 }
+
 .modal-close-btn:hover, .modal-back-btn:hover {
     color: var(--text-color);
 }
+
 .modal-close-btn {
     right: 15px; /* Закрыть справа */
 }
+
 .modal-back-btn {
     top: 0; /* Назад слева */
     /* По умолчанию скрываем на десктопе, показываем на мобильных */
@@ -1473,6 +1491,7 @@ p {
         padding: 30px 25px; /* Уменьшаем паддинги на мобилке */
         width: 95%; /* Еще чуть шире */
     }
+
     /* Показываем кнопку "Назад" в модалке на мобильных */
     /* Скрываем кнопку "Закрыть (X)" на мобильных, если есть "Назад" */
     .modal-close-btn {
@@ -1485,13 +1504,16 @@ p {
         align-items: center;
         gap: 10px;
     }
+
     .login-links-footer.modal-variant a {
         margin: 0;
     }
+
     /* Отступы формы в модалке на мобилке */
     .modal-variant .login-form {
         gap: 15px;
     }
+
     .modal-variant .login-title {
         font-size: 1.6rem;
         margin-bottom: 10px;

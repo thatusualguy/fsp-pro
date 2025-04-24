@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* --- Стили для базового макета приложения --- */
         body {
@@ -178,7 +179,8 @@
 <body>
 
 <!-- Mobile Sidebar (Hidden by default) -->
-<aside id="mobileSidebar" class="mobile-sidebar" role="dialog" aria-modal="true" aria-labelledby="mobileSidebarTitle" hidden>
+<aside id="mobileSidebar" class="mobile-sidebar" role="dialog" aria-modal="true" aria-labelledby="mobileSidebarTitle"
+       hidden>
     <div class="mobile-sidebar-header">
         <a href="/" class="mobile-sidebar-logo logo">
             <img src="{% static 'img/main_icon.svg' %}" alt="Логотип ФСП PRO">
@@ -196,34 +198,43 @@
         <ul>
             {# Активный класс здесь нужно будет выставлять так же, как для десктопного меню #}
             <li><a href="#" class="">
-                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
                 Команда</a></li>
             <li><a href="#" class="{% block nav_docs_active %}{% endblock %}">
-                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
                 Документы</a></li>
-             {# Пример пункта с подменю #}
+            {# Пример пункта с подменю #}
             <li class="has-submenu"> {# Добавлен класс для JS #}
-                 <a href="" class="{% block nav_comps_active %}{% endblock %}">
-                     <svg fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                     Соревнования
-                     <svg class="submenu-arrow" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M7 10l5 5 5-5H7z"/></svg>
-                 </a>
-                 {# Скрытое подменю #}
-                 <ul class="submenu">
-                     <li><a href="#">Предстоящие</a></li>
-                     <li><a href="#">Архив</a></li>
-                     <li><a href="#">Мои заявки</a></li>
-                 </ul>
+                <a href="" class="{% block nav_comps_active %}{% endblock %}">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Соревнования
+                    <svg class="submenu-arrow" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24"
+                         width="20px" fill="currentColor">
+                        <path d="M7 10l5 5 5-5H7z"/>
+                    </svg>
+                </a>
+                {# Скрытое подменю #}
+                <ul class="submenu">
+                    <li><a href="#">Предстоящие</a></li>
+                    <li><a href="#">Архив</a></li>
+                    <li><a href="#">Мои заявки</a></li>
+                </ul>
             </li>
-             {# Добавьте другие пункты меню #}
+            {# Добавьте другие пункты меню #}
         </ul>
     </nav>
 
     <div class="mobile-sidebar-footer">
-         <div class="sidebar-user-avatar">
-             {{ request.user.first_name.0|default:'' }}{{ request.user.last_name.0|default:'?' }} {# Инициалы #}
-         </div>
-         <span class="sidebar-user-name">{{ request.user.get_full_name|default:request.user.username }}</span>
+        <div class="sidebar-user-avatar">
+            {{ request.user.first_name.0|default:'' }}{{ request.user.last_name.0|default:'?' }} {# Инициалы #}
+        </div>
+        <span class="sidebar-user-name">{{ request.user.get_full_name|default:request.user.username }}</span>
     </div>
 </aside>
 
@@ -290,5 +301,8 @@
 
 </div>
 <script src="{% static 'onboarding.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

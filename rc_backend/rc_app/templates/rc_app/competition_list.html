@@ -81,16 +81,15 @@
                 {# -- Блок фильтров (оставлен статическим в этом примере, но можно сделать динамическим) -- #}
                 <div class="competitions-filters">
                     <div class="filter-toggles">
-                        {# Предполагаем, что класс 'active' управляется JS или контекстом бэкенда #}
-                        <button class="btn btn-filter {% if competitions_data.current_filters.type == 'online' %} active{% endif %}"
-                                data-filter="online">Онлайн
-                        </button>
-                        <button class="btn btn-filter {% if competitions_data.current_filters.type == 'offline' %}active{% endif %}"
-                                data-filter="offline">Офлайн
-                        </button>
+                        <a href="?type=online{% if competitions_data.current_filters.region %}&region={{ competitions_data.current_filters.region }}{% endif %}{% if competitions_data.current_filters.discipline %}&discipline={{ competitions_data.current_filters.discipline }}{% endif %}"
+                           class="btn btn-filter{% if competitions_data.current_filters.type == 'online' %} active{% endif %}">Онлайн</a>
+                        <a href="?type=offline{% if competitions_data.current_filters.region %}&region={{ competitions_data.current_filters.region }}{% endif %}{% if competitions_data.current_filters.discipline %}&discipline={{ competitions_data.current_filters.discipline }}{% endif %}"
+                           class="btn btn-filter{% if competitions_data.current_filters.type == 'offline' %} active{% endif %}">Офлайн</a>
+                        <a href="?type=all{% if competitions_data.current_filters.region %}&region={{ competitions_data.current_filters.region }}{% endif %}{% if competitions_data.current_filters.discipline %}&discipline={{ competitions_data.current_filters.discipline }}{% endif %}"
+                           class="btn btn-filter{% if competitions_data.current_filters.type == 'all' %} active{% endif %}">Все</a>
                     </div>
                     <div class="filter-select-wrapper">
-                        <select name="region-filter" id="region-filter" class="filter-select">
+                        <select name="region-filter" id="region-filter" class="filter-select" onchange="window.location.href='?region=' + this.value + '{% if competitions_data.current_filters.type %}&type={{ competitions_data.current_filters.type }}{% endif %}{% if competitions_data.current_filters.discipline %}&discipline={{ competitions_data.current_filters.discipline }}{% endif %}'">
                             <option value="all" {% if competitions_data.current_filters.region == 'all' %}selected{% endif %}
                             >Все регионы</option>
                             <option value="msk"
@@ -109,13 +108,39 @@
                             <path d="M7 10l5 5 5-5z"/>
                         </svg>
                     </div>
-                    <button class="btn-icon filter-calendar" aria-label="Выбрать дату">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"
-                             fill="currentColor">
-                            <path d="M0 0h24v24H0V0z" fill="none"/>
-                            <path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/>
-                        </svg>
-                    </button>
+                    
+                    <div class="competitions-filters-form-wrapper">
+                        <form id="competition-filters-form" class="competition-filters-form" method="get">
+                            {# Сохраняем параметры type и region при отправке формы #}
+                            <input type="hidden" name="type" value="{{ competitions_data.current_filters.type }}">
+                            <input type="hidden" name="region" value="{{ competitions_data.current_filters.region }}">
+                            
+                            {# === Фильтр по дисциплине (select) === #}
+                            <div class="filter-select-wrapper">
+                                <select name="discipline" class="filter-select">
+                                    <option value="" {% if not competitions_data.current_filters.discipline %}selected{% endif %}>Все дисциплины</option>
+                                    {% for disc in disciplines %}
+                                        <option value="{{ disc.discipline }}"
+                                            {% if competitions_data.current_filters.discipline == disc.discipline %}selected{% endif %}
+                                        >{{ disc.discipline }}</option>
+                                    {% endfor %}
+                                </select>
+                                <svg class="filter-select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                     fill="currentColor" width="18" height="18">
+                                    <path d="M7 10l5 5 5-5z"/>
+                                </svg>
+                            </div>
+                            
+                            {# === Фильтр по дате (показываем datepicker и кнопку) === #}
+                            <div class="date-filter-wrapper">
+                                <input type="date" name="date_from" class="date-filter" value="{{ competitions_data.current_filters.date_from|default_if_none:'' }}">
+                                <button type="submit" class="btn btn-filter">Применить</button>
+                                {% if competitions_data.current_filters.discipline or competitions_data.current_filters.date_from %}
+                                    <a href="?type={{ competitions_data.current_filters.type }}&region={{ competitions_data.current_filters.region }}" class="btn btn-filter btn-reset">Сбросить</a>
+                                {% endif %}
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -123,20 +148,14 @@
                 {% if competitions_by_month %}
                 {% for month_group in competitions_by_month %}
                 <div class="competitions-month-group">
-                    {# Display the month name #}
                     <h2 class="month-title">{{ month_group.name }}</h2>
 
-                    {# Container for events within this specific month #}
                     <div class="month-events">
 
-                        {# Check if there are actually events in this month's list #}
                         {% if month_group.events %}
 
-                        {# Loop through each event within the current month #}
                         {% for event in month_group.events %}
-                        {# Link to the event detail page (ensure event.url is provided) #}
                         <a href="{{ event.url | default:'#' }}" class="competition-item"
-                           {# --- Data attributes needed for JS filtering --- #}
                         >
                             {# Display the day of the month #}
                             <div class="competition-date">{{ event.day }}</div>
@@ -218,7 +237,8 @@
     </div>
 </footer>
 
-<style>.visually-hidden {
+<style>
+.visually-hidden {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -227,7 +247,54 @@
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     border: 0;
-}</style>
+}
+
+/* Стили для формы фильтров */
+.competitions-filters-form-wrapper {
+    display: flex;
+    margin-top: 10px;
+}
+
+.competition-filters-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.date-filter-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-filter {
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-reset {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    .competitions-filters-form-wrapper {
+        flex-direction: column;
+    }
+    
+    .competition-filters-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .date-filter-wrapper {
+        flex-wrap: wrap;
+    }
+}
+</style>
 
 <!-- ===== Login Modal ===== -->
 <div class="modal-overlay" id="loginModal" aria-modal="true" role="dialog" aria-labelledby="loginModalTitle" hidden>
@@ -273,5 +340,89 @@
     </div>
 </div>
 <!-- ===== End Login Modal ===== -->
-<script src="{% static 'script.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Мобильное меню
+    const openNavBtn = document.getElementById('openNavBtn');
+    const closeNavBtn = document.getElementById('closeNavBtn');
+    const mobileNav = document.getElementById('mobileNav');
+    
+    if (mobileNav && openNavBtn && closeNavBtn) {
+        const mobileNavLinks = mobileNav.querySelectorAll('a');
+
+        function openMobileMenu() {
+            mobileNav.removeAttribute('hidden');
+            setTimeout(() => {
+                mobileNav.classList.add('active');
+                openNavBtn.setAttribute('aria-expanded', 'true');
+                document.body.style.overflow = 'hidden';
+                closeNavBtn.focus();
+            }, 10);
+        }
+
+        function closeMobileMenu() {
+            mobileNav.classList.remove('active');
+            openNavBtn.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            mobileNav.addEventListener('transitionend', () => {
+                if (!mobileNav.classList.contains('active')) {
+                    mobileNav.setAttribute('hidden', '');
+                }
+            }, { once: true });
+            openNavBtn.focus();
+        }
+
+        openNavBtn.addEventListener('click', () => {
+            if (mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        });
+
+        closeNavBtn.addEventListener('click', closeMobileMenu);
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && e.target !== openNavBtn) {
+                closeMobileMenu();
+            }
+        });
+    }
+
+    // Фильтры соревнований
+    const form = document.getElementById('competition-filters-form');
+    if (form) {
+        // Автоматически сабмитим форму при выборе дисциплины
+        const disciplineSelect = form.querySelector('select[name="discipline"]');
+        if (disciplineSelect) {
+            disciplineSelect.addEventListener('change', function() { 
+                form.submit(); 
+            });
+        }
+    }
+
+    // Динамическая высота фоновой картинки
+    function updateSvgHeight() {
+        const bodyHeight = document.body.scrollHeight;
+        const svgContainer = document.querySelector('.backgroundImage');
+        if (svgContainer) {
+            svgContainer.style.height = `${bodyHeight}px`;
+        }
+    }
+
+    window.addEventListener('resize', updateSvgHeight);
+    window.addEventListener('load', updateSvgHeight);
+    updateSvgHeight();
+});
+</script>
 </html>
