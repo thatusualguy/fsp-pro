@@ -32,8 +32,8 @@ class InviteCompetition(models.Model):
 
 
 class TeamInvitation(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    inviter_team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, )
+    inviter_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_invitations')
     invitee = models.ForeignKey(Profile, on_delete=models.CASCADE)
     invitation_status = models.CharField(
         max_length=20,

@@ -51,13 +51,14 @@ class TeamCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         leader = kwargs.pop('leader', None)
         user = kwargs.pop('user', None)
+        is_create = kwargs.pop('is_create', False)
         competition = kwargs.pop('competition', None)
         super().__init__(*args, **kwargs)
 
         if user != leader:
             raise PermissionDenied
 
-        if self.instance and self.instance.pk:
+        if not is_create:
             # If the form is being used to edit an existing team, make the title field read-only
             self.fields['title'].disabled = True
 
@@ -84,6 +85,7 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         competition_id = self.kwargs.get('competition_id')
         kwargs['leader'] = self.request.user.profile
         kwargs['user'] = self.request.user.profile
+        kwargs['is_create'] = True
         kwargs['competition'] = get_object_or_404(Competition, id=competition_id)
         return kwargs
 
@@ -104,19 +106,19 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         form.instance.leader = self.request.user.profile
 
         # Save the team
-        response = super().form_valid(form)
+        team = form.save()
 
         form.instance.team_members.add(self.request.user.profile)
-
         # Handle invitations
         invitees = form.cleaned_data['invitees']
         for invitee in invitees:
-            TeamInvitation.objects.create(inviter_team=form.instance, invitee=invitee)
+            form.instance.team_invitations.create(invitee=invitee)
+            # TeamInvitation.objects.create(inviter_team=form.instance, invitee=invitee)
 
-        return response
+        return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('rc_app:team_details', kwargs={'pk': self.object.pk})
+        return reverse('rc_app:my_teams_list')
 
 
 class TeamUpdateView(UpdateView):
