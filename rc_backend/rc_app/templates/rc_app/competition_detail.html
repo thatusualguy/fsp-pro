@@ -15,7 +15,7 @@
     <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
 </head>
 
-<body>
+<body style="background-color: var(--background-color)">
 <main>
     <div class="backgroundImage"></div>
 
@@ -89,8 +89,8 @@
 
             <h2 class="competition-main-title">{{ competition.title }}</h2>
 
-            <button class="btn btn-secondary competition-header-participate-btn open-login-modal-btn">Участвовать
-            </button>
+            <a href="/app/login" class="btn btn-secondary competition-header-participate-btn open-login-modal-btn">Участвовать
+            </>
         </div>
 
         <div class="competition-main-layout">
@@ -117,7 +117,7 @@
 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <button class="btn btn-primary main-participate-btn open-login-modal-btn">Участвовать</button>
+                    <a href="/app/login" class="btn btn-primary main-participate-btn open-login-modal-btn">Участвовать</a>
                     <a href="/help#how-to-join-team" class="btn btn-secondary">Как попасть в сборную?</a>
                 </div>
             </div>
@@ -210,49 +210,6 @@
     border: 0;
 }</style>
 
-<!-- ===== Login Modal ===== -->
-<div class="modal-overlay" id="loginModal" aria-modal="true" role="dialog" aria-labelledby="loginModalTitle" hidden>
-    <div class="modal-content">
-        <!-- Добавляем кнопку Назад для модального окна, особенно на мобильных -->
-
-
-        <!-- ** Используем ТУ ЖЕ Обертку для формы, что и на странице входа ** -->
-        <div class="login-form-wrapper modal-variant"> <!-- Добавлен класс modal-variant -->
-            <!-- Сама форма - идентичная структура -->
-            <form class="login-form" action="#" method="post">
-
-                <button class="modal-back-btn" aria-label="Назад">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24"
-                         height="24">
-                        <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
-                    </svg>
-                </button>
-                <!-- Скрытый заголовок для скринридеров, т.к. видимый в модалке есть выше-->
-                <h2 class="login-title" id="loginModalTitle">Вход</h2> <!-- Изменен для модалки, ID для aria -->
-
-                <div class="form-group">
-                    <label for="login-email-modal">Логин</label>
-                    <input type="email" id="login-email-modal" name="email" required value="123@mail.ru">
-                </div>
-
-                <div class="form-group">
-                    <label for="login-password-modal">Пароль</label>
-                    <input type="password" id="login-password-modal" name="password" placeholder="Пароль" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary login-submit-btn">Войти</button>
-
-                <!-- Ссылки в футере для модалки -->
-                <div class="login-links-footer modal-variant"> <!-- Класс modal-variant -->
-                    <a href="/app/register" class="register-link">Нет аккаунта?</a>
-                    <a href="#forgot" class="forgot-password-link">Забыли пароль?</a>
-                </div>
-            </form>
-            <!-- Конец формы -->
-        </div>
-        <!-- ** Конец Обертки для формы ** -->
-    </div>
-</div>
 
 <script src="{% static 'script.js' %}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

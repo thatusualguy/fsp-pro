@@ -27,7 +27,7 @@ urlpatterns = [
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),
     path("competitions/<uuid:competition_id>/teams", TeamsForCompetitionListView.as_view(),
          name="competition_teams_list"),
-    path("competitions/<uuid:competition_id>/member_search", MemberSearchListView.as_view(), name="competition_ms"),
+    path("competitions/<uuid:competition_id>/member_search", MemberSearchListView.as_view(), name="member_searches"),
 
     path('apply_for_position/<uuid:search_id>/', ApplyForPositionView.as_view(), name='apply_for_position'),
 
@@ -62,8 +62,7 @@ urlpatterns = [
 
     # path("competitions/<uuid:competition_id>/member_searches/<uuid:team_id>/new",
     #      WannabePendingJoinRequestCreateView.as_view(),
-    #      name="join_request_new"),
+    #      name="member_searches"),
     # path("competitions/<uuid:competition_id>/member_searches/<uuid:team_id>/delete",
     #      WannabePendingJoinRequestDeleteView.as_view(), name="join_request_delete"),
-
 ]
