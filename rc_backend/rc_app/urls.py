@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import public
+from .views import public, team_views
 from .views.auth import LoginUser, LogoutUser, RegisterUser
 from .views.competition_views import *
 from .views.profile_views import ProfilesListView, ProfileDetailView, ProfileUpdateView, PendingTeamInvitationsListView, \
@@ -27,7 +27,7 @@ urlpatterns = [
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),
     path("competitions/<uuid:competition_id>/teams", TeamsForCompetitionListView.as_view(),
          name="competition_teams_list"),
-    path("competitions/<uuid:competition_id>/member_search", MemberSearchListView.as_view(), name="competition_ms"),
+    path("competitions/<uuid:competition_id>/member_search", MemberSearchListView.as_view(), name="member_searches"),
 
     path('apply_for_position/<uuid:search_id>/', ApplyForPositionView.as_view(), name='apply_for_position'),
 
@@ -47,6 +47,8 @@ urlpatterns = [
     path("team/<uuid:team_id>/disband", DisbandTeamView.as_view(), name="team_disband"),
     path("team/<uuid:team_id>/leave", TeamLeaveView.as_view(), name="team_leave"),
 
+    path('team/<uuid:team_id>/send_to_moderation/', team_views.send_team_to_moderation, name='send_team_to_moderation'),
+
     path("team/<uuid:pk>/request", MemberSearchDetailView.as_view(), name="member_search_details"),
     path("team/<uuid:pk>/request/edit", MemberSearchUpdateView.as_view(), name="member_search_edit"),
     path("team/<uuid:pk>/request/new", MemberSearchCreateView.as_view(), name="member_search_create"),
@@ -62,8 +64,7 @@ urlpatterns = [
 
     # path("competitions/<uuid:competition_id>/member_searches/<uuid:team_id>/new",
     #      WannabePendingJoinRequestCreateView.as_view(),
-    #      name="join_request_new"),
+    #      name="member_searches"),
     # path("competitions/<uuid:competition_id>/member_searches/<uuid:team_id>/delete",
     #      WannabePendingJoinRequestDeleteView.as_view(), name="join_request_delete"),
-
 ]

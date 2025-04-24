@@ -50,6 +50,11 @@
         </div>
     </div>
 
+    <div class="alert alert-info">
+        Moderation Status: {{ team.moderation_status|title }}
+    </div>
+
+
     {% if team.competition.registration_until > now %}
         {% if user.profile.id == leader.id %}
             <div class="mt-3">
@@ -60,6 +65,14 @@
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Disband Team</button>
             </form>
+
+            {% if show_send %}
+                <form action="{% url 'rc_app:send_team_to_moderation' team.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Send to Moderation</button>
+                </form>
+            {% endif %}
+
         {% endif %}
         {% if is_member %}
             {% if user.profile.id != leader.id %}

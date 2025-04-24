@@ -14,135 +14,144 @@
     <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
     <style>
         /* Mobile first: Стилизация competitions-header-row для мобилок */
-.competitions-header-row {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  align-items: stretch;
-  padding: 16px 8px;
-}
+        .competitions-header-row {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: stretch;
+            padding: 16px 8px;
+        }
 
-.competitions-main-title {
-  font-size: 2rem;
-  text-align: left;
-  margin-bottom: 0.5em;
-}
+        .competitions-main-title {
+            font-size: 2rem;
+            text-align: left;
+            margin-bottom: 0.5em;
+        }
 
-.competitions-filters {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
+        .competitions-filters {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
 
-.filter-toggles {
-  display: flex;
-  flex-direction: row;
-  gap: 8px;
-  justify-content: flex-start;
-  width: 100%;
-}
+        .filter-toggles {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            justify-content: flex-start;
+            width: 100%;
+        }
 
-.btn-filter {
-  flex: 1;
-  padding: 12px 0;
-  font-size: 1rem;
-  /* mobile-friendly button size */
-  min-width: 72px;
-  border-radius: 6px;
-}
+        .btn-filter {
+            flex: 1;
+            padding: 12px 0;
+            font-size: 1rem;
+            /* mobile-friendly button size */
+            min-width: 72px;
+            border-radius: 6px;
+        }
 
-/* Обёртка для select чтобы адекватно сжималась */
-.filter-select-wrapper {
-  width: 100%;
-  position: relative;
-  margin: 0;
-}
-.filter-select {
-  width: 100%;
-  padding: 10px 36px 10px 12px;
-  font-size: 1rem;
-  border-radius: 6px;
-}
+        /* Обёртка для select чтобы адекватно сжималась */
+        .filter-select-wrapper {
+            width: 100%;
+            position: relative;
+            margin: 0;
+        }
 
-/* стрелка для select */
-.filter-select-arrow {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  pointer-events: none;
-  transform: translateY(-50%);
-}
+        .filter-select {
+            width: 100%;
+            padding: 10px 36px 10px 12px;
+            font-size: 1rem;
+            border-radius: 6px;
+        }
 
-.date-filter-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.date-filter {
-  width: 100%;
-  padding: 8px 10px;
-  font-size: 1rem;
-}
+        /* стрелка для select */
+        .filter-select-arrow {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            pointer-events: none;
+            transform: translateY(-50%);
+        }
 
-/* Блок дисциплин и кнопок формы */
-.competitions-filters-form-wrapper {
-  width: 100%;
-}
+        .date-filter-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-.competition-filters-form {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+        .date-filter {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 1rem;
+        }
 
-/* Reset button spacing */
-.btn-reset {
-  margin-top: 4px;
-}
+        /* Блок дисциплин и кнопок формы */
+        .competitions-filters-form-wrapper {
+            width: 100%;
+        }
 
-/* --- Адаптация для маленьких экранов --- */
-@media (max-width: 600px) {
-  .competitions-header-row {
-    padding: 10px 2vw;
-    gap: 10px;
-  }
-  .competitions-main-title {
-    font-size: 1.4rem;
-    text-align: left;
-  }
-  .filter-toggles {
-    flex-direction: column;
-    gap: 6px;
-  }
-  .btn-filter {
-    font-size: 1rem;
-    min-width: unset;
-    width: 100%;
-    margin: 0;
-  }
-  .filter-select-wrapper,
-  .date-filter-wrapper {
-    width: 100%;
-  }
-  .competition-filters-form {
-    gap: 8px;
-  }
-}
+        .competition-filters-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
-@media (max-width: 400px) {
-  .competitions-header-row {
-    gap: 4px;
-    padding: 6px 1vw;
-  }
-  .competitions-main-title {
-    font-size: 1.05rem;
-  }
-  .btn-filter, .filter-select, .date-filter {
-    font-size: 0.98rem;
-    padding: 8px 0;
-  }
-}
+        /* Reset button spacing */
+        .btn-reset {
+            margin-top: 4px;
+        }
+
+        /* --- Адаптация для маленьких экранов --- */
+        @media (max-width: 600px) {
+            .competitions-header-row {
+                padding: 10px 2vw;
+                gap: 10px;
+            }
+
+            .competitions-main-title {
+                font-size: 1.4rem;
+                text-align: left;
+            }
+
+            .filter-toggles {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .btn-filter {
+                font-size: 1rem;
+                min-width: unset;
+                width: 100%;
+                margin: 0;
+            }
+
+            .filter-select-wrapper,
+            .date-filter-wrapper {
+                width: 100%;
+            }
+
+            .competition-filters-form {
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .competitions-header-row {
+                gap: 4px;
+                padding: 6px 1vw;
+            }
+
+            .competitions-main-title {
+                font-size: 1.05rem;
+            }
+
+            .btn-filter, .filter-select, .date-filter {
+                font-size: 0.98rem;
+                padding: 8px 0;
+            }
+        }
     </style>
 </head>
 
@@ -223,13 +232,22 @@
                     <div class="filter-select-wrapper">
                         <select name="region-filter" id="region-filter" class="filter-select"
                                 onchange="window.location.href='?region=' + this.value + '{% if competitions_data.current_filters.type %}&type={{ competitions_data.current_filters.type }}{% endif %}{% if competitions_data.current_filters.discipline %}&discipline={{ competitions_data.current_filters.discipline }}{% endif %}'">
-                            <option value="all" {% if competitions_data.current_filters.region == 'all' %}selected{% endif %}>Все регионы</option>
-                            <option value="msk" {% if competitions_data.current_filters.region == 'msk' %}selected{% endif %}>Москва</option>
-                            <option value="spb" {% if competitions_data.current_filters.region == 'spb' %}selected{% endif %}>Санкт-Петербург</option>
-                            {# {% for region in competitions_data.regions_for_filter %}
-                            <option value="{{ region.value }}" {% if competitions_data.current_filters.region == region.value %}selected{% endif %}>{{ region.name }}
+                            <option value="all"
+                                    {% if competitions_data.current_filters.region == 'all' %}selected{% endif %}>Все
+                                регионы
                             </option>
-                            {% endfor %} #}
+                            {#                            <option value="msk"#}
+                            {#                                    {% if competitions_data.current_filters.region == 'msk' %}selected{% endif %}>Москва#}
+                            {#                            </option>#}
+                            {#                            <option value="spb"#}
+                            {#                                    {% if competitions_data.current_filters.region == 'spb' %}selected{% endif %}>#}
+                            {#                                Санкт-Петербург#}
+                            {#                            </option>#}
+                            {% for region in competitions_data.regions_for_filter %}
+                                <option value="{{ region }}"
+                                        {% if competitions_data.current_filters.region == region %}selected{% endif %}>{{ region }}
+                                </option>
+                            {% endfor %}
                         </select>
                         <svg class="filter-select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                              fill="currentColor" width="18" height="18">
@@ -242,13 +260,15 @@
                             <input type="hidden" name="region" value="{{ competitions_data.current_filters.region }}">
                             <div class="filter-select-wrapper">
                                 <select name="discipline" class="filter-select">
-                                    <option value="" {% if not competitions_data.current_filters.discipline %}selected{% endif %}>Все дисциплины
+                                    <option value=""
+                                            {% if not competitions_data.current_filters.discipline %}selected{% endif %}>
+                                        Все дисциплины
                                     </option>
                                     {% for disc in disciplines %}
-                                    <option value="{{ disc.discipline }}"
-                                            {% if competitions_data.current_filters.discipline == disc.discipline %}selected{% endif %}>
-                                        {{ disc.discipline }}
-                                    </option>
+                                        <option value="{{ disc.discipline }}"
+                                                {% if competitions_data.current_filters.discipline == disc.discipline %}selected{% endif %}>
+                                            {{ disc.discipline }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                                 <svg class="filter-select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -261,8 +281,8 @@
                                        value="{{ competitions_data.current_filters.date_from|default_if_none:'' }}">
                                 <button type="submit" class="btn btn-filter">Применить</button>
                                 {% if competitions_data.current_filters.discipline or competitions_data.current_filters.date_from %}
-                                <a href="?type={{ competitions_data.current_filters.type }}&region={{ competitions_data.current_filters.region }}"
-                                   class="btn btn-filter btn-reset">Сбросить</a>
+                                    <a href="?type={{ competitions_data.current_filters.type }}&region={{ competitions_data.current_filters.region }}"
+                                       class="btn btn-filter btn-reset">Сбросить</a>
                                 {% endif %}
                             </div>
                         </form>
@@ -273,71 +293,73 @@
 
             <div class="competitions-list">
                 {% if competitions_by_month %}
-                {% for month_group in competitions_by_month %}
-                <div class="competitions-month-group">
-                    <h2 class="month-title">{{ month_group.name }}</h2>
+                    {% for month_group in competitions_by_month %}
+                        <div class="competitions-month-group">
+                            <h2 class="month-title">{{ month_group.name }}</h2>
 
-                    <div class="month-events">
+                            <div class="month-events">
 
-                        {% if month_group.events %}
+                                {% if month_group.events %}
 
-                        {% for event in month_group.events %}
-                        <a href="{{ event.url | default:'#' }}" class="competition-item"
-                        >
-                            {# Display the day of the month #}
-                            <div class="competition-date">{{ event.day }}</div>
+                                    {% for event in month_group.events %}
+                                        <a href="{{ event.url | default:'#' }}" class="competition-item"
+                                        >
+                                            {# Display the day of the month #}
+                                            <div class="competition-date">{{ event.day }}</div>
 
-                            {# Container for event details #}
-                            <div class="competition-details">
-                                {# Wrapper for title and badges #}
-                                <div class="competition-info-line">
-                                    {# Display the event title #}
-                                    <span class="competition-title">{{ event.title }}</span>
+                                            {# Container for event details #}
+                                            <div class="competition-details">
+                                                {# Wrapper for title and badges #}
+                                                <div class="competition-info-line">
+                                                    {# Display the event title #}
+                                                    <span class="competition-title">{{ event.title }}</span>
 
-                                    {# Check if there are badges (tags) to display #}
-                                    {% if event.badges %}
-                                    <div class="competition-badges-container">
-                                        {# Loop through each badge #}
-                                        {% for badge in event.badges %}
-                                        <span class="competition-badge {{ badge.type }}">{{ badge.text }}</span>
-                                        {% endfor %}
+                                                    {# Check if there are badges (tags) to display #}
+                                                    {% if event.badges %}
+                                                        <div class="competition-badges-container">
+                                                            {# Loop through each badge #}
+                                                            {% for badge in event.badges %}
+                                                                <span class="competition-badge {{ badge.type }}">{{ badge.text }}</span>
+                                                            {% endfor %}
+                                                        </div>
+                                                    {% endif %} {# End if event.badges #}
+                                                </div>
+                                                {% if event.meta %}
+                                                    <div class="competition-meta">{{ event.meta }}</div>
+                                                {% endif %}
+                                            </div>
+                                            {# Right arrow icon #}
+                                            <img class="competition-arrow"
+                                                 src="{% static '/icon/icon_arrow_right.svg' %}"
+                                                 alt="Перейти">
+                                        </a>
+                                    {% endfor %} {# End event loop #}
+
+                                    {# This runs if month_group.events is empty or doesn't exist #}
+                                {% else %}
+                                    {# Display the placeholder for no events #}
+                                    {# The style="display: none;" is for the JS filter logic, remove if not using JS filter #}
+                                    <div class="competition-item-empty" style="display: none;">
+                                        <svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" height="24px"
+                                             viewBox="0 0 24 24"
+                                             width="24px" fill="currentColor">
+                                            <path d="M0 0h24v24H0V0z" fill="none"/>
+                                            <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-6c-2.33 0-4.32 1.45-5.12 3.5h1.67c.69-1.19 1.97-2 3.45-2s2.75.81 3.45 2h1.67c-.8-2.05-2.79-3.5-5.12-3.5zM9 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm6 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
+                                        </svg>
+                                        <span>Нет запланированных соревнований</span>
                                     </div>
-                                    {% endif %} {# End if event.badges #}
-                                </div>
-                                {% if event.meta %}
-                                <div class="competition-meta">{{ event.meta }}</div>
-                                {% endif %}
+                                {% endif %} {# End if month_group.events #}
                             </div>
-                            {# Right arrow icon #}
-                            <img class="competition-arrow" src="{% static '/icon/icon_arrow_right.svg' %}"
-                                 alt="Перейти">
-                        </a>
-                        {% endfor %} {# End event loop #}
-
-                        {# This runs if month_group.events is empty or doesn't exist #}
-                        {% else %}
-                        {# Display the placeholder for no events #}
-                        {# The style="display: none;" is for the JS filter logic, remove if not using JS filter #}
-                        <div class="competition-item-empty" style="display: none;">
-                            <svg class="empty-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24"
-                                 width="24px" fill="currentColor">
-                                <path d="M0 0h24v24H0V0z" fill="none"/>
-                                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-6c-2.33 0-4.32 1.45-5.12 3.5h1.67c.69-1.19 1.97-2 3.45-2s2.75.81 3.45 2h1.67c-.8-2.05-2.79-3.5-5.12-3.5zM9 13c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm6 0c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1z"/>
-                            </svg>
-                            <span>Нет запланированных соревнований</span>
+                            {# End month-events #}
                         </div>
-                        {% endif %} {# End if month_group.events #}
-                    </div>
-                    {# End month-events #}
-                </div>
-                {# End competitions-month-group #}
-                {% endfor %} {# End month_group loop #}
+                        {# End competitions-month-group #}
+                    {% endfor %} {# End month_group loop #}
 
-                {# This runs if the main competitions_by_month list is empty #}
+                    {# This runs if the main competitions_by_month list is empty #}
                 {% else %}
-                <div class="competition-list-empty"> {# Optional overall empty message #}
-                    <p>Нет доступных соревнований для отображения.</p>
-                </div>
+                    <div class="competition-list-empty"> {# Optional overall empty message #}
+                        <p>Нет доступных соревнований для отображения.</p>
+                    </div>
                 {% endif %} {# End if competitions_by_month #}
 
             </div>

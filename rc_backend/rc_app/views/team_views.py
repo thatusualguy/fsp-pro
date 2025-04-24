@@ -1,5 +1,6 @@
 from annoying.functions import get_object_or_None
 from django import forms
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
@@ -11,7 +12,9 @@ from django.views import View
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
+from rc_backend.rc_app.models.enums import JoinRequestEnum, CompetitionTypeEnum, ModerationEnum
 from rc_backend.rc_app.models.enums import JoinRequestEnum, CompetitionTypeEnum
+from rc_backend.rc_app.models.invitation import TeamInvitation
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
@@ -33,6 +36,7 @@ class TeamDetailsView(DetailView):
         context['members'] = members
         context['leader'] = leader
         context['now'] = timezone.now()
+        context["show_send"] = team.moderation_status == ModerationEnum.NOT_SENT
         context['competition'] = competition
         context['is_member'] = self.request.user.profile in team.team_members.all()
         context['region'] = leader_fsp
@@ -41,52 +45,89 @@ class TeamDetailsView(DetailView):
 
 
 class TeamCreateForm(forms.ModelForm):
+    """
+    Форма для создания и обновления команды.
+    """
     invitees = forms.ModelMultipleChoiceField(
         queryset=Profile.objects.none(),
         widget=forms.CheckboxSelectMultiple,
         required=False,
-        label="Invite Members"
+        label="Пригласить участников"
     )
 
     class Meta:
         model = Team
-        # fields = ['title', ]
-        fields = ['title', 'invitees']
+        fields = ['title', 'invitees', ]
 
     def __init__(self, *args, **kwargs):
+        """
+        Дополнительные параметры:
+          - leader: Profile (инициатор – будущий капитан)
+          - user: Profile (текущий пользователь)
+          - is_create: bool (True для создания, False для редактирования)
+          - competition: Competition (соревнование, к которому относится команда)
+        """
         leader = kwargs.pop('leader', None)
-        user = kwargs.pop('user', None)
+        user: Profile = kwargs.pop('user', None)
         is_create = kwargs.pop('is_create', False)
         competition: Competition = kwargs.pop('competition', None)
         super().__init__(*args, **kwargs)
 
+        # Условия для создания/обновления команды по уровню соревнования
         if competition:
-            if competition.competition_type == CompetitionTypeEnum.FEDERAL:
-                raise PermissionDenied
+            regions = competition.fsps.values_list('region', flat=True)
+            match competition.competition_type:
+                case CompetitionTypeEnum.FEDERAL:
+                    raise PermissionDenied
+                case CompetitionTypeEnum.REGIONAL:
+                    if user.fsp.region not in regions:
+                        raise PermissionDenied
 
+        # Только лидер может обновлять/создавать свою команду
         if user != leader:
-            raise PermissionDenied
+            raise PermissionDenied("Только лидер может создавать или редактировать свою команду.")
 
         if not is_create:
-            # If the form is being used to edit an existing team, make the title field read-only
+            # Если идёт редактирование, делаем поле названия только для чтения (например, нельзя менять)
             self.fields['title'].disabled = True
 
+        # Ограничить доступные для приглашения пользователей одной областью (FSP)
         if leader:
-            # Filter invitees to only include profiles from the same region as the leader
-            self.fields['invitees'].queryset = Profile.objects.filter(fsp=leader.fsp).filter(~Q(id=leader.id))
+            self.fields['invitees'].queryset = Profile.objects.filter(fsp=leader.fsp).exclude(id=leader.id)
         else:
-            raise PermissionDenied
+            raise PermissionDenied("Не определён лидер команды.")
 
     def clean_title(self):
+        """
+        При обновлении пропускаем проверку уникальности — поле недоступно.
+        При создании обязательно проверяем, что такого названия ещё нет.
+        """
         title = self.cleaned_data.get('title')
+        # Если поле отключено (редактирование) — не валидируем дубликаты
+        if self.fields['title'].disabled:
+            return title
         if Team.objects.filter(title=title).exists():
-            raise ValidationError("A team with this title already exists.")
+            raise ValidationError("Команда с таким названием уже существует.")
         return title
+
+
+@login_required
+def send_team_to_moderation(request, team_id):
+    if request.method == 'POST':
+        team = get_object_or_404(Team, id=team_id)
+        # Ensure only team leader can send for moderation
+        if request.user.profile == team.leader:
+            team.moderation_status = ModerationEnum.PENDING
+            team.save()
+        else:
+            raise PermissionDenied
+    return redirect('rc_app:team_details', pk=team.id)
 
 
 class TeamCreateView(LoginRequiredMixin, FormView):
     template_name = 'rc_app/team_form.html'
     form_class = TeamCreateForm
+    success_url = reverse_lazy('rc_app:my_teams_list')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -120,15 +161,17 @@ class TeamCreateView(LoginRequiredMixin, FormView):
 
         # Save the team
         team = form.save()
-
         form.instance.team_members.add(self.request.user.profile)
+        # TeamInvitation.objects.create(inviter_team=team)
+
         # Handle invitations
         invitees = form.cleaned_data['invitees']
         for invitee in invitees:
             form.instance.team_invitations.create(invitee=invitee)
             # TeamInvitation.objects.create(inviter_team=form.instance, invitee=invitee)
 
-        return super().form_valid(form)
+        # Team.objects.create(team)
+        return redirect(self.success_url)
 
     def get_success_url(self):
         return reverse('rc_app:my_teams_list')
