@@ -1,7 +1,6 @@
-from pprint import pprint
-
 from annoying.functions import get_object_or_None
 from django import forms
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -52,27 +51,31 @@ class TeamCreateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         leader = kwargs.pop('leader', None)
         competition = kwargs.pop('competition', None)
-        context = self.get_context()
         super().__init__(*args, **kwargs)
         if leader:
             # Filter invitees to only include profiles from the same region as the leader
             self.fields['invitees'].queryset = Profile.objects.filter(fsp=leader.fsp).filter(~Q(id=leader.id))
-            context['competition'] = competition
-            pprint(context)
         else:
             raise PermissionDenied
 
 
-class TeamCreateView(FormView):
-    # template_name = 'rc_app/team_form.html'
+class TeamCreateView(LoginRequiredMixin, FormView):
+    template_name = 'rc_app/team_form.html'
     form_class = TeamCreateForm
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         # Pass the leader to the form
+        competition_id = self.kwargs.get('competition_id')
         kwargs['leader'] = self.request.user.profile
-        kwargs['competition_id'] = get_object_or_404(Competition, id=kwargs['competition_id'])
+        kwargs['competition'] = get_object_or_404(Competition, id=competition_id)
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        competition_id = self.kwargs.get('competition_id')
+        context['competition'] = get_object_or_404(Competition, id=competition_id)
+        return context
 
     def form_valid(self, form):
         competition_id = self.kwargs['competition_id']
