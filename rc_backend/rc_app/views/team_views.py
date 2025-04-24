@@ -1,14 +1,14 @@
 from annoying.functions import get_object_or_None
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
-from rc_backend.rc_app.models.invitation import TeamInvitation
+from rc_backend.rc_app.models.enums import JoinRequestEnum
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
@@ -50,13 +50,29 @@ class TeamCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         leader = kwargs.pop('leader', None)
+        user = kwargs.pop('user', None)
+        is_create = kwargs.pop('is_create', False)
         competition = kwargs.pop('competition', None)
         super().__init__(*args, **kwargs)
+
+        if user != leader:
+            raise PermissionDenied
+
+        if not is_create:
+            # If the form is being used to edit an existing team, make the title field read-only
+            self.fields['title'].disabled = True
+
         if leader:
             # Filter invitees to only include profiles from the same region as the leader
             self.fields['invitees'].queryset = Profile.objects.filter(fsp=leader.fsp).filter(~Q(id=leader.id))
         else:
             raise PermissionDenied
+
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        if Team.objects.filter(title=title).exists():
+            raise ValidationError("A team with this title already exists.")
+        return title
 
 
 class TeamCreateView(LoginRequiredMixin, FormView):
@@ -68,6 +84,8 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         # Pass the leader to the form
         competition_id = self.kwargs.get('competition_id')
         kwargs['leader'] = self.request.user.profile
+        kwargs['user'] = self.request.user.profile
+        kwargs['is_create'] = True
         kwargs['competition'] = get_object_or_404(Competition, id=competition_id)
         return kwargs
 
@@ -88,19 +106,19 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         form.instance.leader = self.request.user.profile
 
         # Save the team
-        response = super().form_valid(form)
+        team = form.save()
 
         form.instance.team_members.add(self.request.user.profile)
-
         # Handle invitations
         invitees = form.cleaned_data['invitees']
         for invitee in invitees:
-            TeamInvitation.objects.create(inviter_team=form.instance, invitee=invitee)
+            form.instance.team_invitations.create(invitee=invitee)
+            # TeamInvitation.objects.create(inviter_team=form.instance, invitee=invitee)
 
-        return response
+        return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('rc_app:team_details', kwargs={'pk': self.object.pk})
+        return reverse('rc_app:my_teams_list')
 
 
 class TeamUpdateView(UpdateView):
@@ -194,21 +212,6 @@ class MemberSearchDetailView(DetailView):
     fields = "__all__"
 
 
-# user invited to team
-class PendingTeamInvitationsListView(ListView):
-    model = TeamInvitation
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Get Profile of the current user
-        profile = Profile.objects.get(user=self.request.user)
-        # Get TeamInvitations where the current user is invited
-        invitations = TeamInvitation.objects.filter(invitee=profile)
-
-        context['invitations'] = invitations
-        return context
-
-
 # user asks to join team
 
 # WANNABE SIDE
@@ -261,16 +264,27 @@ class WannabePendingJoinRequestDeleteView(DeleteView):
 class LeaderPendingJoinRequestsListView(ListView):
     """request that other people have sent to my team"""
     model = JoinRequest
+    template_name = 'rc_app/leader_join_requests_list.html'
+    context_object_name = 'join_requests'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        team_id = kwargs.get("team_id")
-        team = Team.objects.get(id=team_id)
-        requests = JoinRequest.objects.filter(
-            team=team
-        )
-        context['join_requests'] = requests
-        return context
+    def get_queryset(self):
+        # Get the current user's profile
+        profile = self.request.user.profile
+
+        # Filter join requests for teams where the current user is the leader
+        return (JoinRequest.objects
+                .filter(team__leader=profile)
+                .filter(join_status=JoinRequestEnum.PENDING))
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     team_id = kwargs.get("team_id")
+    #     team = Team.objects.get(id=team_id)
+    #     requests = JoinRequest.objects.filter(
+    #         team=team
+    #     )
+    #     context['join_requests'] = requests
+    #     return context
 
 
 class LeaderPendingJoinRequestUpdateView(UpdateView):
