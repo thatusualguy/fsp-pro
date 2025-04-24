@@ -1,5 +1,6 @@
 from annoying.functions import get_object_or_None
 from django import forms
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
@@ -11,7 +12,7 @@ from django.views import View
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
-from rc_backend.rc_app.models.enums import JoinRequestEnum, CompetitionTypeEnum
+from rc_backend.rc_app.models.enums import JoinRequestEnum, CompetitionTypeEnum, ModerationEnum
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
@@ -33,6 +34,7 @@ class TeamDetailsView(DetailView):
         context['members'] = members
         context['leader'] = leader
         context['now'] = timezone.now()
+        context["show_send"] = team.moderation_status == ModerationEnum.NOT_SENT
         context['competition'] = competition
         context['is_member'] = self.request.user.profile in team.team_members.all()
         context['region'] = leader_fsp
@@ -82,6 +84,19 @@ class TeamCreateForm(forms.ModelForm):
         if Team.objects.filter(title=title).exists():
             raise ValidationError("A team with this title already exists.")
         return title
+
+
+@login_required
+def send_team_to_moderation(request, team_id):
+    if request.method == 'POST':
+        team = get_object_or_404(Team, id=team_id)
+        # Ensure only team leader can send for moderation
+        if request.user.profile == team.leader:
+            team.moderation_status = ModerationEnum.PENDING
+            team.save()
+        else:
+            raise PermissionDenied
+    return redirect('rc_app:team_details', pk=team.id)
 
 
 class TeamCreateView(LoginRequiredMixin, FormView):
