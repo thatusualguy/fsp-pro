@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -275,6 +275,28 @@ class MemberSearchUpdateView(UpdateView):
         if team.leader != profile:
             raise PermissionDenied("You do not have permission to delete this team.")
         return super().dispatch(request, *args, **kwargs)
+
+
+class TeamLeaveView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        team_id = kwargs.get('team_id')
+        profile = request.user.profile
+        team = get_object_or_404(Team, id=team_id)
+
+        # Check if the user is the leader
+        if team.leader == profile:
+            raise PermissionDenied("The leader cannot leave the team. Please assign a new leader before leaving.")
+
+        if team.competition.registration_until < timezone.now():
+            raise PermissionDenied("You cannot leave after registration end.")
+
+        # Check if the user is a member of the team
+        if profile in team.team_members.all():
+            team.team_members.remove(profile)
+        else:
+            raise PermissionDenied("You are not a member of this team.")
+
+        return HttpResponseRedirect(reverse('rc_app:my_teams_list'))
 
 
 class DisbandTeamView(LoginRequiredMixin, View):
