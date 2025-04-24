@@ -3,8 +3,9 @@ from django.urls import path
 from .views import public
 from .views.auth import LoginUser, LogoutUser, RegisterUser
 from .views.competition_views import *
-from .views.profile_views import ProfilesListView, ProfileDetailView, ProfileUpdateView
-from .views.public import PublicCompetitionsDetailView, PublicRegionsDetailView
+from .views.profile_views import ProfilesListView, ProfileDetailView, ProfileUpdateView, PendingTeamInvitationsListView, \
+    MyProfileDetailView, AcceptInvitationView, DeclineInvitationView
+from .views.public import PublicRegionsDetailView
 from .views.team_views import *
 
 app_name = "rc_app"
@@ -25,7 +26,9 @@ urlpatterns = [
     path("competitions/<uuid:competition_id>/teams", TeamsForCompetitionListView.as_view(),
          name="competition_teams_list"),
 
+    path("profile/", MyProfileDetailView.as_view(), name="profile"),
     path("profiles/", ProfilesListView.as_view(), name="profiles"),
+    path("profile/my_invites/", PendingTeamInvitationsListView.as_view(), name="profile_my_invites"),
     path("profiles/<uuid:pk>/", ProfileDetailView.as_view(), name="profile_detail"),
     path("profiles/<uuid:pk>/edit/", ProfileUpdateView.as_view(), name="edit_profile"),
 
@@ -41,6 +44,9 @@ urlpatterns = [
     path("team/<uuid:pk>/join/all", LeaderPendingJoinRequestsListView.as_view(), name="leader_pending_join_requests"),
     path("team/<uuid:pk>/join/<uuid:pk2>", LeaderPendingJoinRequestUpdateView.as_view(),
          name="leader_pending_join_update"),
+
+    path('accept_invitation/<uuid:invitation_id>/', AcceptInvitationView.as_view(), name='accept_invitation'),
+    path('decline_invitation/<uuid:invitation_id>/', DeclineInvitationView.as_view(), name='decline_invitation'),
 
     path("competitions/<uuid:competition_id>/member_searches", MemberSearchListView.as_view(),
          name="member_searches"),

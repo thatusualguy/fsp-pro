@@ -1,10 +1,15 @@
 from pprint import pprint
 
-from django.contrib.contenttypes import forms
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import ListView, DetailView, UpdateView
 
 from rc_backend.rc_app.models import Team, Competition, CompetitionResult, FSP
+from rc_backend.rc_app.models.enums import TeamInvitationEnum
+from rc_backend.rc_app.models.invitation import TeamInvitation
 from rc_backend.rc_app.models.profile import Profile
 
 
@@ -51,6 +56,15 @@ def combine_profile_data(profile):
 #         fields = ['name', 'last_name', 'email', 'description']
 #
 
+class MyProfileDetailView(DetailView):
+    model = Profile
+    template_name = 'rc_app/profile_detail.html'
+
+    def get_object(self, queryset=None):
+        # Return the profile of the currently logged-in user
+        return self.request.user.profile
+
+
 class ProfileDetailView(DetailView):
     model = Profile
 
@@ -67,30 +81,61 @@ class ProfileDetailView(DetailView):
 class ProfileUpdateView(UpdateView):
     model = Profile
     fields = ['name', 'last_name', 'email', 'description', 'fsp']
+    success_url = reverse_lazy('rc_app:profile')
 
     def get_context_data(self, *args, **kwargs):
         self.object = self.get_object()
         context = super().get_context_data(**kwargs)
         context["fsps"] = FSP.objects.all()
 
-        self.success_url = reverse_lazy('rc_app:profiles_detail', kwargs={'pk': self.object.pk})
-
         return context
 
-    # def get_context_data(self, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     context = super().get_context_data(**kwargs)
-    #     profile = self.get_object()
-    #     data = combine_profile_data(profile)
-    #     context["data"] = data
-    #     return context
-    #
-    # def post(self, request, *args, **kwargs):
-    #     profile = self.get_object()
-    #     form = ProfileForm(request.POST, instance=profile)
-    #
-    #     if form.is_valid():
-    #         form.save()
-    #         return JsonResponse({'success': True, 'message': 'Profile updated successfully.'})
-    #     else:
-    #         return JsonResponse({'success': False, 'errors': form.errors}, status=400)
+
+# user invited to team
+
+
+class PendingTeamInvitationsListView(ListView, LoginRequiredMixin):
+    model = TeamInvitation
+
+    def get_queryset(self):
+        profile = self.request.user.profile
+        # Filter invitations where the invitee is the current user
+
+        data = (TeamInvitation.objects
+                .filter(invitation_status=TeamInvitationEnum.PENDING)
+                .filter(invitee=profile))
+        pprint(data)
+        return data
+
+
+class AcceptInvitationView(LoginRequiredMixin, View):
+    def post(self, request, invitation_id):
+        invitation = get_object_or_404(TeamInvitation, id=invitation_id)
+
+        # Ensure the current user is the invitee
+        if invitation.invitee != request.user.profile:
+            return HttpResponseForbidden("You are not authorized to accept this invitation.")
+
+        # Update the invitation status and add the user to the team
+        invitation.invitation_status = 'ACCEPTED'
+        invitation.save()
+
+        # Add the invitee to the team members
+        invitation.inviter_team.team_members.add(invitation.invitee)
+
+        return redirect('rc_app:profile_my_invites')
+
+
+class DeclineInvitationView(LoginRequiredMixin, View):
+    def post(self, request, invitation_id):
+        invitation = get_object_or_404(TeamInvitation, id=invitation_id)
+
+        # Ensure the current user is the invitee
+        if invitation.invitee != request.user.profile:
+            return HttpResponseForbidden("You are not authorized to decline this invitation.")
+
+        # Update the invitation status
+        invitation.invitation_status = 'DECLINED'
+        invitation.save()
+
+        return redirect('rc_app:profile_my_invites')

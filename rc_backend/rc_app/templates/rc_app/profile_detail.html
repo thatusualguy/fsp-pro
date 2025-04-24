@@ -7,13 +7,6 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Profile Details</h1>
-<div>
-    <h2>{{ profile.name }} {{ profile.last_name }}</h2>
-    <p><strong>Email:</strong> {{ profile.email }}</p>
-    <p><strong>Description:</strong> {{ profile.description }}</p>
-    <a href="{% url 'rc_app:edit_profile' profile.id %}">Edit Profile</a>
-</div>
 <div class="container mt-5">
     <h1 class="mb-4">Profile Details</h1>
     <div class="card mb-4">
@@ -23,6 +16,8 @@
             <p class="card-text"><strong>Description:</strong> {{ profile.description }}</p>
             {% if request.user.profile.id == profile.id %}
                 <a href="{% url 'rc_app:edit_profile' profile.id %}" class="btn btn-primary">Edit Profile</a>
+                <a href="{% url 'rc_app:my_teams_list' %}" class="btn btn-secondary">My Teams</a>
+                <a href="{% url 'rc_app:profile_my_invites' %}" class="btn btn-secondary">My Invites</a>
             {% endif %}
         </div>
     </div>

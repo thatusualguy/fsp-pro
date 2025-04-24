@@ -8,7 +8,6 @@ from django.urls import reverse
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
-from rc_backend.rc_app.models.invitation import TeamInvitation
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
@@ -210,21 +209,6 @@ class MemberSearchUpdateView(UpdateView):
 class MemberSearchDetailView(DetailView):
     model = MemberSearch
     fields = "__all__"
-
-
-# user invited to team
-class PendingTeamInvitationsListView(ListView):
-    model = TeamInvitation
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Get Profile of the current user
-        profile = Profile.objects.get(user=self.request.user)
-        # Get TeamInvitations where the current user is invited
-        invitations = TeamInvitation.objects.filter(invitee=profile)
-
-        context['invitations'] = invitations
-        return context
 
 
 # user asks to join team

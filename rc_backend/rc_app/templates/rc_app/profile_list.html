@@ -12,7 +12,7 @@
     <ul class="list-group">
         {% for profile in profile_list %}
             <li class="list-group-item">
-                <a href="{% url 'rc_app:profile_details' profile.id %}">
+                <a href="{% url 'rc_app:profile_detail' profile.id %}">
                     {{ profile.name }} {{ profile.last_name }}
                 </a>
             </li>
