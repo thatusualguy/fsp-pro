@@ -1,14 +1,19 @@
+version: "3.8"
+
 services:
   russian-cup-backend:
     container_name: "russian-cup-backend-django"
     build:
-      dockerfile: Dockerfile
       context: ..
-
+      dockerfile: deployments/Dockerfile
+    volumes:
+      - static_volume:/app/rc_backend/staticfiles
+    environment:
+      - PYTHONPATH=/app
     env_file:
-        - .env
+      - ../.env
     ports:
-        - "9090:9090"
+      - "9090:9090"
 
   nginx-russian-cup:
     image: nginx:latest
@@ -17,30 +22,31 @@ services:
       - "4443:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/app/rc_backend/staticfiles
 
-  russian-cup-pg:
-    container_name: "russian-cup-pg"
-    ports:
-      - "5433:5432"
-    image: postgres:15.0
-    environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: b1fddce8ae427c0d
-    volumes:
-      - "../pgdata:/var/lib/postgresql/data"
-    healthcheck:
-      test: pg_isready -d postgres -U postgres
-      retries: 5
-      interval: 5s
-      timeout: 7s
+volumes:
+  static_volume:
 
-  rabbitmq-service:
-      image: 'rabbitmq:3.6-management-alpine'
-      ports:
-        # The standard AMQP protocol port
-        - '5672:5672'
-        # HTTP management UI
-        - '15672:15672'
-      networks:
-        - network
+# Uncomment below services if needed
+
+#  russian-cup-pg:
+#    container_name: "russian-cup-pg"
+#    image: postgres:15.0
+#    ports:
+#      - "5433:5432"
+#    environment:
+#      POSTGRES_DB: postgres
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: b1fddce8ae427c0d
+#    volumes:
+#      - "../pgdata:/var/lib/postgresql/data"
+#    healthcheck:
+#      test: pg_isready -d postgres -U postgres
+#      retries: 5
+#      interval: 5s
+#      timeout: 7s
+
+#  rabbitmq-service:
+#    image: 'rabbitmq:3.6-management-alpine'
+#    ports:
+#      - '5672:5672'  # The standard AMQP protocol port
