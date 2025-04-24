@@ -74,15 +74,19 @@ class TeamResource(resources.ModelResource):
         model = Team
 
 class TeamAdmin(ImportExportModelAdmin):
-    list_display = ('id', 'title', 'competition', 'leader', 'get_team_members', 'moderation_status')
-    list_filter = ('competition',)
+    list_display = ('leader__fsp__region', 'title', 'competition', 'leader', 'get_team_members', 'moderation_status')
+    list_filter = ('competition', 'moderation_status', "leader__fsp__region")
     search_fields = ("title", 'get_team_members', 'competition')
     resource_classes = [TeamResource]
 
+class FSPResource(resources.ModelResource):
+    class Meta:
+        model = FSP
 
-class FSPAdmin(admin.ModelAdmin):
-    pass
 
+class FSPAdmin(ImportExportModelAdmin):
+    list_display = ("region", "country", "head")
+    search_fields = ("region", "country", "head")
 
 class InviteCompetitionAdmin(admin.ModelAdmin):
     pass
