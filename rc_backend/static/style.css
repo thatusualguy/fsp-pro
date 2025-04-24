@@ -47,7 +47,7 @@ main { /* Или .main-content-area */
     animation: pulse 6s infinite ease-in-out;
 }
 
-.background-icon {
+.background-icon1 {
     position: absolute;
     top: -10vh;
     right: 0;
@@ -1265,6 +1265,103 @@ p {
 
     .competition-arrow {
         margin: auto 15px auto 10px; /* Уменьшаем отступы стрелки */
+    }
+}
+
+/* --- Desktop layout: фильтры и вся фильтрующая форма в строку --- */
+@media (min-width: 1024px) {
+    .competitions-header-row {
+        flex-direction: row;
+        align-items: center;
+        gap: 36px;
+    }
+    
+    .competitions-main-title {
+        margin-bottom: 0;
+        margin-right: 36px;
+        font-size: 2.5rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .competitions-filters {
+        flex-direction: row;
+        align-items: center;
+        gap: 24px;
+        width: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 0;
+    }
+    
+    .filter-toggles {
+        flex-direction: row;
+        gap: 12px;
+        width: auto;
+    }
+    
+    .btn-filter {
+        min-width: 120px;
+        font-size: 1rem;
+        padding: 10px 18px;
+    }
+    
+    .filter-select-wrapper {
+        display: flex;
+        align-items: center;
+        min-width: 180px;
+        max-width: 290px;
+        margin: 0 0 0 10px;
+        width: auto;
+    }
+    
+    .filter-select {
+        font-size: 1rem;
+        height: 42px;
+        min-width: 135px;
+        padding: 0 38px 0 14px;
+    }
+    
+    .filter-select-arrow {
+        right: 12px;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .competitions-filters-form-wrapper {
+        margin: 0;
+        padding: 0;
+        width: auto;
+    }
+    
+    .competition-filters-form {
+        flex-direction: row;
+        align-items: center;
+        gap: 18px;
+        margin: 0;
+        padding: 0;
+        width: auto;
+    }
+    
+    .date-filter-wrapper {
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        width: auto;
+        margin-left: 12px;
+        margin-bottom: 0;
+    }
+    
+    .date-filter {
+        min-width: 120px;
+        height: 42px;
+        font-size: 1rem;
+        margin: 0 6px 0 0;
+    }
+    
+    .btn-filter,
+    .btn-filter.btn-reset {
+        margin-top: 0;
+        margin-bottom: 0;
     }
 }
 

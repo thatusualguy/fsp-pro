@@ -141,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) { /* ... */
 
         }
-
         closeMobileMenuIfNeeded();
         updateSvgHeight();
     }
@@ -166,41 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('popstate', handleLocationChange);
     handleLocationChange(); // Показать секцию при первой загрузке
 
-    // Функция для показа нужной секции
-    // function showSection(sectionId) {
-    //
-    //     Нормализуем ID (убираем # если он есть)
-        // const targetId = sectionId.startsWith('#') ? sectionId.substring(1) : sectionId;
-        //
-        // let sectionFound = false;
-        // sections.forEach(section => {
-        //     if (section.id === targetId) {
-        //         section.classList.add('active'); // Показываем нужную секцию
-        //         sectionFound = true;
-        //     } else {
-        //         section.classList.remove('active'); // Скрываем остальные
-        //     }
-        // });
-        //
-        // Если секция не найдена (например, плохой хеш), показать стартовую
-        // if (!sectionFound && sections.length > 0) {
-        //     Пытаемся показать 'hero', если ее нет - первую секцию из списка
-            // const defaultSection = document.getElementById('hero') || sections[0];
-            // if (defaultSection) {
-            //     defaultSection.classList.add('active');
-            //     updateNavActiveState('#' + defaultSection.id); // Обновляем и нав. ссылки
-            // }
-        // } else if (sectionFound) {
-        //     updateNavActiveState('#' + targetId); // Обновляем состояние нав. ссылок
-        // }
-        //
-        // window.scrollTo(0, 0); // Прокрутка вверх при смене секции
-        // if (targetId === "about")
-        //     backgroundIcons.forEach(link => {
-        //         link.classList.add('hidden');
-        //     })
-        // updateSvgHeight()
-    // })
 
     // Функция для обновления активного состояния ссылок навигации
     function updateNavActiveState(targetSectionId) {

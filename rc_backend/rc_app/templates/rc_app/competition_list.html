@@ -12,6 +12,138 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
+    <style>
+        /* Mobile first: Стилизация competitions-header-row для мобилок */
+.competitions-header-row {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+  padding: 16px 8px;
+}
+
+.competitions-main-title {
+  font-size: 2rem;
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+
+.competitions-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.filter-toggles {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.btn-filter {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 1rem;
+  /* mobile-friendly button size */
+  min-width: 72px;
+  border-radius: 6px;
+}
+
+/* Обёртка для select чтобы адекватно сжималась */
+.filter-select-wrapper {
+  width: 100%;
+  position: relative;
+  margin: 0;
+}
+.filter-select {
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+/* стрелка для select */
+.filter-select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.date-filter-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.date-filter {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 1rem;
+}
+
+/* Блок дисциплин и кнопок формы */
+.competitions-filters-form-wrapper {
+  width: 100%;
+}
+
+.competition-filters-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Reset button spacing */
+.btn-reset {
+  margin-top: 4px;
+}
+
+/* --- Адаптация для маленьких экранов --- */
+@media (max-width: 600px) {
+  .competitions-header-row {
+    padding: 10px 2vw;
+    gap: 10px;
+  }
+  .competitions-main-title {
+    font-size: 1.4rem;
+    text-align: left;
+  }
+  .filter-toggles {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .btn-filter {
+    font-size: 1rem;
+    min-width: unset;
+    width: 100%;
+    margin: 0;
+  }
+  .filter-select-wrapper,
+  .date-filter-wrapper {
+    width: 100%;
+  }
+  .competition-filters-form {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 400px) {
+  .competitions-header-row {
+    gap: 4px;
+    padding: 6px 1vw;
+  }
+  .competitions-main-title {
+    font-size: 1.05rem;
+  }
+  .btn-filter, .filter-select, .date-filter {
+    font-size: 0.98rem;
+    padding: 8px 0;
+  }
+}
+    </style>
 </head>
 
 <body>
@@ -41,8 +173,8 @@
             </ul>
         </nav>
         <div class="mobile-nav-auth">
-            <a href="#login" class="btn btn-secondary">Войти в личный кабинет</a>
-            <a href="#register" class="btn btn-primary">Зарегистрироваться</a>
+            <a href="/app/login" class="btn btn-secondary">Войти в личный кабинет</a>
+            <a href="/app/register" class="btn btn-primary">Зарегистрироваться</a>
         </div>
     </div>
 
@@ -60,7 +192,7 @@
                 </ul>
             </nav>
             <div class="header-auth">
-                <a href="#login" class="btn btn-primary desktop-login-btn">Войти</a>
+                <a href="/app/login" class="btn btn-primary desktop-login-btn">Войти</a>
             </div>
             <button class="nav-toggle-btn" id="openNavBtn" aria-label="Открыть меню" aria-controls="mobileNav"
                     aria-expanded="false">
@@ -76,9 +208,9 @@
         <div class="container competitions-page">
 
             {# --- Строка с Заголовком и Фильтрами --- #}
+
             <div class="competitions-header-row">
                 <h1 class="competitions-main-title">Соревнования</h1>
-                {# -- Блок фильтров (оставлен статическим в этом примере, но можно сделать динамическим) -- #}
                 <div class="competitions-filters">
                     <div class="filter-toggles">
                         <a href="?type=online{% if competitions_data.current_filters.region %}&region={{ competitions_data.current_filters.region }}{% endif %}{% if competitions_data.current_filters.discipline %}&discipline={{ competitions_data.current_filters.discipline }}{% endif %}"
@@ -89,40 +221,34 @@
                            class="btn btn-filter{% if competitions_data.current_filters.type == 'all' %} active{% endif %}">Все</a>
                     </div>
                     <div class="filter-select-wrapper">
-                        <select name="region-filter" id="region-filter" class="filter-select" onchange="window.location.href='?region=' + this.value + '{% if competitions_data.current_filters.type %}&type={{ competitions_data.current_filters.type }}{% endif %}{% if competitions_data.current_filters.discipline %}&discipline={{ competitions_data.current_filters.discipline }}{% endif %}'">
-                            <option value="all" {% if competitions_data.current_filters.region == 'all' %}selected{% endif %}
-                            >Все регионы</option>
-                            <option value="msk"
-                                    {% if competitions_data.current_filters.region == 'msk' %}selected{% endif %}
-                            >Москва</option>
-                            <option value="spb"
-                                    {% if competitions_data.current_filters.region == 'spb' %}selected{% endif %}
-                            >Санкт-Петербург</option>
+                        <select name="region-filter" id="region-filter" class="filter-select"
+                                onchange="window.location.href='?region=' + this.value + '{% if competitions_data.current_filters.type %}&type={{ competitions_data.current_filters.type }}{% endif %}{% if competitions_data.current_filters.discipline %}&discipline={{ competitions_data.current_filters.discipline }}{% endif %}'">
+                            <option value="all" {% if competitions_data.current_filters.region == 'all' %}selected{% endif %}>Все регионы</option>
+                            <option value="msk" {% if competitions_data.current_filters.region == 'msk' %}selected{% endif %}>Москва</option>
+                            <option value="spb" {% if competitions_data.current_filters.region == 'spb' %}selected{% endif %}>Санкт-Петербург</option>
                             {# {% for region in competitions_data.regions_for_filter %}
                             <option value="{{ region.value }}" {% if competitions_data.current_filters.region == region.value %}selected{% endif %}>{{ region.name }}
                             </option>
-                            {% endfor %}
+                            {% endfor %} #}
                         </select>
                         <svg class="filter-select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                              fill="currentColor" width="18" height="18">
                             <path d="M7 10l5 5 5-5z"/>
                         </svg>
                     </div>
-                    
                     <div class="competitions-filters-form-wrapper">
                         <form id="competition-filters-form" class="competition-filters-form" method="get">
-                            {# Сохраняем параметры type и region при отправке формы #}
                             <input type="hidden" name="type" value="{{ competitions_data.current_filters.type }}">
                             <input type="hidden" name="region" value="{{ competitions_data.current_filters.region }}">
-                            
-                            {# === Фильтр по дисциплине (select) === #}
                             <div class="filter-select-wrapper">
                                 <select name="discipline" class="filter-select">
-                                    <option value="" {% if not competitions_data.current_filters.discipline %}selected{% endif %}>Все дисциплины</option>
+                                    <option value="" {% if not competitions_data.current_filters.discipline %}selected{% endif %}>Все дисциплины
+                                    </option>
                                     {% for disc in disciplines %}
-                                        <option value="{{ disc.discipline }}"
-                                            {% if competitions_data.current_filters.discipline == disc.discipline %}selected{% endif %}
-                                        >{{ disc.discipline }}</option>
+                                    <option value="{{ disc.discipline }}"
+                                            {% if competitions_data.current_filters.discipline == disc.discipline %}selected{% endif %}>
+                                        {{ disc.discipline }}
+                                    </option>
                                     {% endfor %}
                                 </select>
                                 <svg class="filter-select-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -130,19 +256,20 @@
                                     <path d="M7 10l5 5 5-5z"/>
                                 </svg>
                             </div>
-                            
-                            {# === Фильтр по дате (показываем datepicker и кнопку) === #}
                             <div class="date-filter-wrapper">
-                                <input type="date" name="date_from" class="date-filter" value="{{ competitions_data.current_filters.date_from|default_if_none:'' }}">
+                                <input type="date" name="date_from" class="date-filter"
+                                       value="{{ competitions_data.current_filters.date_from|default_if_none:'' }}">
                                 <button type="submit" class="btn btn-filter">Применить</button>
                                 {% if competitions_data.current_filters.discipline or competitions_data.current_filters.date_from %}
-                                    <a href="?type={{ competitions_data.current_filters.type }}&region={{ competitions_data.current_filters.region }}" class="btn btn-filter btn-reset">Сбросить</a>
+                                <a href="?type={{ competitions_data.current_filters.type }}&region={{ competitions_data.current_filters.region }}"
+                                   class="btn btn-filter btn-reset">Сбросить</a>
                                 {% endif %}
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
+
 
             <div class="competitions-list">
                 {% if competitions_by_month %}
@@ -238,62 +365,62 @@
 </footer>
 
 <style>
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-}
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
 
-/* Стили для формы фильтров */
-.competitions-filters-form-wrapper {
-    display: flex;
-    margin-top: 10px;
-}
-
-.competition-filters-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-}
-
-.date-filter-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.date-filter {
-    padding: 8px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.btn-reset {
-    background-color: #f5f5f5;
-    color: #333;
-}
-
-@media (max-width: 768px) {
+    /* Стили для формы фильтров */
     .competitions-filters-form-wrapper {
-        flex-direction: column;
+        display: flex;
+        margin-top: 10px;
     }
-    
+
     .competition-filters-form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .date-filter-wrapper {
+        display: flex;
         flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
     }
-}
+
+    .date-filter-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .date-filter {
+        padding: 8px 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .btn-reset {
+        background-color: #f5f5f5;
+        color: #333;
+    }
+
+    @media (max-width: 768px) {
+        .competitions-filters-form-wrapper {
+            flex-direction: column;
+        }
+
+        .competition-filters-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .date-filter-wrapper {
+            flex-wrap: wrap;
+        }
+    }
 </style>
 
 <!-- ===== Login Modal ===== -->
@@ -330,7 +457,7 @@
 
                 <!-- Ссылки в футере для модалки -->
                 <div class="login-links-footer modal-variant"> <!-- Класс modal-variant -->
-                    <a href="#register" class="register-link">Нет аккаунта?</a>
+                    <a href="/app/register" class="register-link">Нет аккаунта?</a>
                     <a href="#forgot" class="forgot-password-link">Забыли пароль?</a>
                 </div>
             </form>
@@ -341,88 +468,88 @@
 </div>
 <!-- ===== End Login Modal ===== -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    // Мобильное меню
-    const openNavBtn = document.getElementById('openNavBtn');
-    const closeNavBtn = document.getElementById('closeNavBtn');
-    const mobileNav = document.getElementById('mobileNav');
-    
-    if (mobileNav && openNavBtn && closeNavBtn) {
-        const mobileNavLinks = mobileNav.querySelectorAll('a');
+    document.addEventListener('DOMContentLoaded', () => {
+        // Мобильное меню
+        const openNavBtn = document.getElementById('openNavBtn');
+        const closeNavBtn = document.getElementById('closeNavBtn');
+        const mobileNav = document.getElementById('mobileNav');
 
-        function openMobileMenu() {
-            mobileNav.removeAttribute('hidden');
-            setTimeout(() => {
-                mobileNav.classList.add('active');
-                openNavBtn.setAttribute('aria-expanded', 'true');
-                document.body.style.overflow = 'hidden';
-                closeNavBtn.focus();
-            }, 10);
-        }
+        if (mobileNav && openNavBtn && closeNavBtn) {
+            const mobileNavLinks = mobileNav.querySelectorAll('a');
 
-        function closeMobileMenu() {
-            mobileNav.classList.remove('active');
-            openNavBtn.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
-            mobileNav.addEventListener('transitionend', () => {
-                if (!mobileNav.classList.contains('active')) {
-                    mobileNav.setAttribute('hidden', '');
+            function openMobileMenu() {
+                mobileNav.removeAttribute('hidden');
+                setTimeout(() => {
+                    mobileNav.classList.add('active');
+                    openNavBtn.setAttribute('aria-expanded', 'true');
+                    document.body.style.overflow = 'hidden';
+                    closeNavBtn.focus();
+                }, 10);
+            }
+
+            function closeMobileMenu() {
+                mobileNav.classList.remove('active');
+                openNavBtn.setAttribute('aria-expanded', 'false');
+                document.body.style.overflow = '';
+                mobileNav.addEventListener('transitionend', () => {
+                    if (!mobileNav.classList.contains('active')) {
+                        mobileNav.setAttribute('hidden', '');
+                    }
+                }, {once: true});
+                openNavBtn.focus();
+            }
+
+            openNavBtn.addEventListener('click', () => {
+                if (mobileNav.classList.contains('active')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
                 }
-            }, { once: true });
-            openNavBtn.focus();
-        }
+            });
 
-        openNavBtn.addEventListener('click', () => {
-            if (mobileNav.classList.contains('active')) {
-                closeMobileMenu();
-            } else {
-                openMobileMenu();
-            }
-        });
+            closeNavBtn.addEventListener('click', closeMobileMenu);
 
-        closeNavBtn.addEventListener('click', closeMobileMenu);
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
 
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', closeMobileMenu);
-        });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+                    closeMobileMenu();
+                }
+            });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
-                closeMobileMenu();
-            }
-        });
-
-        document.addEventListener('click', (e) => {
-            if (mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && e.target !== openNavBtn) {
-                closeMobileMenu();
-            }
-        });
-    }
-
-    // Фильтры соревнований
-    const form = document.getElementById('competition-filters-form');
-    if (form) {
-        // Автоматически сабмитим форму при выборе дисциплины
-        const disciplineSelect = form.querySelector('select[name="discipline"]');
-        if (disciplineSelect) {
-            disciplineSelect.addEventListener('change', function() { 
-                form.submit(); 
+            document.addEventListener('click', (e) => {
+                if (mobileNav.classList.contains('active') && !mobileNav.contains(e.target) && e.target !== openNavBtn) {
+                    closeMobileMenu();
+                }
             });
         }
-    }
 
-    // Динамическая высота фоновой картинки
-    function updateSvgHeight() {
-        const bodyHeight = document.body.scrollHeight;
-        const svgContainer = document.querySelector('.backgroundImage');
-        if (svgContainer) {
-            svgContainer.style.height = `${bodyHeight}px`;
+        // Фильтры соревнований
+        const form = document.getElementById('competition-filters-form');
+        if (form) {
+            // Автоматически сабмитим форму при выборе дисциплины
+            const disciplineSelect = form.querySelector('select[name="discipline"]');
+            if (disciplineSelect) {
+                disciplineSelect.addEventListener('change', function () {
+                    form.submit();
+                });
+            }
         }
-    }
 
-    window.addEventListener('resize', updateSvgHeight);
-    window.addEventListener('load', updateSvgHeight);
-    updateSvgHeight();
-});
+        // Динамическая высота фоновой картинки
+        function updateSvgHeight() {
+            const bodyHeight = document.body.scrollHeight;
+            const svgContainer = document.querySelector('.backgroundImage');
+            if (svgContainer) {
+                svgContainer.style.height = `${bodyHeight}px`;
+            }
+        }
+
+        window.addEventListener('resize', updateSvgHeight);
+        window.addEventListener('load', updateSvgHeight);
+        updateSvgHeight();
+    });
 </script>
 </html>

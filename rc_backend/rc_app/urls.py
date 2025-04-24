@@ -10,7 +10,9 @@ from .views.team_views import *
 
 app_name = "rc_app"
 urlpatterns = [
-    path("", public.index, name="index"),
+    # path("", public.index, name="index"),
+    path("about", public.about, name="about"),
+    path("regions", public.regions, name="regions"),
     # path("competition/<uuid:pk>/", PublicCompetitionsDetailView.as_view(), name="public_competition_details"),
     path("region/<uuid:pk>/", PublicRegionsDetailView.as_view(), name="public_region_details"),
 
