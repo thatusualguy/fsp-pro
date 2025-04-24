@@ -6,9 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ФСП PRO - Платформа для спортивного программирования</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link rel="stylesheet" href="{% static 'regions.css' %}">
-    <link rel="stylesheet" href="{% static 'region-details.css' %}">
-    <link rel="stylesheet" href="{% static 'competition_details.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
@@ -16,8 +13,8 @@
 
 <body>
 <main>
-    <div class="background-icon"></div>
-    <div class="backgroundImage"></div>
+    <div class="backgroundImage1"></div>
+    <div class="background-icon1"></div>
 
     <!-- Mobile Navigation -->
     <div class="mobile-nav" id="mobileNav" role="dialog" aria-modal="true" aria-labelledby="mobileNavTitle" hidden>
@@ -41,8 +38,8 @@
             </ul>
         </nav>
         <div class="mobile-nav-auth">
-            <a href="#login" class="btn btn-secondary">Войти в личный кабинет</a>
-            <a href="#register" class="btn btn-primary">Зарегистрироваться</a>
+            <a href="/app/login" class="btn btn-secondary">Войти в личный кабинет</a>
+            <a href="/app/register" class="btn btn-primary">Зарегистрироваться</a>
         </div>
     </div>
 
@@ -60,7 +57,7 @@
                 </ul>
             </nav>
             <div class="header-auth">
-                <a href="#login" class="btn btn-primary desktop-login-btn">Войти</a>
+                <a href="/app/login" class="btn btn-primary desktop-login-btn">Войти</a>
             </div>
             <button class="nav-toggle-btn" id="openNavBtn" aria-label="Открыть меню" aria-controls="mobileNav"
                     aria-expanded="false">
@@ -88,7 +85,7 @@
         <!-- Features Section -->
         <section class="features" id="about_fsp"> <!-- Added ID for nav link -->
             <div class="container">
-                <h2>{{ }}</h2>
+                <h2>Что умеет?</h2>
                 <div class="features-grid">
                     <div class="feature-item">
                         <img class="feature-icon" src="{% static '/icon/icon_cursor.svg' %}" alt="" loading="lazy">
@@ -248,7 +245,7 @@
 
                 <!-- Ссылки в футере для модалки -->
                 <div class="login-links-footer modal-variant"> <!-- Класс modal-variant -->
-                    <a href="#register" class="register-link">Нет аккаунта?</a>
+                    <a href="/app/register" class="register-link">Нет аккаунта?</a>
                     <a href="#forgot" class="forgot-password-link">Забыли пароль?</a>
                 </div>
             </form>

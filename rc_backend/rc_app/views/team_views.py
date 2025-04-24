@@ -3,8 +3,11 @@ from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.db.models import Q
-from django.shortcuts import get_object_or_404
-from django.urls import reverse
+from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
+from django.utils import timezone
+from django.views import View
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
@@ -172,15 +175,82 @@ class TeamDeleteView(DeleteView):
 
 class MemberSearchListView(ListView):
     model = MemberSearch
-    fields = "__all__"
+    context_object_name = 'member_searches'
+
+    def get_queryset(self):
+        competition_id = self.kwargs.get('competition_id')
+        competition = get_object_or_404(Competition, pk=competition_id)
+        return MemberSearch.objects.filter(team__competition=competition)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        competition_id = self.kwargs['competition_id']
+        competition_id = self.kwargs.get('competition_id')
         competition = get_object_or_404(Competition, pk=competition_id)
-        ms = MemberSearch.objects.filter(team__competition=competition)
-        context['member_search'] = ms
+        user_profile = self.request.user.profile
+
+        # Check if the user is already in a team for this competition
+        is_in_team = already_in_team_for_competition(competition, user_profile)
+
+        # Add a flag to each member search to indicate if the user has already applied
+        member_searches = context['member_searches']
+        for member_search in member_searches:
+            member_search.has_applied = JoinRequest.objects.filter(
+                profile=user_profile,
+                team=member_search.team,
+                join_status=JoinRequestEnum.PENDING
+            ).exists()
+
+        context['competition'] = competition
+        context['is_in_team'] = is_in_team
         return context
+
+
+class JoinRequestForm(forms.Form):
+    description = forms.CharField(widget=forms.Textarea, label="Description", required=False)
+
+
+def already_in_team_for_competition(competition, profile):
+    is_in_team = (Team.objects.filter(competition=competition,
+                                      team_members=profile) | Team.objects.filter(leader=profile, )
+                  ).exists()
+    return is_in_team
+
+
+class ApplyForPositionView(LoginRequiredMixin, FormView):
+    form_class = JoinRequestForm
+    template_name = 'rc_app/joinrequest_form.html'
+
+    def get_success_url(self):
+        search_id = self.kwargs['search_id']
+        member_search = get_object_or_404(MemberSearch, id=search_id)
+        competition_id = member_search.team.competition.id
+        return reverse_lazy('rc_app:competition_ms', kwargs={'competition_id': competition_id})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_id = self.kwargs['search_id']
+        member_search = get_object_or_404(MemberSearch, id=search_id)
+        context['competition_name'] = member_search.team.competition.title
+        context['team_name'] = member_search.team.title
+        return context
+
+    def form_valid(self, form):
+        search_id = self.kwargs['search_id']
+        member_search = get_object_or_404(MemberSearch, id=search_id)
+
+        # Check if the user is already a member of the team
+        if already_in_team_for_competition(member_search.team.competition, self.request.user.profile):
+            return HttpResponseForbidden("You are already a member of the team.")
+
+        # Process the application (e.g., create a join request)
+        JoinRequest.objects.create(
+            profile=self.request.user.profile,
+            team=member_search.team,
+            description=form.cleaned_data['description'],
+            join_status='PENDING'
+        )
+
+        return super().form_valid(form)
 
 
 class MemberSearchCreateView(CreateView):
@@ -213,6 +283,46 @@ class MemberSearchUpdateView(UpdateView):
         if team.leader != profile:
             raise PermissionDenied("You do not have permission to delete this team.")
         return super().dispatch(request, *args, **kwargs)
+
+
+class TeamLeaveView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        team_id = kwargs.get('team_id')
+        profile = request.user.profile
+        team = get_object_or_404(Team, id=team_id)
+
+        # Check if the user is the leader
+        if team.leader == profile:
+            raise PermissionDenied("The leader cannot leave the team. Please assign a new leader before leaving.")
+
+        if team.competition.registration_until < timezone.now():
+            raise PermissionDenied("You cannot leave after registration end.")
+
+        # Check if the user is a member of the team
+        if profile in team.team_members.all():
+            team.team_members.remove(profile)
+        else:
+            raise PermissionDenied("You are not a member of this team.")
+
+        return HttpResponseRedirect(reverse('rc_app:my_teams_list'))
+
+
+class DisbandTeamView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        team = Team.objects.get(id=kwargs['team_id'])
+        profile = request.user.profile
+
+        print(kwargs['team_id'])
+        # Check if the current user is the team leader
+        if team.leader != profile:
+            raise PermissionDenied("You do not have permission to disband this team.")
+
+        if team.competition.registration_until > timezone.now():
+            raise PermissionDenied("Too late.")
+
+        # Disband the team
+        team.disband()
+        return redirect('rc_app:my_teams_list')
 
 
 class MemberSearchDetailView(DetailView):

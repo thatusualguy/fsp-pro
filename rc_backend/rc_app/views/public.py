@@ -227,6 +227,11 @@ class PublicRegionsDetailView(DetailView):
     model = FSP
     template_name = "rc_app/public/regions_detail.html"
 
+def regions(request):
+    return render(request, 'rc_app/public/regions.html')
+
+def about(request):
+    return render(request, 'rc_app/public/about.html')
 
 def login(request):
     return render(request, 'rc_app/login/login.html')

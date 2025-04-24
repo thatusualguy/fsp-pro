@@ -22,6 +22,13 @@ class Team(models.Model):
         verbose_name='Статус модерации'
     )
 
+    def disband(self):
+        # Clear team members
+        self.team_members.clear()
+        # Optionally, you might want to clear related invitations or other team-specific data here
+        # Delete the team instance
+        self.delete()
+
     def __str__(self):
         return self.title
 
