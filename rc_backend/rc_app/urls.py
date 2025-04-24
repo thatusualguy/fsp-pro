@@ -28,10 +28,11 @@ urlpatterns = [
     path("profiles/<uuid:pk>/", ProfileDetailView.as_view(), name="profile_detail"),
     path("profiles/<uuid:pk>/edit/", ProfileUpdateView.as_view(), name="edit_profile"),
 
+    path("myteams/", MyTeamsListView.as_view(), name="my_teams_list"),
     path("team/<uuid:pk>/", TeamDetailsView.as_view(), name="team_details"),
     path("team/<uuid:pk>/edit", TeamUpdateView.as_view(), name="team_details_update"),
     path("team/<uuid:pk>/delete", TeamDeleteView.as_view(), name="team_details_delete"),
-    path("team/<uuid:pk>/new", TeamCreateView.as_view(), name="team_details_new"),
+    path("competitions/<uuid:competition_id>/new_team", TeamCreateView.as_view(), name="team_details_new"),
 
     path("team/<uuid:pk>/request", MemberSearchDetailView.as_view(), name="member_search_details"),
     path("team/<uuid:pk>/request/edit", MemberSearchUpdateView.as_view(), name="member_search_edit"),

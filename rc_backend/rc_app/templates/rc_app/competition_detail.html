@@ -2,22 +2,38 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Competition Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Competition Details</h1>
-<div>
-    <h2>{{ competition.title }}</h2>
-    <p>{{ competition.competition_id }}</p>
-    <p><strong>Start Date:</strong> {{ competition.start_date }}</p>
-    <p><strong>Finish Date:</strong> {{ competition.finish_date }}</p>
-    <p><strong>Online:</strong> {{ competition.online|yesno:"Yes,No" }}</p>
-    <p><strong>Place:</strong> {{ competition.place }}</p>
-    <p><strong>Description:</strong> {{ competition.description }}</p>
-    <p><strong>Max Participants:</strong> {{ competition.max_participants }}</p>
-    <p><strong>Min Participants:</strong> {{ competition.min_participants }}</p>
-    <p><strong>Competition Type:</strong> {{ competition.competition_type }}</p>
-    <p><strong>Is Shown:</strong> {{ competition.is_shown|yesno:"Yes,No" }}</p>
+<div class="container mt-5">
+    <h1 class="mb-4">Competition Details</h1>
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">{{ competition.title }}</h2>
+            <p class="card-text"><strong>ID:</strong> {{ competition.id }}</p>
+            <p class="card-text"><strong>Start Date:</strong> {{ competition.start_date }}</p>
+            <p class="card-text"><strong>Finish Date:</strong> {{ competition.finish_date }}</p>
+            <p class="card-text"><strong>Online:</strong> {{ competition.online|yesno:"Yes,No" }}</p>
+            <p class="card-text"><strong>Place:</strong> {{ competition.place }}</p>
+            <p class="card-text"><strong>Description:</strong> {{ competition.description }}</p>
+            <p class="card-text"><strong>Max Participants:</strong> {{ competition.max_participants }}</p>
+            <p class="card-text"><strong>Min Participants:</strong> {{ competition.min_participants }}</p>
+            <p class="card-text"><strong>Competition Type:</strong> {{ competition.competition_type }}</p>
+            <p class="card-text"><strong>Is Shown:</strong> {{ competition.is_shown|yesno:"Yes,No" }}</p>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'rc_app:competition_teams_list' competition.id %}" class="btn btn-primary">View
+            Teams</a>
+        <a href="{% url 'rc_app:team_details_new' competition.id %}" class="btn btn-success">Create Team</a>
+        <a href="{% url 'rc_app:member_searches' competition.id %}" class="btn btn-info">View Member
+            Searches</a>
+    </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

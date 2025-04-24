@@ -1,9 +1,12 @@
 from pprint import pprint
 
 from annoying.functions import get_object_or_None
+from django import forms
 from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView
+from django.urls import reverse
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
 from rc_backend.rc_app.models.invitation import TeamInvitation
@@ -33,9 +36,68 @@ class TeamDetailsView(DetailView):
         return context
 
 
-class TeamCreateView(CreateView):
-    model = Team
-    fields = "__all__"
+class TeamCreateForm(forms.ModelForm):
+    invitees = forms.ModelMultipleChoiceField(
+        queryset=Profile.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Invite Members"
+    )
+
+    class Meta:
+        model = Team
+        # fields = ['title', ]
+        fields = ['title', 'invitees']
+
+    def __init__(self, *args, **kwargs):
+        leader = kwargs.pop('leader', None)
+        competition = kwargs.pop('competition', None)
+        context = self.get_context()
+        super().__init__(*args, **kwargs)
+        if leader:
+            # Filter invitees to only include profiles from the same region as the leader
+            self.fields['invitees'].queryset = Profile.objects.filter(fsp=leader.fsp).filter(~Q(id=leader.id))
+            context['competition'] = competition
+            pprint(context)
+        else:
+            raise PermissionDenied
+
+
+class TeamCreateView(FormView):
+    # template_name = 'rc_app/team_form.html'
+    form_class = TeamCreateForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Pass the leader to the form
+        kwargs['leader'] = self.request.user.profile
+        kwargs['competition_id'] = get_object_or_404(Competition, id=kwargs['competition_id'])
+        return kwargs
+
+    def form_valid(self, form):
+        competition_id = self.kwargs['competition_id']
+        competition = Competition.objects.get(id=competition_id)
+
+        # Set the competition for the team
+        form.instance.competition = competition
+
+        # Set the current user as the team leader
+        form.instance.leader = self.request.user.profile
+
+        # Save the team
+        response = super().form_valid(form)
+
+        form.instance.team_members.add(self.request.user.profile)
+
+        # Handle invitations
+        invitees = form.cleaned_data['invitees']
+        for invitee in invitees:
+            TeamInvitation.objects.create(inviter_team=form.instance, invitee=invitee)
+
+        return response
+
+    def get_success_url(self):
+        return reverse('rc_app:team_details', kwargs={'pk': self.object.pk})
 
 
 class TeamUpdateView(UpdateView):
@@ -52,6 +114,16 @@ class TeamUpdateView(UpdateView):
             raise PermissionDenied("You do not have permission to update this team.")
 
         return super().dispatch(request, *args, **kwargs)
+
+
+class MyTeamsListView(ListView):
+    model = Team
+    template_name = "rc_app/team_list.html"
+
+    def get_queryset(self):
+        member_teams = self.request.user.profile.member_teams.all()
+        leader_teams = self.request.user.profile.leader_teams.all()
+        return member_teams | leader_teams
 
 
 class TeamDeleteView(DeleteView):
@@ -75,7 +147,8 @@ class MemberSearchListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        competition = get_object_or_404(Competition, pk=context["competition_id"])
+        competition_id = self.kwargs['competition_id']
+        competition = get_object_or_404(Competition, pk=competition_id)
         ms = MemberSearch.objects.filter(team__competition=competition)
         context['member_search'] = ms
         return context
@@ -210,4 +283,3 @@ class LeaderPendingJoinRequestUpdateView(UpdateView):
         if team.leader != profile:
             raise PermissionDenied("You do not have permission to delete this team.")
         return super().dispatch(request, *args, **kwargs)
-

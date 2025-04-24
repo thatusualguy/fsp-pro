@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Searches</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">Member Searches</h1>
+    {% if member_searches %}
+        <div class="list-group">
+            {% for search in member_searches %}
+                <div class="list-group-item">
+                    {#                    <h5 class="mb-1">{{ search.position_title }}</h5>#}
+                    <p class="mb-1"><strong>Description:</strong> {{ search.description }}</p>
+                    {#                    <p class="mb-1"><strong>Requirements:</strong> {{ search.requirements }}</p>#}
+                    <p class="mb-1"><strong>Team:</strong> {{ search.team.name }}</p>
+                    <p class="mb-1"><strong>Team size:</strong> {{ search.team.team_members|length }}</p>
+                    <a href="{% url 'rc_app:apply_for_position' search.id %}" class="btn btn-primary">Apply for
+                        Position</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No member searches available.</p>
+    {% endif %}
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
