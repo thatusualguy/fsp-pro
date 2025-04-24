@@ -24,29 +24,25 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - static_volume:/app/rc_backend/staticfiles
 
+  russian-cup-pg:
+    container_name: "russian-cup-pg"
+    image: postgres:15.0
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: b1fddce8ae427c0d
+    volumes:
+      - "../pgdata:/var/lib/postgresql/data"
+    healthcheck:
+      test: pg_isready -d postgres -U postgres
+      retries: 5
+      interval: 5s
+      timeout: 7s
+
 volumes:
   static_volume:
 
 # Uncomment below services if needed
 
-#  russian-cup-pg:
-#    container_name: "russian-cup-pg"
-#    image: postgres:15.0
-#    ports:
-#      - "5433:5432"
-#    environment:
-#      POSTGRES_DB: postgres
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: b1fddce8ae427c0d
-#    volumes:
-#      - "../pgdata:/var/lib/postgresql/data"
-#    healthcheck:
-#      test: pg_isready -d postgres -U postgres
-#      retries: 5
-#      interval: 5s
-#      timeout: 7s
-
-#  rabbitmq-service:
-#    image: 'rabbitmq:3.6-management-alpine'
-#    ports:
-#      - '5672:5672'  # The standard AMQP protocol port

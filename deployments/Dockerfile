@@ -1,3 +1,5 @@
+FROM python:3.12-bullseye
+
 WORKDIR /app
 
 COPY deployments/requirements.txt /app/deployments/requirements.txt

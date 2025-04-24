@@ -110,6 +110,7 @@ from django.views.generic import ListView
 # from .utils import prepare_competition_data # Импорт вашей функции обработки
 from pprint import pprint # Для отладки
 
+
 class CompetitionListView(ListView):
     model = Competition
     template_name = "rc_app/competition_list.html"
@@ -189,7 +190,6 @@ class CompetitionListView(ListView):
         context['disciplines'] = all_disciplines
         pprint(context)
         return context
-
 
 
 class CompetitionDetailView(DetailView):

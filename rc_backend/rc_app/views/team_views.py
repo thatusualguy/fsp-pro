@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView, ListView, FormView
 
 from rc_backend.rc_app.models import Team, Profile, Competition
-from rc_backend.rc_app.models.enums import JoinRequestEnum
+from rc_backend.rc_app.models.enums import JoinRequestEnum, CompetitionTypeEnum
 from rc_backend.rc_app.models.join_request import JoinRequest
 from rc_backend.rc_app.models.team import MemberSearch, CompetitionResult
 
@@ -52,8 +52,12 @@ class TeamCreateForm(forms.ModelForm):
         leader = kwargs.pop('leader', None)
         user = kwargs.pop('user', None)
         is_create = kwargs.pop('is_create', False)
-        competition = kwargs.pop('competition', None)
+        competition: Competition = kwargs.pop('competition', None)
         super().__init__(*args, **kwargs)
+
+        if competition:
+            if competition.competition_type == CompetitionTypeEnum.FEDERAL:
+                raise PermissionDenied
 
         if user != leader:
             raise PermissionDenied
@@ -87,6 +91,10 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         kwargs['user'] = self.request.user.profile
         kwargs['is_create'] = True
         kwargs['competition'] = get_object_or_404(Competition, id=competition_id)
+
+        if kwargs['competition'].competition_type == CompetitionTypeEnum.FEDERAL:
+            raise PermissionDenied
+
         return kwargs
 
     def get_context_data(self, **kwargs):
