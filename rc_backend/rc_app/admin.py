@@ -100,6 +100,10 @@ class ModerationCompetitionAdmin(admin.ModelAdmin):
     reject.short_description = "Отклонить выбранные заявки"
 
 
+class DisciplineAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(Competition, CompetitionAdmin)
 admin.site.register(CompetitionModerationProxy, ModerationCompetitionAdmin)
 admin.site.register(Team, TeamAdmin)
