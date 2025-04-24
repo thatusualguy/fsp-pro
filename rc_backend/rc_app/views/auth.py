@@ -16,6 +16,7 @@ class LoginUser(LoginView):
     form_class = AuthenticationForm
     # redirect_authenticated_user = True
     success_url = reverse_lazy('/app/profile/')
+    next_page = reverse_lazy('rc_app:profile')
 
     def form_valid(self, form):
         username = form.cleaned_data.get('username')
@@ -76,7 +77,7 @@ class RegisterUser(FormView):
 
 
 class LogoutUser(LogoutView):
-    next_page = reverse_lazy('login')
+    next_page = reverse_lazy('/app/about')
 
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)

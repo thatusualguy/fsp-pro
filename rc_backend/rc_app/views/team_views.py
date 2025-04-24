@@ -177,9 +177,27 @@ class TeamCreateView(LoginRequiredMixin, FormView):
         return reverse('rc_app:my_teams_list')
 
 
-class TeamUpdateView(UpdateView):
+class TeamUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Team
+        fields = ['title', 'invitees']
+
+    invitees = forms.ModelMultipleChoiceField(
+        queryset=Profile.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Пригласить участников"
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+        self.fields['invitees'].queryset = Profile.objects.all()
+
+
+class TeamUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = 'rc_app/team_form.html'
     model = Team
-    fields = "__all__"
+    form_class = TeamUpdateForm
 
     def dispatch(self, request, *args, **kwargs):
         team: Team = self.get_object()
