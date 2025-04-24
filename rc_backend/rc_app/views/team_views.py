@@ -32,7 +32,9 @@ class TeamDetailsView(DetailView):
 
         context['members'] = members
         context['leader'] = leader
+        context['now'] = timezone.now()
         context['competition'] = competition
+        context['is_member'] = self.request.user.profile in team.team_members.all()
         context['region'] = leader_fsp
         context['competition_result'] = competition_result
         return context
