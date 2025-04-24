@@ -2,6 +2,10 @@ from datetime import datetime
 
 from django.views.generic import DetailView
 
+from rc_backend.rc_app.models import Competition, Team, FSP
+
+from django.views.generic import DetailView
+
 from rc_backend.rc_app.models import Competition, Team
 from rc_backend.rc_app.models.discipline import Discipline
 
@@ -97,6 +101,7 @@ def prepare_competition_data(queryset):
     # pprint(data)
     return data
 
+
 import calendar
 from collections import defaultdict
 from django.shortcuts import get_object_or_404
@@ -104,7 +109,7 @@ from django.views.generic import ListView
 # from django.utils.translation import gettext as _ # Если используете перевод
 # from .models import Competition, Discipline # Импорт моделей
 # from .utils import prepare_competition_data # Импорт вашей функции обработки
-from pprint import pprint # Для отладки
+from pprint import pprint  # Для отладки
 
 
 class CompetitionListView(ListView):
@@ -135,11 +140,8 @@ class CompetitionListView(ListView):
         # === Фильтрация по региону ===
         region = self.request.GET.get("region", "all")
         if region != "all":
-            if region == "msk":
-                queryset = queryset.filter(place__icontains="Москва")
-            elif region == "spb":
-                queryset = queryset.filter(place__icontains="Петербург") | queryset.filter(place__icontains="Санкт-Петербург")
-                # Можно добавить другие регионы по необходимости
+            target_fsp = FSP.objects.get(region__iexact=region)
+            queryset = queryset.filter(fsps=target_fsp)
 
         # === Фильтрация по дате: выбранная дата попадает в диапазон start_date..end_date ===
         date_from_str = self.request.GET.get("date_from")
@@ -176,12 +178,13 @@ class CompetitionListView(ListView):
 
         # Забираем все нужные фильтры из запроса
         context['competitions_data'] = {
-             'current_filters': {
-                 'type': self.request.GET.get('type', 'all'),
-                 'region': self.request.GET.get('region', 'all'),
-                 'discipline': self.request.GET.get('discipline', None),
-                 'date_from': self.request.GET.get('date_from', None),
-             }
+            'current_filters': {
+                'type': self.request.GET.get('type', 'all'),
+                'region': self.request.GET.get('region', 'all'),
+                'discipline': self.request.GET.get('discipline', None),
+                'date_from': self.request.GET.get('date_from', None),
+            },
+            "regions_for_filter": [x.region for x in FSP.objects.all()],
         }
         context['disciplines'] = all_disciplines
         pprint(context)
