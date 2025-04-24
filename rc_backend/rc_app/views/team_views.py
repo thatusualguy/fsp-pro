@@ -53,14 +53,19 @@ class TeamCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         leader = kwargs.pop('leader', None)
-        user = kwargs.pop('user', None)
+        user: Profile = kwargs.pop('user', None)
         is_create = kwargs.pop('is_create', False)
         competition: Competition = kwargs.pop('competition', None)
         super().__init__(*args, **kwargs)
 
         if competition:
-            if competition.competition_type == CompetitionTypeEnum.FEDERAL:
-                raise PermissionDenied
+            regions = competition.fsps.values_list('region', flat=True)
+            match competition.competition_type:
+                case CompetitionTypeEnum.FEDERAL:
+                    raise PermissionDenied
+                case CompetitionTypeEnum.REGIONAL:
+                    if user.fsp.region not in regions:
+                        raise PermissionDenied
 
         if user != leader:
             raise PermissionDenied

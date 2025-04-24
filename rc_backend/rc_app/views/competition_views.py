@@ -1,11 +1,7 @@
 from datetime import datetime
-from django.shortcuts import get_object_or_404
-import calendar
-from collections import defaultdict
-from pprint import pprint
-from django.shortcuts import get_object_or_404
-from django.utils.translation import gettext as _
-from django.views.generic import ListView, DetailView
+
+from django.views.generic import DetailView
+
 from rc_backend.rc_app.models import Competition, Team
 from rc_backend.rc_app.models.discipline import Discipline
 
@@ -129,6 +125,8 @@ class CompetitionListView(ListView):
 
         # === Фильтрация по типу (online/offline) ===
         competition_type = self.request.GET.get("type", "all")
+        queryset = queryset.filter(is_shown=True)
+
         if competition_type == "online":
             queryset = queryset.filter(online=True)
         elif competition_type == "offline":
@@ -152,8 +150,6 @@ class CompetitionListView(ListView):
                 pprint(date_from)
                 start_date = datetime(date_from.year, date_from.month, date_from.day + 1, 23, 59)
                 end_date = datetime(date_from.year, date_from.month, date_from.day + 1, 0, 0)
-                print(start_date)
-                print(end_date)
                 # Важно: делаем фильтр "start_date <= date_from <= end_date"
                 queryset = queryset.filter(start_date__lte=start_date, finish_date__gte=end_date)
             except ValueError:
