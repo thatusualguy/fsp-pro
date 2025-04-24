@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="mb-4">{{ team.title }}</h1>
+    <div class="card mb-3">
+        <div class="card-header">
+            Leader
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ leader }}</h5>
+            <p class="card-text">Region: {{ region }}</p>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            Members
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for member in members %}
+                <li class="list-group-item">{{ member }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            Competition
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ competition }}</h5>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            Competition Result
+        </div>
+        <div class="card-body">
+            {% if competition_result %}
+                <p class="card-text">Points: {{ competition_result.points }}</p>
+                <p class="card-text">Place: {{ competition_result.place }}</p>
+            {% else %}
+                <p class="card-text">No results available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -3,7 +3,7 @@ from django.urls import path
 from .views import public
 from .views.auth import LoginUser, LogoutUser, RegisterUser
 from .views.competition_views import *
-from .views.profile_views import ProfilesListView, ProfileDetailView, EditProfileDetailView
+from .views.profile_views import ProfilesListView, ProfileDetailView, ProfileUpdateView
 from .views.public import PublicCompetitionsDetailView, PublicRegionsDetailView
 from .views.team_views import *
 
@@ -23,8 +23,8 @@ urlpatterns = [
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),
 
     path("profiles/", ProfilesListView.as_view(), name="profiles"),
-    path("profiles/<uuid:pk>/", ProfileDetailView.as_view(), name="profile_details"),
-    path("profiles/<uuid:pk>/edit/", EditProfileDetailView.as_view(), name="edit_profile"),
+    path("profiles/<uuid:pk>/", ProfileDetailView.as_view(), name="profile_detail"),
+    path("profiles/<uuid:pk>/edit/", ProfileUpdateView.as_view(), name="edit_profile"),
 
     path("team/<uuid:pk>/", TeamDetailsView.as_view(), name="team_details"),
     path("team/<uuid:pk>/edit", TeamUpdateView.as_view(), name="team_details_update"),

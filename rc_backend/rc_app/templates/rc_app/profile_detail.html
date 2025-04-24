@@ -2,29 +2,40 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Profile Details</h1>
-<div>
-    <h2>{{ profile.name }} {{ profile.last_name }}</h2>
-    <p><strong>Email:</strong> {{ profile.email }}</p>
-    <p><strong>Description:</strong> {{ profile.description }}</p>
-    <a href="{% url 'rc_app:edit_profile' profile.id %}">Edit Profile</a>
-</div>
+<div class="container mt-5">
+    <h1 class="mb-4">Profile Details</h1>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="card-title">{{ profile.name }} {{ profile.last_name }}</h2>
+            <p class="card-text"><strong>Email:</strong> {{ profile.email }}</p>
+            <p class="card-text"><strong>Description:</strong> {{ profile.description }}</p>
+            {% if request.user.profile.id == profile.id %}
+                <a href="{% url 'rc_app:edit_profile' profile.id %}" class="btn btn-primary">Edit Profile</a>
+            {% endif %}
+        </div>
+    </div>
 
-<h2>Competition Results</h2>
-<ul>
-    {% for result in data.competition_results %}
-        <li>
-            <p><strong>Competition ID:</strong> {{ result.competition_id }}</p>
-            <p><strong>Team ID:</strong> {{ result.team_id }}</p>
-            <p><strong>Points:</strong> {{ result.points }}</p>
-            <p><strong>Place:</strong> {{ result.place }}</p>
-        </li>
-    {% empty %}
-        <li>No competition results available.</li>
-    {% endfor %}
-</ul>
+    <h2>Competition Results</h2>
+    <ul class="list-group">
+        {% for result in data.competition_results %}
+            <li class="list-group-item">
+                <p><strong>Competition ID:</strong> {{ result.competition_id }}</p>
+                <p><strong>Team ID:</strong> {{ result.team_id }}</p>
+                <p><strong>Points:</strong> {{ result.points }}</p>
+                <p><strong>Place:</strong> {{ result.place }}</p>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No competition results available.</li>
+        {% endfor %}
+    </ul>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
