@@ -1,12 +1,11 @@
+from datetime import datetime
 from django.shortcuts import get_object_or_404
 import calendar
 from collections import defaultdict
 from pprint import pprint
-
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
 from django.views.generic import ListView, DetailView
-
 from rc_backend.rc_app.models import Competition, Team
 from rc_backend.rc_app.models.discipline import Discipline
 
@@ -70,6 +69,8 @@ def prepare_competition_data(queryset):
             # "id": competition.slug if hasattr(competition, 'slug') else competition.id, # Use slug if available
             "id": competition.id,  # Using integer ID as per original code
             "day": competition.start_date.day,
+            "date_start": competition.start_date,
+            "date_end": competition.finish_date,
             "title": competition.title,
             "url": f"/app/competition/{competition.id}/",  # Consider using reverse()
             # "url": reverse('competition_detail', args=[competition.slug or competition.id]),
@@ -111,90 +112,84 @@ from pprint import pprint # Для отладки
 
 class CompetitionListView(ListView):
     model = Competition
-    # paginate_by = 10 # Пример пагинации (раскомментируйте, если нужно)
     template_name = "rc_app/competition_list.html"
-    # context_object_name = 'competition_list' # Можно задать имя переменной в шаблоне, если нужно
 
     def get_queryset(self):
-        """
-        Этот метод должен возвращать ТОЛЬКО QuerySet.
-        Фильтрация и оптимизация - здесь.
-        """
-        # Получаем базовый queryset (обычно Competition.objects.all())
-        queryset = super().get_queryset() # Пример: выбираем только активные
+        queryset = super().get_queryset()
 
-        # Применяем фильтр по дисциплине, если он есть в GET параметрах
+        # === Фильтрация по дисциплине ===
         discipline_name = self.request.GET.get("discipline")
         if discipline_name:
-            # Безопаснее использовать get_object_or_404 или обрабатывать DoesNotExist
             try:
-                discipline = Discipline.objects.get(discipline__iexact=discipline_name) # Поиск без учета регистра
+                discipline = Discipline.objects.get(discipline__iexact=discipline_name)
                 queryset = queryset.filter(discipline=discipline)
             except Discipline.DoesNotExist:
-                # Можно вернуть пустой queryset или оставить как есть (будет все)
-                queryset = queryset.none() # Вернуть пустой, если дисциплина не найдена
+                queryset = queryset.none()
 
-        # Оптимизируем запросы к связанным моделям
-        # Указываем 'discipline' и 'fsps', если они нужны в prepare_competition_data
-        queryset = queryset.select_related("discipline").prefetch_related("fsps")
+        # === Фильтрация по типу (online/offline) ===
+        competition_type = self.request.GET.get("type", "all")
+        if competition_type == "online":
+            queryset = queryset.filter(online=True)
+        elif competition_type == "offline":
+            queryset = queryset.filter(online=False)
 
-        # Оптимизируем поля, чтобы не тянуть лишнее из БД (опционально)
-        queryset = queryset.only(
-            "id", "title", "start_date", "online", "place",
-            "discipline__discipline", # Пример доступа к полю связанной модели
-             # Добавьте сюда поля, необходимые для логики event_regions/badges
-             # "registration_status", ...
-             # Не указывайте 'fsps' здесь, т.к. используется prefetch_related
+        # === Фильтрация по региону ===
+        region = self.request.GET.get("region", "all")
+        if region != "all":
+            if region == "msk":
+                queryset = queryset.filter(place__icontains="Москва")
+            elif region == "spb":
+                queryset = queryset.filter(place__icontains="Петербург") | queryset.filter(place__icontains="Санкт-Петербург")
+                # Можно добавить другие регионы по необходимости
+
+        # === Фильтрация по дате: выбранная дата попадает в диапазон start_date..end_date ===
+        date_from_str = self.request.GET.get("date_from")
+
+        if date_from_str:
+            try:
+                date_from = datetime.strptime(date_from_str, "%Y-%m-%d")
+                pprint(date_from)
+                start_date = datetime(date_from.year, date_from.month, date_from.day + 1, 23, 59)
+                end_date = datetime(date_from.year, date_from.month, date_from.day + 1, 0, 0)
+                print(start_date)
+                print(end_date)
+                # Важно: делаем фильтр "start_date <= date_from <= end_date"
+                queryset = queryset.filter(start_date__lte=start_date, finish_date__gte=end_date)
+            except ValueError:
+                pass  # Некорректная дата — игнорируем фильтр
+
+        queryset = queryset.select_related("discipline").prefetch_related("fsps").only(
+            "id", "title", "start_date", "finish_date", "online", "place",
+            "discipline__discipline",
         )
-
-        # Просто возвращаем QuerySet
-        print("DEBUG: Queryset generated") # Отладка
         return queryset
 
     def get_context_data(self, **kwargs):
-        """
-        Здесь мы получаем базовый контекст и ДОБАВЛЯЕМ обработанные данные.
-        """
-        # Получаем базовый контекст от ListView (уже будет содержать object_list/competition_list)
         context = super().get_context_data(**kwargs)
-
-        # Получаем уже отфильтрованный и готовый к использованию список объектов
-        # Имя ('object_list' или 'competition_list') зависит от context_object_name или модели
-        competitions = context.get('object_list') # По умолчанию 'object_list'
+        competitions = context.get('object_list')
 
         if competitions is not None:
-            # Вызываем нашу функцию обработки для данных, УЖЕ ПОЛУЧЕННЫХ из БД
-            # Передаем сам список объектов, а не queryset, чтобы не бить БД снова
             processed_data = prepare_competition_data(list(competitions))
-
-            # Добавляем нужную часть обработанных данных в контекст
             context['competitions_by_month'] = processed_data.get('competitions_by_month', [])
-
-            # Можно добавить и другие ключи из processed_data, если они нужны
-            # context['some_other_processed_key'] = processed_data.get('some_key')
-
-            # Отладка: Печатаем финальный контекст (часть данных)
-            print("--- DEBUG: Processed context data ---")
-            pprint(context.get('competitions_by_month', [])[:1]) # Печатаем только первый месяц
-            print("--- End DEBUG context ---")
-
         else:
-            # Если competitions is None (маловероятно в ListView, но на всякий случай)
             context['competitions_by_month'] = []
-            print("WARNING: 'object_list' not found in context.")
 
-        # Добавляем данные о текущих фильтрах для подсветки в шаблоне
-        # Это лучше делать здесь, а не внутри prepare_competition_data
+        # Список дисциплин для выпадающего списка
+        all_disciplines = Discipline.objects.all()
+
+        # Забираем все нужные фильтры из запроса
         context['competitions_data'] = {
              'current_filters': {
-                 'type': self.request.GET.get('type', 'all'), # Пример
-                 'region': self.request.GET.get('region', 'all'), # Пример
-                 'discipline': self.request.GET.get('discipline', None)
+                 'type': self.request.GET.get('type', 'all'),
+                 'region': self.request.GET.get('region', 'all'),
+                 'discipline': self.request.GET.get('discipline', None),
+                 'date_from': self.request.GET.get('date_from', None),
              }
-         }
-
-        # Возвращаем обновленный контекст для рендеринга шаблона
+        }
+        context['disciplines'] = all_disciplines
+        pprint(context)
         return context
+
 
 
 class CompetitionDetailView(DetailView):
