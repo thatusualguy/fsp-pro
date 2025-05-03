@@ -13,7 +13,6 @@ urlpatterns = [
     # path("", public.index, name="index"),
     path("about", public.about, name="about"),
     path("regions", public.regions, name="regions"),
-    # path("competition/<uuid:pk>/", PublicCompetitionsDetailView.as_view(), name="public_competition_details"),
     path("region/<uuid:pk>/", PublicRegionsDetailView.as_view(), name="public_region_details"),
 
     path('login/', LoginUser.as_view(), name='login'),
@@ -27,7 +26,7 @@ urlpatterns = [
     path("competitions/<uuid:pk>/", CompetitionDetailView.as_view(), name="competition_details"),
     path("competitions/<uuid:competition_id>/teams", TeamsForCompetitionListView.as_view(),
          name="competition_teams_list"),
-    path("competitions/<uuid:competition_id>/member_search", MemberSearchListView.as_view(), name="member_searches"),
+    path("competitions/<uuid:competition_id>/search", MemberSearchListView.as_view(), name="member_searches"),
 
     path('apply_for_position/<uuid:search_id>/', ApplyForPositionView.as_view(), name='apply_for_position'),
 
@@ -52,7 +51,6 @@ urlpatterns = [
     path("team/<uuid:pk>/request", MemberSearchDetailView.as_view(), name="member_search_details"),
     path("team/<uuid:pk>/request/edit", MemberSearchUpdateView.as_view(), name="member_search_edit"),
     path("team/<uuid:pk>/request/new", MemberSearchCreateView.as_view(), name="member_search_create"),
-    # path("team/<uuid:pk>/join/all", LeaderPendingJoinRequestsListView.as_view(), name="leader_pending_join_requests"),
     path("team/<uuid:pk>/join/<uuid:pk2>", LeaderPendingJoinRequestUpdateView.as_view(),
          name="leader_pending_join_update"),
 
@@ -61,10 +59,4 @@ urlpatterns = [
 
     path('accept_join_request/<uuid:request_id>/', AcceptJoinRequestView.as_view(), name='accept_join_request'),
     path('decline_join_request/<uuid:request_id>/', DeclineJoinRequestView.as_view(), name='decline_join_request'),
-
-    # path("competitions/<uuid:competition_id>/member_searches/<uuid:team_id>/new",
-    #      WannabePendingJoinRequestCreateView.as_view(),
-    #      name="member_searches"),
-    # path("competitions/<uuid:competition_id>/member_searches/<uuid:team_id>/delete",
-    #      WannabePendingJoinRequestDeleteView.as_view(), name="join_request_delete"),
 ]
