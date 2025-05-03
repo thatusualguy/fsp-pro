@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+{% load static %} {# Загружаем теги для статических файлов #}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход - ФСП PRO</title>
+    {# Ссылка на CSS через static тэг #}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
+    <style>
+        /* Специфичные стили только для login.html для фона и центрирования */
+        body.login-page {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--background-color); /* Fallback */
+            overflow: hidden; /* Предотвратить скролл фона */
+            position: relative;
+        }
+        /* Затемненный фон, как на скрине */
+        body.login-page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(26, 26, 46, 0.5) 0%, rgba(10, 10, 15, 0.9) 100%);
+            z-index: -1;
+        }
+
+        .login-page-logo {
+            margin-bottom: 40px; /* Отступ от лого до формы */
+        }
+        .login-page-logo img{
+            max-width: 200px; /* Ограничиваем размер лого */
+        }
+
+        .back-to-site-link { /* Стиль не используется в HTML, но оставляем на всякий случай */
+            display: inline-block;
+            margin-top: 25px;
+            color: var(--text-muted-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .back-to-site-link:hover {
+            color: var(--text-color);
+        }
+
+        /* Контейнер, чтобы не растягивать форму на всю ширину */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 20px; /* Отступы на мобилке */
+            z-index: 1; /* Выше псевдоэлемента фона */
+            max-width: 400px; /* Ограничим макс. ширину для лучшего вида */
+        }
+
+        /* --- Стили для обертки и формы входа --- */
+        /* Эти стили можно вынести в основной style.css, если они будут общими */
+        .login-form-wrapper {
+            background-color: rgba(31, 31, 51, 0.8); /* Полупрозрачный фон */
+            padding: 30px 35px;
+            border-radius: 8px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .login-form .login-title {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--text-color);
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-group input[type="email"],
+        .form-group input[type="text"], /* Добавляем text для username */
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: var(--secondary-color); /* Темный фон поля */
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input[type="email"]:focus,
+        .form-group input[type="text"]:focus,
+        .form-group input[type="password"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 74, 255, 0.3); /* Подсветка при фокусе */
+        }
+        /* Стили для ошибок Django */
+        .form-group .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+            color: #ff4d4d; /* Красный цвет для ошибок */
+            font-size: 0.85rem;
+        }
+        .non-field-errors .errorlist { /* Ошибки не связанные с полем */
+             list-style: none;
+            padding: 10px;
+            margin: 0 0 15px 0;
+            color: #ff4d4d;
+            background-color: rgba(255, 77, 77, 0.1);
+             border: 1px solid rgba(255, 77, 77, 0.3);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+
+        .login-submit-btn {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px; /* Небольшой отступ сверху */
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .login-links-footer.page-variant {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login-links-footer a {
+             color: var(--text-muted-color);
+             font-size: 0.9rem;
+             text-decoration: none;
+             transition: color 0.3s ease;
+        }
+         .login-links-footer a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Помощь (?) иконка */
+        .help-icon-page {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease;
+            z-index: 10;
+        }
+        .help-icon-page:hover {
+            background-color: var(--hover-secondary-bg);
+        }
+
+        /* Убираем стандартные фоны из style.css */
+
+        /* Responsive adjustments for dedicated login page */
+        @media (max-width: 768px) {
+            .login-form-wrapper {
+                width: 100%;
+                padding: 25px; /* Чуть меньше паддинг на мобилке */
+            }
+        }
+    </style>
+</head>
+<body class="login-page">
+<div class="backgroundImageLogin"></div> <!-- Не используется, так как есть ::before -->
+
+
+<div class="login-container">
+
+    {# Ссылка на логотип через static тэг, URL можно заменить на {% url 'your_app_name:home' %} #about если есть именованный URL #}
+    <a href="/src/rc_app_app/templates/rc_app/public" class="login-page-logo"> {# Используем просто "/" как главную #}
+        <img src="{% static 'img/main_icon.svg' %}" alt="Логотип ФСП PRO" loading="lazy">
+    </a>
+
+    <!-- Обертка для формы -->
+    <div class="login-form-wrapper">
+        {# Метод POST обязателен, action="." отправит на ту же страницу #}
+        <form class="login-form" method="post">
+            {% csrf_token %}
+
+            <h2 class="login-title">Вход</h2>
+
+            {% if form.non_field_errors %}
+                <div class="non-field-errors">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+
+            <div class="form-group">
+                <label for={{ form.username }}Логин</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    {{ form.username.errors }}
+                {% endif %}
+            </div>
+
+            {# Поле Пароля #}
+            <div class="form-group">
+                <label for={{ form.password }}Пароль</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    {{ form.password.errors }}
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary login-submit-btn">Войти</button>
+
+            <div class="login-links-footer page-variant">
+                {# Ссылку на сброс пароля лучше сделать через Django url tag #}
+                <a href="/app/password_reset" class="forgot-password-link">Забыли пароль?</a> {# Пример: имя URL 'password_reset' #}
+            </div>
+        </form>
+        <!-- Конец формы -->
+    </div>
+    <!-- Конец Обертки для формы -->
+
+</div>
+
+<!-- Иконка помощи (?) -->
+{# URL можно заменить на {% url 'help_page' %} #}
+<a href="/help/" class="help-icon-page" aria-label="Помощь">?</a>
+
+</body>
+</html>

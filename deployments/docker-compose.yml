@@ -7,7 +7,7 @@ services:
       context: ..
       dockerfile: deployments/Dockerfile
     volumes:
-      - static_volume:/app/rc_backend/staticfiles
+      - static_volume:/app/fsppro/staticfiles
     environment:
       - PYTHONPATH=/app
     env_file:
@@ -22,7 +22,7 @@ services:
       - "4443:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - static_volume:/app/rc_backend/staticfiles
+      - static_volume:/app/fsppro/staticfiles
 
   russian-cup-pg:
     container_name: "russian-cup-pg"

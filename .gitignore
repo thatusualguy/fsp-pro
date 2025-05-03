@@ -11,4 +11,4 @@ secrets
 **.json
 .env
 .qodo
-/rc_backend/staticfiles/
+/src/staticfiles/

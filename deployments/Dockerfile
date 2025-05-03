@@ -2,8 +2,8 @@ FROM python:3.12-bullseye
 
 WORKDIR /app
 
-COPY deployments/requirements.txt /app/deployments/requirements.txt
-RUN pip install -r /app/deployments/requirements.txt
+COPY requirements.txt requirements.txt
+RUN pip install -r requirements.txt
 RUN pip install gunicorn
 
 COPY  . /app

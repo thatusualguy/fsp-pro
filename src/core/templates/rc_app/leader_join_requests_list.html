@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Join Requests</title>
+    <style>
+        .description-short {
+            display: inline;
+        }
+
+        .description-full {
+            display: none;
+        }
+
+        .show-more {
+            color: blue;
+            cursor: pointer;
+            display: inline-block;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Join Requests for My Teams</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Team</th>
+            <th>Competition</th>
+            <th>Requester</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for request in join_requests %}
+            <tr>
+                <td>
+                    <a href="{% url 'core:team_details' request.team.id %}">
+                        {{ request.team.title }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'core:competition_details' request.team.competition.id %}">
+                        {{ request.team.competition.title }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'core:profile_detail' request.profile.id %}">
+                        {{ request.profile.user.username }}
+                    </a>
+                </td>
+                <td>
+                    <span class="description-short">{{ request.description|slice:":20" }}...</span>
+                    <span class="description-full">{{ request.description }}</span>
+                    <span class="show-more">Show more</span>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'core:accept_join_request' request.id %}"
+                          style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                    </form>
+                    <form method="post" action="{% url 'core:decline_join_request' request.id %}"
+                          style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Decline</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No join requests available.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const showMoreLinks = document.querySelectorAll('.show-more');
+        showMoreLinks.forEach(link => {
+            link.addEventListener('click', function () {
+                const descriptionShort = this.previousElementSibling.previousElementSibling;
+                const descriptionFull = this.previousElementSibling;
+                const isExpanded = descriptionFull.style.display === 'inline';
+
+                descriptionShort.style.display = isExpanded ? 'inline' : 'none';
+                descriptionFull.style.display = isExpanded ? 'none' : 'inline';
+                this.textContent = isExpanded ? 'Show more' : 'Show less';
+            });
+        });
+    });
+</script>
+</body>
+</html>

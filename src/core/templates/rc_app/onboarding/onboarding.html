@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ФСП PRO{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'onboarding.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* --- Стили для базового макета приложения --- */
+        body {
+            background-color: var(--background-color); /* Базовый фон */
+            color: var(--text-color);
+            font-family: var(--font-family), sans-serif;
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .app-layout {
+            display: flex;
+            width: 100%;
+        }
+
+        /* Стили сайдбара (будут добавлены ниже) */
+        .sidebar {
+            width: 250px; /* Примерная ширина */
+            background-color: #161620; /* Темный фон сайдбара */
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            min-height: 100vh; /* Растянуть на всю высоту */
+            border-right: 1px solid var(--border-color);
+        }
+
+        /* Стили контента (будут добавлены ниже) */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px 30px;
+            overflow-y: auto; /* Прокрутка если контент больше */
+            background: linear-gradient(145deg, rgba(26, 26, 46, 0.8) 0%, rgba(40, 40, 70, 0.95) 100%); /* Градиент как на скринах */
+        }
+
+        /* Адаптивность макета */
+        @media (max-width: 992px) {
+            /* Прячем сайдбар на планшетах/мобильных */
+            .sidebar {
+                display: none; /* Или позиционировать абсолютно и показывать по кнопке */
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+        }
+
+        /* --- Стили хедера (показываем на мобильных) --- */
+        .mobile-header {
+            display: none; /* Скрыт по умолчанию */
+            background-color: #161620; /* Тот же фон что у сайдбара */
+            padding: 10px 15px;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mobile-header .logo img {
+            height: 30px;
+        }
+
+        .mobile-header .nav-toggle-btn { /* Кнопка бургер */
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.8rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        @media (max-width: 992px) {
+            body {
+                flex-direction: column;
+            }
+
+            /* Меняем направление для мобилки */
+            .app-layout {
+                flex-direction: column;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+
+            .main-content {
+                min-height: calc(100vh - 57px); /* Высота за вычетом хедера */
+            }
+        }
+
+        /* Стили сайдбара */
+        .sidebar-logo {
+            padding: 0 20px 30px 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-logo img {
+            max-width: 150px;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-muted-color);
+            text-decoration: none;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            border-left: 3px solid transparent; /* Для активной ссылки */
+            font-size: 0.95rem;
+        }
+
+        .sidebar-nav li a svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav li a.active,
+        .sidebar-nav li a:hover {
+            color: var(--text-color);
+            background-color: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--primary-color);
+        }
+
+        .sidebar-user {
+            margin-top: auto; /* Прижать к низу */
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .sidebar-user-name {
+            color: var(--text-muted-color);
+            font-size: 0.9rem;
+        }
+
+        /* --- Специфичные стили для onboarding будут добавлены ниже --- */
+
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<!-- Mobile Sidebar (Hidden by default) -->
+<aside id="mobileSidebar" class="mobile-sidebar" role="dialog" aria-modal="true" aria-labelledby="mobileSidebarTitle"
+       hidden>
+    <div class="mobile-sidebar-header">
+        <a href="/src/rc_app_app/templates/rc_app/public" class="mobile-sidebar-logo logo">
+            <img src="{% static 'img/main_icon.svg' %}" alt="Логотип ФСП PRO">
+        </a>
+        <button id="mobileSidebarCloseBtn" class="mobile-sidebar-close-btn" aria-label="Закрыть меню">
+            {# Иконка "X" (Крестик) #}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+        </button>
+        <h2 id="mobileSidebarTitle" class="visually-hidden">Мобильное меню</h2>
+    </div>
+
+    <nav class="mobile-sidebar-nav">
+        <ul>
+            {# Активный класс здесь нужно будет выставлять так же, как для десктопного меню #}
+            <li><a href="#" class="">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                Команда</a></li>
+            <li><a href="#" class="{% block nav_docs_active %}{% endblock %}">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+                Документы</a></li>
+            {# Пример пункта с подменю #}
+            <li class="has-submenu"> {# Добавлен класс для JS #}
+                <a href="" class="{% block nav_comps_active %}{% endblock %}">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Соревнования
+                    <svg class="submenu-arrow" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24"
+                         width="20px" fill="currentColor">
+                        <path d="M7 10l5 5 5-5H7z"/>
+                    </svg>
+                </a>
+                {# Скрытое подменю #}
+                <ul class="submenu">
+                    <li><a href="#">Предстоящие</a></li>
+                    <li><a href="#">Архив</a></li>
+                    <li><a href="#">Мои заявки</a></li>
+                </ul>
+            </li>
+            {# Добавьте другие пункты меню #}
+        </ul>
+    </nav>
+
+    <div class="mobile-sidebar-footer">
+        <div class="sidebar-user-avatar">
+            {{ request.user.first_name.0|default:'' }}{{ request.user.last_name.0|default:'?' }} {# Инициалы #}
+        </div>
+        <span class="sidebar-user-name">{{ request.user.get_full_name|default:request.user.username }}</span>
+    </div>
+</aside>
+
+<!-- Overlay (Затемнение фона при открытом меню) -->
+<div id="mobileSidebarOverlay" class="mobile-sidebar-overlay" hidden></div>
+
+<div class="app-layout">
+
+    <!-- Сайдбар (для десктопа) -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <a href="/src/rc_app_app/templates/rc_app/public"> {# Ссылка на главную страницу приложения #}
+                <img src="{% static 'img/main_icon.svg' %}" alt="Логотип ФСП PRO">
+            </a>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#" class="">
+                    {# Placeholder SVG иконка - замените на реальные #}
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                    Команда</a></li>
+                <li><a href="#" class="">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                    Документы</a></li>
+                <li><a href="" class=""> {# Пример ссылки на соревнования #}
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    Соревнования</a></li>
+                {# Добавьте другие пункты меню #}
+            </ul>
+        </nav>
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">
+                {{ request.user.first_name.0|default:'' }}{{ request.user.last_name.0|default:'?' }} {# Инициалы #}
+            </div>
+            <span class="sidebar-user-name">{{ request.user.get_full_name|default:request.user.username }}</span>
+        </div>
+    </aside>
+
+    <!-- Мобильный Хедер (виден на мобильных/планшетах) -->
+    <header class="mobile-header">
+        <a href="/src/rc_app_app/templates/rc_app/public" class="logo">
+            <img src="{% static 'img/main_icon.svg' %}" alt="Логотип ФСП PRO">
+        </a>
+        <button class="nav-toggle-btn" id="mobileMenuBtn" aria-label="Открыть меню">
+            {# Бургер иконка SVG #}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24" height="24">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </button>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        {% block content %}
+        {# Сюда будет вставляться контент дочерних шаблонов #}
+        {% endblock %}
+    </main>
+
+</div>
+<script src="{% static 'onboarding.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

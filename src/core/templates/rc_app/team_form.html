@@ -1,0 +1,76 @@
+
+{% extends "core/onboarding/onboarding.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+        <!-- Header Row -->
+        <div class="row mb-4">
+            <div class="col d-flex align-items-center">
+                <a href="#" class="text-decoration-none me-3 back-arrow" onclick="window.history.back();return false;">
+                    <i class="bi bi-arrow-left fs-4 align-middle"></i>
+                </a>
+                <h1 class="mb-0 page-title h2">
+                  {% if form.instance.pk %}Редактировать команду{% else %}Новая команда{% endif %}
+                </h1>
+            </div>
+        </div>
+
+        <!-- Реальная форма Django -->
+        <form method="post" enctype="multipart/form-data" action="">
+            {% csrf_token %}
+            <!-- Для всех ошибок формы -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <!-- Выведем поля формы по отдельности, чтобы можно было красиво стилизовать каждый -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group-custom">
+                        <label for="{{ form.title.id_for_label }}" class="form-label-custom">Название команды</label>
+                        {{ form.title }}
+                        {% for error in form.title.errors %}
+                          <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="form-group-custom">
+                        <label for="{{ form.invitees.id_for_label }}" class="form-label-custom">Пригласить участников</label>
+                        {{ form.invitees }}
+                        {% for error in form.invitees.errors %}
+                          <div class="text-danger small mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {# Если появятся новые поля в форме — добавить их аналогично: #}
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+                </div>
+                <!-- Можно добавить другие колонки для дополнительных полей здесь -->
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-primary submit-btn">
+                    {% if form.instance.pk %}Сохранить изменения{% else %}Создать команду{% endif %}
+                </button>
+            </div>
+        </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Применить select2 к полю invitees, если оно есть в шаблоне
+        const inviteesField = document.getElementById("id_invitees");
+        if (inviteesField) {
+            $(inviteesField).select2({
+                width: '100%',
+                theme: 'bootstrap4',
+                placeholder: "Выберите участников"
+            });
+        }
+    });
+</script>
+{% endblock %}

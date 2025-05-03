@@ -1,0 +1,248 @@
+{% extends "core/onboarding/onboarding.html" %}
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-card">
+        <div class="profile-card-body">
+            <div class="profile-avatar">
+                <span class="profile-avatar-initials">
+                  {{ profile.name|default:"" |slice:":1" }}{{ profile.last_name|default:""|slice:":1" }}
+                </span>
+            </div>
+            <div class="profile-info">
+                <h1 class="profile-name">{{ profile.name }} {{ profile.last_name }}</h1>
+                <p class="profile-email"><strong>Email:</strong> {{ profile.email }}</p>
+                <p class="profile-description"><strong>Описание:</strong> {{ profile.description }}</p>
+                {% if request.user.profile.id == profile.id %}
+                <div class="profile-actions">
+                    <a href="{% url 'core:edit_profile' profile.id %}" role="button" class="btn-primary">Редактировать
+                        профиль</a>
+                    <a href="{% url 'core:my_teams_list' %}" class="btn-secondary">Мои команды</a>
+                    <a href="{% url 'core:profile_my_invites' %}" class="btn-secondary">Мои приглашения</a>
+                    <a href="{% url 'core:my_join_requests' %}" class="btn-secondary">Заявки на вступление</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="competition-results-section">
+        <h2>Результаты соревнований</h2>
+        {% if data.competition_results %}
+        <div class="competition-results-list">
+            {% for result in data.competition_results %}
+            <div class="competition-result-card">
+                <p><span class="label">Название соревнования:</span>
+                    <span class="value">
+                        <a href="/app/competition/{{ result.competition_id }}/">{{ result.competition_name }}
+                        </a>
+                    </span>
+                </p>
+                <p><span class="label">ИД команды:</span>
+                    <span class="value">
+                            <a href="/app/team/{{ result.team_id }}/">{{ result.team_title }}
+                            </a>
+                    </span>
+                </p>
+                <p><span class="label">Баллы:</span> <span class="value">{{ result.points }}</span></p>
+                <p><span class="label">Место:</span> <span class="value">{{ result.place }}</span></p>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="competition-results-empty">Нет данных о соревнованиях.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+{{ block.super }}
+<style>
+    .profile-container {
+        max-width: 700px;
+        margin: 0 auto;
+        background: none;
+        padding-top: 32px;
+        padding-bottom: 32px;
+    }
+
+    .profile-card {
+        border-radius: 14px;
+        padding: 36px 32px 32px 32px;
+        margin-bottom: 36px;
+        display: flex;
+        align-items: flex-start;
+        gap: 32px;
+    }
+
+    .profile-card-body {
+        display: flex;
+        align-items: flex-start;
+        gap: 32px;
+        width: 100%;
+    }
+
+    .profile-avatar {
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        background: var(--primary-color, #6941CB);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.8rem;
+        font-weight: bold;
+        margin-right: 16px;
+        margin-top: 7px;
+        box-shadow: 0px 1px 8px 0 rgba(40, 40, 80, 0.26);
+        flex-shrink: 0;
+    }
+
+    .profile-info {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .profile-name {
+        margin-bottom: 10px;
+        font-size: 2rem;
+        color: var(--text-color, #fff);
+    }
+
+    .profile-email,
+    .profile-description {
+        margin-bottom: 8px;
+        color: var(--text-muted-color, #c5c5e0);
+        font-size: 1.05rem;
+    }
+
+    .profile-actions {
+        margin-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        row-gap: 8px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        padding: 7px 20px;
+        border-radius: 100px;
+        font-size: 1rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background 0.16s, color 0.16s;
+        border: none;
+        display: inline-block;
+        outline: none;
+    }
+
+    .btn-primary {
+        background: var(--primary-color, #6941CB);
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: #7F56D9;
+        color: #fff;
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-color, #fff);
+        border: 1px solid var(--border-color, #4636A1);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(120, 120, 180, 0.13);
+        color: #fff;
+        border-color: var(--primary-color, #6941CB);
+    }
+
+    /* Competition results */
+    .competition-results-section {
+        background: none;
+    }
+
+    .competition-results-section h2 {
+        margin-bottom: 17px;
+        margin-top: 0;
+        color: var(--text-color, #fff);
+        font-size: 1.5rem;
+    }
+
+    .competition-results-list {
+        display: flex;
+        flex-direction: column;
+        gap: 17px;
+    }
+
+    .competition-result-card {
+        background: rgba(39, 39, 67, 0.97);
+        border-radius: 9px;
+        padding: 18px 21px 13px 21px;
+        color: var(--text-muted-color, #e4e4f0);
+        box-shadow: 0px 1px 5px 0 rgba(40, 40, 80, 0.16);
+        font-size: 1rem;
+    }
+
+    .competition-result-card p {
+        margin: 0 0 6px 0;
+    }
+
+    .competition-result-card .label {
+        color: var(--text-muted-color, #b5b5d7);
+        font-weight: 400;
+        margin-right: 8px;
+        font-size: 1rem;
+    }
+
+    .competition-result-card .value {
+        color: var(--primary-color, #6941CB);
+        font-weight: 600;
+    }
+
+    .competition-results-empty {
+        color: var(--text-muted-color, #a9aac9);
+        font-style: italic;
+        margin-top: 10px;
+        padding: 8px 0 8px 2px;
+        text-align: left;
+    }
+
+    @media (max-width: 700px) {
+        .profile-card {
+            flex-direction: column;
+            padding: 22px 8vw 22px 8vw;
+        }
+
+        .profile-card-body {
+            gap: 18px;
+        }
+
+        .profile-info {
+            min-width: 0;
+        }
+    }
+
+    @media (max-width: 550px) {
+        .profile-card,
+        .profile-card-body {
+            padding: 17px 2vw 17px 2vw;
+            gap: 12px;
+        }
+
+        .competition-results-section h2 {
+            font-size: 1.18rem;
+        }
+
+        .profile-container {
+            padding-top: 13px;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Team Invitations</title>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Team Invitations</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Team Name</th>
+            <th>Competition</th>
+            <th>Inviter</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for invitation in object_list %}
+            <tr>
+                <td>
+                    <a href="{% url 'core:team_details' invitation.inviter_team.id %}">
+                        {{ invitation.inviter_team.title }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'core:competition_details' invitation.inviter_team.competition.id %}">
+                        {{ invitation.inviter_team.competition.title }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'core:profile_detail' invitation.inviter_team.leader.id %}">
+                        {{ invitation.inviter_team.leader }}
+                    </a>
+                </td>
+                <td>
+                    <form method="post" action="{% url 'core:accept_invitation' invitation.id %}"
+                          style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                    </form>
+                    <form method="post" action="{% url 'core:decline_invitation' invitation.id %}"
+                          style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Decline</button>
+                    </form>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No invitations available.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
