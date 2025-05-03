@@ -1,18 +1,18 @@
 from django.contrib import admin
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 from src.core.models import Competition
 from src.core.models import CompetitionResult
+from src.core.models import Discipline
 from src.core.models import FSP
 from src.core.models import InviteCompetition
+from src.core.models import OnModerationStatus
 from src.core.models import Profile
 from src.core.models import Team
-from src.core.models import OnModerationStatus
-from src.core.models import Discipline
 
-from import_export.admin import ImportExportModelAdmin
-from import_export import resources
 
 # Register your models here.
 class CompetitionResultResourse(resources.ModelResource):
@@ -30,6 +30,7 @@ class CompetitionResultAdmin(ImportExportModelAdmin):
 class CompetitionResourse(resources.ModelResource):
     class Meta:
         model = Competition
+
 
 class CompetitionAdmin(ImportExportModelAdmin):
     list_display = ('title', 'start_date', 'finish_date', 'place', 'on_moderation', 'competition_type', 'get_fsps')
@@ -56,16 +57,18 @@ class CompetitionAdmin(ImportExportModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if request.user.groups.filter(name='Федеральное ФСП').exists() or request.user.is_superuser:
             return super().get_readonly_fields(request, obj)
-        return ('on_moderation', )
+        return ('on_moderation',)
+
 
 class ProfileResource(resources.ModelResource):
     class Meta:
         model = Profile
 
+
 class ProfileAdmin(ImportExportModelAdmin):
     list_display = ("__str__", "email", "fsp")
     search_fields = ("__str__", "email")
-    list_filter = ("fsp", )
+    list_filter = ("fsp",)
     resource_classes = [ProfileResource]
 
 
@@ -73,11 +76,13 @@ class TeamResource(resources.ModelResource):
     class Meta:
         model = Team
 
+
 class TeamAdmin(ImportExportModelAdmin):
     list_display = ('leader__fsp__region', 'title', 'competition', 'leader', 'get_team_members', 'moderation_status')
     list_filter = ('competition', 'moderation_status', "leader__fsp__region")
     search_fields = ("title", 'get_team_members', 'competition')
     resource_classes = [TeamResource]
+
 
 class FSPResource(resources.ModelResource):
     class Meta:
@@ -88,8 +93,10 @@ class FSPAdmin(ImportExportModelAdmin):
     list_display = ("region", "country", "head")
     search_fields = ("region", "country", "head")
 
+
 class InviteCompetitionAdmin(admin.ModelAdmin):
     pass
+
 
 class CompetitionModerationProxy(Competition):
     class Meta:
@@ -97,7 +104,8 @@ class CompetitionModerationProxy(Competition):
         verbose_name = "Заявка на модерацию"
         verbose_name_plural = "Заявки на модерацию"
 
-class ModerationCompetitionAdmin(admin.ModelAdmin):    
+
+class ModerationCompetitionAdmin(admin.ModelAdmin):
     list_display = ('title', 'start_date', 'finish_date', 'place', 'on_moderation', 'competition_type', 'get_fsps')
     list_filter = ('fsps', 'on_moderation')
     search_fields = ("title", 'place')
@@ -119,15 +127,17 @@ class ModerationCompetitionAdmin(admin.ModelAdmin):
     # Кнопки действий
     def approve(self, request, queryset):
         queryset.update(on_moderation=OnModerationStatus.APPROVED)
+
     approve.short_description = "Одобрить выбранные заявки"
 
     def reject(self, request, queryset):
         queryset.update(on_moderation=OnModerationStatus.REJECTED)
+
     reject.short_description = "Отклонить выбранные заявки"
 
 
 class DisciplineAdmin(admin.ModelAdmin):
-    list_display = ("discipline", )
+    list_display = ("discipline",)
 
 
 admin.site.register(Competition, CompetitionAdmin)

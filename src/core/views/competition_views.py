@@ -1,10 +1,9 @@
 from datetime import datetime
 
-from src.core.models import FSP
-
 from django.views.generic import DetailView
 
 from src.core.models import Competition, Team
+from src.core.models import FSP
 from src.core.models.discipline import Discipline
 
 

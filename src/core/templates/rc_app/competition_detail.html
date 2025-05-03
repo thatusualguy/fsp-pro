@@ -104,7 +104,7 @@
                          alt="Баннер соревнования"
                          class="competition-banner-img" loading="lazy">
                     <div class="banner-tags">
-                        <span class="banner-tag banner-tag-{{badge.type}}">{{ badge.text }}</span>
+                        <span class="banner-tag banner-tag-{{ badge.type }}">{{ badge.text }}</span>
                     </div>
                     <div class="banner-top-tags"></div>
                 </div>
@@ -117,7 +117,8 @@
 
                 <!-- Action Buttons -->
                 <div class="action-buttons">
-                    <a href="/app/login" class="btn btn-primary main-participate-btn open-login-modal-btn">Участвовать</a>
+                    <a href="/app/login"
+                       class="btn btn-primary main-participate-btn open-login-modal-btn">Участвовать</a>
                     <a href="/help#how-to-join-team" class="btn btn-secondary">Как попасть в сборную?</a>
                 </div>
             </div>
@@ -130,10 +131,11 @@
                         <h3 class="info-heading">Формат</h3>
                         <p>{{ competition.online | yesno:"Онлайн,Офлайн" }}</p>
                         {% if not competition.online and competition.place %}
-                        <p>{{ competition.place }}</p>
+                            <p>{{ competition.place }}</p>
                         {% endif %}
                         {% if competition.competition_type %}
-                        <p>Тип: {{ competition.get_competition_type_display }}</p> {# Используем _display для choices #}
+                            <p>Тип: {{ competition.get_competition_type_display }}</p>
+                            {# Используем _display для choices #}
                         {% endif %}
                     </div>
                 </div>
@@ -145,7 +147,7 @@
                         <ul>
                             <li>Начало: {{ competition.start_date | date:"d E Y" }}</li>
                             {% if competition.finish_date %}
-                            <li>Окончание: {{ competition.finish_date | date:"d E Y" }}</li>
+                                <li>Окончание: {{ competition.finish_date | date:"d E Y" }}</li>
                             {% endif %}
                         </ul>
                     </div>
@@ -157,12 +159,14 @@
                         <h3 class="info-heading">Участники</h3>
                         <ul>
                             {% if competition.min_participants or competition.max_participants %}
-                            <li>
-                                В команде:
-                                {% if competition.min_participants %} от {{ competition.min_participants }}{% endif %}
-                                {% if competition.max_participants %} до {{ competition.max_participants }}{% endif %}
-                                чел.
-                            </li>
+                                <li>
+                                    В команде:
+                                    {% if competition.min_participants %} от
+                                        {{ competition.min_participants }}{% endif %}
+                                    {% if competition.max_participants %} до
+                                        {{ competition.max_participants }}{% endif %}
+                                    чел.
+                                </li>
                             {% endif %}
                             {% comment %}
                             <li>Возраст: {{ competition.min_age }}-{{ competition.max_age }} лет</li>
@@ -175,24 +179,24 @@
         </div>
 
         {% if sponsors %} {# Предполагаем, что список спонсоров передан как 'sponsors' #}
-        <div class="sponsor-logos">
-            {% for sponsor in sponsors %}
-            {# <a href="{{ sponsor.url }}" target="_blank"> #}
-            <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}" class="sponsor-logo">
-            {# </a> #}
-            {% endfor %}
-        </div>
+            <div class="sponsor-logos">
+                {% for sponsor in sponsors %}
+                    {# <a href="{{ sponsor.url }}" target="_blank"> #}
+                    <img src="{{ sponsor.logo.url }}" alt="{{ sponsor.name }}" class="sponsor-logo">
+                    {# </a> #}
+                {% endfor %}
+            </div>
         {% else %}
-        {# Можно показать статические лого, если динамических нет #}
-        <div class="sponsor-logos">
-            <img src="{% static '/img/logo_fsp.png' %}" alt="Федерация Спортивного Программирования России"
-                 class="sponsor-logo">
-            <img src="{% static '/img/logo_minsport.png' %}" alt="Министерство Спорта Российской Федерации"
-                 class="sponsor-logo">
-            <img src="{% static '/img/logo_smolensk.png' %}" alt="Правительство Смоленской Области"
-                 class="sponsor-logo">
-            <img src="{% static '/img/logo_stoloto.png' %}" alt="Столото" class="sponsor-logo">
-        </div>
+            {# Можно показать статические лого, если динамических нет #}
+            <div class="sponsor-logos">
+                <img src="{% static '/img/logo_fsp.png' %}" alt="Федерация Спортивного Программирования России"
+                     class="sponsor-logo">
+                <img src="{% static '/img/logo_minsport.png' %}" alt="Министерство Спорта Российской Федерации"
+                     class="sponsor-logo">
+                <img src="{% static '/img/logo_smolensk.png' %}" alt="Правительство Смоленской Области"
+                     class="sponsor-logo">
+                <img src="{% static '/img/logo_stoloto.png' %}" alt="Столото" class="sponsor-logo">
+            </div>
         {% endif %}
 
     </div>

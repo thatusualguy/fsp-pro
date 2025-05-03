@@ -22,6 +22,7 @@
             overflow: hidden; /* Предотвратить скролл фона */
             position: relative;
         }
+
         /* Затемненный фон, как на скрине */
         body.login-page::before {
             content: '';
@@ -37,7 +38,8 @@
         .login-page-logo {
             margin-bottom: 40px; /* Отступ от лого до формы */
         }
-        .login-page-logo img{
+
+        .login-page-logo img {
             max-width: 200px; /* Ограничиваем размер лого */
         }
 
@@ -48,6 +50,7 @@
             text-decoration: none;
             transition: color 0.3s ease;
         }
+
         .back-to-site-link:hover {
             color: var(--text-color);
         }
@@ -71,7 +74,7 @@
             border-radius: 8px;
             width: 100%;
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .login-form .login-title {
@@ -114,6 +117,7 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(74, 74, 255, 0.3); /* Подсветка при фокусе */
         }
+
         /* Стили для ошибок Django */
         .form-group .errorlist {
             list-style: none;
@@ -122,13 +126,14 @@
             color: #ff4d4d; /* Красный цвет для ошибок */
             font-size: 0.85rem;
         }
+
         .non-field-errors .errorlist { /* Ошибки не связанные с полем */
-             list-style: none;
+            list-style: none;
             padding: 10px;
             margin: 0 0 15px 0;
             color: #ff4d4d;
             background-color: rgba(255, 77, 77, 0.1);
-             border: 1px solid rgba(255, 77, 77, 0.3);
+            border: 1px solid rgba(255, 77, 77, 0.3);
             border-radius: 4px;
             font-size: 0.9rem;
             text-align: center;
@@ -147,13 +152,15 @@
             text-align: center;
             margin-top: 20px;
         }
+
         .login-links-footer a {
-             color: var(--text-muted-color);
-             font-size: 0.9rem;
-             text-decoration: none;
-             transition: color 0.3s ease;
+            color: var(--text-muted-color);
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: color 0.3s ease;
         }
-         .login-links-footer a:hover {
+
+        .login-links-footer a:hover {
             color: var(--primary-color);
         }
 
@@ -178,6 +185,7 @@
             transition: background-color 0.3s ease;
             z-index: 10;
         }
+
         .help-icon-page:hover {
             background-color: var(--hover-secondary-bg);
         }
@@ -221,26 +229,27 @@
 
             <div class="form-group">
                 <label for={{ form.username }}Логин</label>
-                {{ form.username }}
-                {% if form.username.errors %}
-                    {{ form.username.errors }}
-                {% endif %}
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                        {{ form.username.errors }}
+                    {% endif %}
             </div>
 
             {# Поле Пароля #}
             <div class="form-group">
                 <label for={{ form.password }}Пароль</label>
-                {{ form.password }}
-                {% if form.password.errors %}
-                    {{ form.password.errors }}
-                {% endif %}
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                        {{ form.password.errors }}
+                    {% endif %}
             </div>
 
             <button type="submit" class="btn btn-primary login-submit-btn">Войти</button>
 
             <div class="login-links-footer page-variant">
                 {# Ссылку на сброс пароля лучше сделать через Django url tag #}
-                <a href="/app/password_reset" class="forgot-password-link">Забыли пароль?</a> {# Пример: имя URL 'password_reset' #}
+                <a href="/app/password_reset" class="forgot-password-link">Забыли пароль?</a>
+                {# Пример: имя URL 'password_reset' #}
             </div>
         </form>
         <!-- Конец формы -->

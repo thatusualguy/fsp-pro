@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 
 from .discipline import Discipline
-from .enums import CompetitionEnum, OnModerationStatus, CompetitionTypeEnum
+from .enums import OnModerationStatus, CompetitionTypeEnum
 from .fsp import FSP
 
 

@@ -49,7 +49,7 @@ class CompetitionResult(models.Model):
 
     def __str__(self):
         return f'Результат {self.id} - Place {self.place}'
-    
+
     class Meta:
         verbose_name = "Результат соревнования"
         verbose_name_plural = "Результаты соревнования"

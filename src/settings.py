@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
-from config import PGSettings
-
 from import_export.formats.base_formats import XLSX, CSV, JSON
+
+from config import PGSettings
 
 IMPORT_EXPORT_FORMATS = [XLSX, CSV, JSON]
 

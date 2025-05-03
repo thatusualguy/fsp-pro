@@ -222,16 +222,18 @@ class PublicCompetitionsDetailView(DetailView):
     template_name = "core/public/competitions_detail.html"
 
 
-
 class PublicRegionsDetailView(DetailView):
     model = FSP
     template_name = "core/public/regions_detail.html"
 
+
 def regions(request):
     return render(request, 'core/public/regions.html')
 
+
 def about(request):
     return render(request, 'core/public/about.html')
+
 
 def login(request):
     return render(request, 'core/login/login.html')

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from abc import ABC
 from typing import List, TypeVar, Generic, Type
 
@@ -35,7 +36,3 @@ class CRUDMixin(Generic[T]):
 
 class BaseRepo(ABC, CRUDMixin[T], Generic[T]):
     model = type(None)
-
-
-
-
