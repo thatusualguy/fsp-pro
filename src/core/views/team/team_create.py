@@ -82,7 +82,7 @@ class TeamCreateForm(forms.ModelForm):
 
 
 class TeamCreateView(LoginRequiredMixin, FormView):
-    template_name = 'core/team_form.html'
+    template_name = 'core/team/team/team_form.html'
     form_class = TeamCreateForm
     success_url = reverse_lazy('core:my_teams_list')
 
