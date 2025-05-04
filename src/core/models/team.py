@@ -15,12 +15,10 @@ class Team(models.Model):
     leader = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='leader_teams')
     team_members = models.ManyToManyField(Profile, related_name='member_teams')
 
-    moderation_status = models.CharField(
-        max_length=20,
-        choices=ModerationEnum.choices,
-        default=ModerationEnum.NOT_SENT,
-        verbose_name='Статус модерации'
-    )
+    moderation_status = models.CharField(max_length=20, choices=ModerationEnum.choices, default=ModerationEnum.NOT_SENT,
+        verbose_name='Статус модерации')
+
+    objects = models.Manager()
 
     def disband(self):
         # Clear team members
@@ -47,6 +45,8 @@ class CompetitionResult(models.Model):
     place = models.IntegerField()
     team = models.OneToOneField(Team, on_delete=models.CASCADE)
 
+    objects = models.Manager()  # Explicitly defining the default manager
+
     def __str__(self):
         return f'Результат {self.id} - Place {self.place}'
 
@@ -60,6 +60,8 @@ class MemberSearch(models.Model):
     team = models.ForeignKey(to=Team, on_delete=models.CASCADE)
     description = models.TextField()
     is_active = models.BooleanField(default=True)
+
+    objects = models.Manager()  # Explicitly defining the default manager
 
     def __str__(self):
         return f"Search {self.id} for Team {self.team}"

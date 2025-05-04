@@ -76,7 +76,7 @@ class TeamCreateForm(forms.ModelForm):
         # Если поле отключено (редактирование) — не валидируем дубликаты
         if self.fields['title'].disabled:
             return title
-        if Team.objects.filter(title=title).exists():
+        if Team.objects .filter(title=title).exists():
             raise ValidationError("Команда с таким названием уже существует.")
         return title
 
