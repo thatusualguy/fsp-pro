@@ -1,10 +1,29 @@
+import calendar
+from collections import defaultdict
 from datetime import datetime
+from pprint import pprint  # Для отладки
 
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
+from django.views.generic import ListView
 
 from src.core.models import Competition, Team
 from src.core.models import FSP
 from src.core.models.discipline import Discipline
+
+
+
+class CompetitionDetailView(DetailView):
+    model = Competition
+    template_name = "core/competition/competition_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        discipline = Competition.discipline
+        context["discipline"] = discipline
+        return context
+
+
 
 
 def prepare_competition_data(queryset):
@@ -99,19 +118,9 @@ def prepare_competition_data(queryset):
     return data
 
 
-import calendar
-from collections import defaultdict
-from django.shortcuts import get_object_or_404
-from django.views.generic import ListView
-# from django.utils.translation import gettext as _ # Если используете перевод
-# from .models import Competition, Discipline # Импорт моделей
-# from .utils import prepare_competition_data # Импорт вашей функции обработки
-from pprint import pprint  # Для отладки
-
-
 class CompetitionListView(ListView):
     model = Competition
-    template_name = "core/competition_list.html"
+    template_name = "core/competition/competition_list.html"
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -188,26 +197,3 @@ class CompetitionListView(ListView):
         return context
 
 
-class CompetitionDetailView(DetailView):
-    model = Competition
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        discipline = Competition.discipline
-        context["discipline"] = discipline
-        return context
-
-
-class TeamsForCompetitionListView(ListView):
-    model = Team
-    template_name = 'core/team_list.html'
-
-    def get_queryset(self):
-        competition_id = self.kwargs.get('competition_id')
-        competition = get_object_or_404(Competition, id=competition_id)
-        teams = Team.objects.filter(competition=competition)
-        pprint(competition)
-        pprint(teams)
-        pprint(teams[0].team_members.all())
-        pprint(teams[0].competitionresult)
-        return teams

@@ -4,6 +4,32 @@ from django.views.generic import DetailView
 from src.core.models import Competition, FSP
 
 
+class PublicCompetitionsDetailView(DetailView):
+    model = Competition
+    template_name = "core/public/competition_detail.html"
+
+
+class PublicRegionsDetailView(DetailView):
+    model = FSP
+    template_name = "core/public/region_detail.html"
+
+
+def regions(request):
+    return render(request, 'core/public/regions.html')
+
+
+def about(request):
+    return render(request, 'core/public/about.html')
+
+
+def login(request):
+    return render(request, 'core/login/login.html')
+
+
+def onboarding(request):
+    return render(request, 'core/onboarding/onboarding.html')
+
+
 def index(request):
     data = {
         "title_feature": str,
@@ -216,28 +242,3 @@ def index(request):
         }
     )
 
-
-class PublicCompetitionsDetailView(DetailView):
-    model = Competition
-    template_name = "core/public/competitions_detail.html"
-
-
-class PublicRegionsDetailView(DetailView):
-    model = FSP
-    template_name = "core/public/regions_detail.html"
-
-
-def regions(request):
-    return render(request, 'core/public/regions.html')
-
-
-def about(request):
-    return render(request, 'core/public/about.html')
-
-
-def login(request):
-    return render(request, 'core/login/login.html')
-
-
-def onboarding(request):
-    return render(request, 'core/onboarding/onboarding.html')

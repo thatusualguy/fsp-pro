@@ -1,12 +1,24 @@
 from django.urls import path
 
-from .views import public, team_views
-from .views.auth import LoginUser, LogoutUser, RegisterUser
-from .views.competition_views import *
-from .views.profile_views import ProfilesListView, ProfileDetailView, ProfileUpdateView, PendingTeamInvitationsListView, \
-    MyProfileDetailView, AcceptInvitationView, DeclineInvitationView, DeclineJoinRequestView, AcceptJoinRequestView
-from .views.public import PublicRegionsDetailView
-from .views.team_views import *
+from .views.auth.login import LoginUser
+from .views.auth.logout import LogoutUser
+from .views.auth.register import RegisterUser
+from .views.profile.profile import MyProfileDetailView, ProfileDetailView, ProfileUpdateView
+from .views.profile.profile_list import ProfilesListView
+from .views.public import public
+from src.core.views.competition.competition import *
+from src.core.views.public.public import PublicRegionsDetailView
+from .views.competition.teams_list import TeamsForCompetitionListView
+from .views.team.invitation import PendingTeamInvitationsListView, AcceptInvitationView, DeclineInvitationView
+from .views.team.join_request_views import ApplyForPositionView
+from .views.team.leader_member_views import LeaderPendingJoinRequestsListView, LeaderPendingJoinRequestUpdateView
+from .views.team.member_search_views import MemberSearchDetailView, MemberSearchUpdateView, MemberSearchCreateView
+from .views.team.request import AcceptJoinRequestView, DeclineJoinRequestView
+from .views.team.search import MemberSearchListView
+from .views.team.team import TeamDeleteView, TeamDetailsView, MyTeamsListView
+from .views.team.team_create import TeamCreateView
+from .views.team.team_management_views import DisbandTeamView, TeamLeaveView
+from .views.team.team_update import TeamUpdateView, send_team_to_moderation
 
 app_name = "core"
 urlpatterns = [
@@ -46,7 +58,7 @@ urlpatterns = [
     path("team/<uuid:team_id>/disband", DisbandTeamView.as_view(), name="team_disband"),
     path("team/<uuid:team_id>/leave", TeamLeaveView.as_view(), name="team_leave"),
 
-    path('team/<uuid:team_id>/send_to_moderation/', team_views.send_team_to_moderation, name='send_team_to_moderation'),
+    path('team/<uuid:team_id>/send_to_moderation/', send_team_to_moderation, name='send_team_to_moderation'),
 
     path("team/<uuid:pk>/request", MemberSearchDetailView.as_view(), name="member_search_details"),
     path("team/<uuid:pk>/request/edit", MemberSearchUpdateView.as_view(), name="member_search_edit"),
