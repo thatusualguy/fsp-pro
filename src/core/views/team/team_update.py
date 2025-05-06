@@ -1,3 +1,13 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django import forms
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import UpdateView
+
+from src.core.models import ModerationEnum, Team, Profile
+
+
 @login_required
 def send_team_to_moderation(request, team_id):
     if request.method == 'POST':
