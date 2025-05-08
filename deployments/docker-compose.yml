@@ -7,13 +7,12 @@ services:
       context: ..
       dockerfile: deployments/Dockerfile
     volumes:
-      - static_volume:/app/fsppro/staticfiles
-    environment:
-      - PYTHONPATH=/app
-    env_file:
-      - ../.env
+      - static_volume:/app/fsp-pro/staticfiles
     ports:
       - "9090:9090"
+    networks:
+      - russian_cup_backend_net
+    restart: on-failure
 
   nginx-russian-cup:
     image: nginx:latest
@@ -22,7 +21,9 @@ services:
       - "4443:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - static_volume:/app/fsppro/staticfiles
+      - static_volume:/app/fsp-pro/staticfiles
+    networks:
+      - russian_cup_backend_net
 
   russian-cup-pg:
     container_name: "russian-cup-pg"
@@ -34,15 +35,22 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: b1fddce8ae427c0d
     volumes:
-      - "../pgdata:/var/lib/postgresql/data"
+      - "pgdata:/var/lib/postgresql/data"
     healthcheck:
       test: pg_isready -d postgres -U postgres
       retries: 5
       interval: 5s
       timeout: 7s
+    networks:
+      - russian_cup_backend_net
 
 volumes:
   static_volume:
+  pgdata:
 
-# Uncomment below services if needed
+networks:
+  russian_cup_backend_net:
+    external: true
+
+
 

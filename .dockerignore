@@ -1,0 +1,15 @@
+# Exclude environment files
+.env
+
+# Exclude Git-related files
+.git
+.gitignore
+
+# IDE and editor files
+/.idea
+/.vscode
+*.code-workspace
+
+# Docker specific
+Dockerfile
+docker-compose.yml

@@ -2,11 +2,14 @@ FROM python:3.12-bullseye
 
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-RUN pip install gunicorn
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/app
 
-COPY  . /app
+COPY ./requirements.txt requirements.txt
+RUN pip install -r requirements.txt
+
+COPY ./static ./src ./manage.py ./config.py /app/
 
 CMD ["gunicorn", "rc_backend.rc_backend.wsgi:application", "--bind", "0.0.0.0:9090"]
 
