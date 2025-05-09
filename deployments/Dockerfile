@@ -9,7 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 COPY ./requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY ./static ./src ./manage.py ./config.py /app/
+COPY . /app
 
 CMD ["gunicorn", "src.wsgi:application", "--bind", "0.0.0.0:9090"]
 
