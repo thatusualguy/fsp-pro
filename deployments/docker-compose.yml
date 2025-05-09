@@ -8,6 +8,8 @@ services:
       dockerfile: deployments/Dockerfile
     volumes:
       - static_volume:/app/fsp-pro/staticfiles
+    env_file:
+      - "../.env"
     ports:
       - "9090:9090"
     networks:
