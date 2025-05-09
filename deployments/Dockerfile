@@ -11,7 +11,7 @@ RUN pip install -r requirements.txt
 
 COPY ./static ./src ./manage.py ./config.py /app/
 
-CMD ["gunicorn", "rc_backend.rc_backend.wsgi:application", "--bind", "0.0.0.0:9090"]
+CMD ["gunicorn", "src.wsgi:application", "--bind", "0.0.0.0:9090"]
 
 
 
