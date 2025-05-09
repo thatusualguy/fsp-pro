@@ -40,7 +40,7 @@ done
 echo "All russian_cup_backend containers removed."
 
 echo "Deploying the service..."
-cd "$DEPLOYMENTS_DIR" && docker compose -f docker-compose.yml up
+cd "$DEPLOYMENTS_DIR" && docker compose -f docker-compose.yml up --build
 echo "Deployment completed."
 
 

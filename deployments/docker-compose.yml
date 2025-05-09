@@ -7,7 +7,7 @@ services:
       context: ..
       dockerfile: deployments/Dockerfile
     volumes:
-      - static_volume:/app/fsp-pro/staticfiles
+      - static_volume:/app/static
     env_file:
       - "../.env"
     ports:
@@ -23,7 +23,7 @@ services:
       - "4443:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - static_volume:/app/fsp-pro/staticfiles
+      - static_volume:/app/static
     networks:
       - russian_cup_backend_net
 
