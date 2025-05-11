@@ -6,6 +6,8 @@ from src.core.models.enums import DisciplineEnum
 
 
 class Discipline(models.Model):
+    objects = models.Manager()
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     discipline = models.CharField(
         max_length=100,

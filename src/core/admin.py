@@ -15,7 +15,7 @@ from src.core.models import Team
 
 
 # Register your models here.
-class CompetitionResultResourse(resources.ModelResource):
+class CompetitionResultResource(resources.ModelResource):
     class Meta:
         model = CompetitionResult
 
@@ -24,10 +24,10 @@ class CompetitionResultAdmin(ImportExportModelAdmin):
     list_display = ("team__competition__title", 'team', "place", "points")
     list_filter = ("team", "team__competition__title", "place", "points")
     search_fields = ("team", 'team__competition__title')
-    resource_classes = [CompetitionResultResourse]
+    resource_classes = [CompetitionResultResource]
 
 
-class CompetitionResourse(resources.ModelResource):
+class CompetitionResource(resources.ModelResource):
     class Meta:
         model = Competition
 

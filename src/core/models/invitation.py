@@ -11,6 +11,8 @@ from .team import Team
 
 
 class InviteCompetition(models.Model):
+    objects = models.Manager()
+
     id = models.UUIDField(primary_key=True, editable=False)
     invitee = models.ForeignKey(FSP, on_delete=models.CASCADE,
                                 related_name='invites_received')
@@ -32,6 +34,8 @@ class InviteCompetition(models.Model):
 
 
 class TeamInvitation(models.Model):
+    objects = models.Manager()
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, )
     inviter_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='team_invitations')
     invitee = models.ForeignKey(Profile, on_delete=models.CASCADE)

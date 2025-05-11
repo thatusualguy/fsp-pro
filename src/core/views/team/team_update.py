@@ -18,7 +18,8 @@ def send_team_to_moderation(request, team_id):
             team.save()
         else:
             raise PermissionDenied
-    return redirect('core:team_details', pk=team.id)
+        return redirect('core:team_details', pk=team.id)
+    return NotImplemented
 
 
 class TeamUpdateForm(forms.ModelForm):
@@ -39,7 +40,7 @@ class TeamUpdateForm(forms.ModelForm):
 
 
 class TeamUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = 'core/team_form.html'
+    template_name = 'core/team/team/team_form.html'
     model = Team
     form_class = TeamUpdateForm
 

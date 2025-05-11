@@ -8,6 +8,8 @@ from .profile import Profile
 
 
 class Team(models.Model):
+    objects = models.Manager()
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255)
     competition = models.ForeignKey(Competition,
@@ -17,9 +19,6 @@ class Team(models.Model):
 
     moderation_status = models.CharField(max_length=20, choices=ModerationEnum.choices, default=ModerationEnum.NOT_SENT,
         verbose_name='Статус модерации')
-
-    objects = models.Manager()
-
     def disband(self):
         # Clear team members
         self.team_members.clear()
@@ -39,13 +38,14 @@ class Team(models.Model):
 
 
 class CompetitionResult(models.Model):
+    objects = models.Manager()
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # competition_id = models.ForeignKey(Competition, on_delete=models.CASCADE)
     points = models.FloatField()
     place = models.IntegerField()
     team = models.OneToOneField(Team, on_delete=models.CASCADE)
 
-    objects = models.Manager()  # Explicitly defining the default manager
 
     def __str__(self):
         return f'Результат {self.id} - Place {self.place}'
@@ -56,6 +56,8 @@ class CompetitionResult(models.Model):
 
 
 class MemberSearch(models.Model):
+    objects = models.Manager()
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     team = models.ForeignKey(to=Team, on_delete=models.CASCADE)
     description = models.TextField()

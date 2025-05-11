@@ -8,6 +8,8 @@ from .fsp import FSP
 
 
 class Competition(models.Model):
+    objects = models.Manager()
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     start_date = models.DateTimeField()
     finish_date = models.DateTimeField()

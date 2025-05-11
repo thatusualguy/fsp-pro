@@ -34,9 +34,9 @@ class TeamCreateForm(forms.ModelForm):
           - competition: Competition (соревнование, к которому относится команда)
         """
         leader = kwargs.pop('leader', None)
-        user: Profile = kwargs.pop('user', None)
+        user: Profile | None = kwargs.pop('user', None)
         is_create = kwargs.pop('is_create', False)
-        competition: Competition = kwargs.pop('competition', None)
+        competition: Competition | None = kwargs.pop('competition', None)
         super().__init__(*args, **kwargs)
 
         # Условия для создания/обновления команды по уровню соревнования

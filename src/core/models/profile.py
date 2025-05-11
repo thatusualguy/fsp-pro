@@ -7,6 +7,8 @@ from src.core.models import FSP
 
 
 class Profile(models.Model):
+    objects = models.Manager()
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)

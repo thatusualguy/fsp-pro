@@ -9,6 +9,5 @@ secrets
 **.log
 **.csv
 **.json
-.env
 .qodo
 /src/staticfiles/

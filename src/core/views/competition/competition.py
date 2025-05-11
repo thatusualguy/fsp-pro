@@ -3,14 +3,12 @@ from collections import defaultdict
 from datetime import datetime
 from pprint import pprint  # Для отладки
 
-from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView
 from django.views.generic import ListView
 
-from src.core.models import Competition, Team
+from src.core.models import Competition
 from src.core.models import FSP
 from src.core.models.discipline import Discipline
-
 
 
 class CompetitionDetailView(DetailView):

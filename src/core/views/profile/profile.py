@@ -56,7 +56,6 @@ class MyProfileDetailView(DetailView):
         profile = self.get_object()
         data = combine_profile_data(profile)
         context["data"] = data
-        # pprint(context)
         return context
 
 
@@ -70,9 +69,7 @@ class ProfileDetailView(DetailView):
         profile = self.get_object()
         data = combine_profile_data(profile)
         context["data"] = data
-        # pprint(context)
         return context
-        # return render(request, self.template_name, context)
 
 
 class ProfileUpdateView(UpdateView):
