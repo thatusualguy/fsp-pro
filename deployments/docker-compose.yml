@@ -4,6 +4,8 @@ services:
   russian-cup-backend:
     container_name: "russian-cup-backend-django"
     build:
+      env_file:
+        - .env
       context: ..
       dockerfile: deployments/Dockerfile
     volumes:
