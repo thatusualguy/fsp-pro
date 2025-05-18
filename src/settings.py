@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
-
+from config import Settings
 from import_export.formats.base_formats import XLSX, CSV, JSON
 
 from config import PGSettings
@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-rtaz*fk@^_9@ii!+p)dp86*zd=z70s+%izlys402mp=8znxeog'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = Settings.DEBUG
 
 ALLOWED_HOSTS = [
     "localhost",

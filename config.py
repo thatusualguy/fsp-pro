@@ -10,12 +10,6 @@ PROJECT_DIR = Path(__file__).parent
 load_dotenv(Path(PROJECT_DIR, ".env"))
 
 
-# @dataclass(frozen=True)
-# class Config(TypedDict):
-#     name: str
-#     pass
-
-
 @dataclass(frozen=True)
 class PGSettings:
     DB_HOST: str = os.environ.get("DB_HOST")
@@ -23,3 +17,7 @@ class PGSettings:
     DB_USER: str = os.environ.get("DB_USER")
     DB_PASSWORD: str = os.environ.get("DB_PASSWORD")
     DB_NAME: str = os.environ.get("DB_NAME")
+
+@dataclass
+class Settings:
+    DEBUG = bool(os.environ.get("DEBUG"))
