@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}{{ region.name }} - подробная информация{% endblock %}
+{% block description %}Детальная информация о регионе {{ region.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2 class="fw-bold">{{ region.name }}</h2>
+        <p class="text-muted">{{ region.description }}</p>
+    </div>
+    <div class="col-md-4 text-md-end">
+        <a href="/regions/1/" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Назад к списку
+        </a>
+    </div>
+</div>
+
+<!-- Карточка региона -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="card-title mb-4">Основные характеристики</h5>
+                <dl class="row mb-0">
+                    <dt class="col-4 text-muted">Код:</dt>
+                    <dd class="col-8">{{ region.code }}</dd>
+                    
+                    <dt class="col-4 text-muted">Население:</dt>
+                    <dd class="col-8">{{ region.population }}</dd>
+                    
+                    <dt class="col-4 text-muted">Площадь:</dt>
+                    <dd class="col-8">{{ region.area }} км²</dd>
+                    
+                    <dt class="col-4 text-muted">Плотность:</dt>
+                    <dd class="col-8">{{ region.density }}/км²</dd>
+                </dl>
+            </div>
+            <div class="col-md-6 mt-4 mt-md-0">
+                <h5 class="card-title mb-4">География</h5>
+                <div class="ratio ratio-16x9">
+                    <img src="https://placehold.co/600x400/EEE/333?text=Map+Placeholder " 
+                         class="rounded shadow-sm" 
+                         alt="Карта региона {{ region.name }}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Вкладки с дополнительной информацией -->
+<ul class="nav nav-tabs mb-3" id="regionTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="info-tab" data-bs-toggle="tab" 
+                data-bs-target="#info" type="button" role="tab">
+            Основная информация
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="economy-tab" data-bs-toggle="tab" 
+                data-bs-target="#economy" type="button" role="tab">
+            Экономика
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="regionTabsContent">
+    <div class="tab-pane fade show active" id="info" role="tabpanel">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Географическое положение</h5>
+                <p>{{ region.geography }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="economy" role="tabpanel">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Экономические показатели</h5>
+                <p>{{ region.economy }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

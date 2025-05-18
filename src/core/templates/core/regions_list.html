@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Список регионов{% endblock %}
+{% block description %}Каталог географических регионов с детальной информацией{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2 class="fw-bold">Регионы</h2>
+        <p class="text-muted">Каталог географических регионов с основными характеристиками</p>
+    </div>
+    <div class="col-md-4">
+        <form class="input-group">
+            <input type="text" class="form-control" placeholder="Поиск региона..." aria-label="Поиск">
+            <button class="btn btn-primary" type="submit">
+                <i class="bi bi-search"></i>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Список регионов -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for region in regions %}
+    <div class="col">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <h3 class="card-title fs-5">{{ region.name }}</h3>
+                <div class="d-flex justify-content-between text-muted small mb-3">
+                    <span><i class="bi bi-geo-alt me-2"></i>{{ region.code }}</span>
+                    <span><i class="bi bi-people me-2"></i>{{ region.population }}</span>
+                </div>
+                <a href="/" 
+                   class="btn btn-outline-primary w-100 stretched-link">
+                    Подробнее
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Пагинация -->
+<nav aria-label="Пагинация" class="mt-5">
+    <ul class="pagination justify-content-center">
+        {% if page > 1 %}
+        <li class="page-item">
+            <a class="page-link" href="/regions/}" 
+               aria-label="Предыдущая">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+        </li>
+        {% endif %}
+        
+        <li class="page-item active" aria-current="page">
+            <span class="page-link">{{ page }}</span>
+        </li>
+        
+        {% if has_next %}
+        <li class="page-item">
+            <a class="page-link" href="/regions/" 
+               aria-label="Следующая">
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endblock %}
