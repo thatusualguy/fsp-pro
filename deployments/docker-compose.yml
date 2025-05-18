@@ -46,6 +46,24 @@ services:
     networks:
       - russian_cup_backend_net
 
+  certbot-russian-cup:
+    ports:
+      - "6000:80"
+    env_file:
+      - ./cert/certbot.env
+    # и снова мониторуем директорию nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    build:
+      context: ./cert
+      dockerfile: Dockerfile
+      # задаем переменные среды
+      args:
+        DOMAIN_EMAIL: ${DOMAIN_EMAIL}
+        DOMAIN_URL: ${DOMAIN_URL}
+    networks:
+       - russian_cup_backend_net
+
 volumes:
   static_volume:
   pgdata:
