@@ -34,11 +34,6 @@ class Region(models.Model):
         help_text="Формат: UTC±X"
     )
 
-    timezone = models.CharField(
-        max_length=10,
-        verbose_name="Часовой пояс",
-        help_text="Формат: UTC±X"
-    )
     population = models.PositiveIntegerField(verbose_name="Население")
     code = models.CharField(
         max_length=10,
