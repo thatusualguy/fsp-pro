@@ -11,6 +11,7 @@ class RegionListView(ListView):
     template_name = 'core/region/region_list.html'
     context_object_name = 'regions'
     ordering = ['name']
+    paginate_by = 10  # Number of regions per page
 
 class RegionDetailView(DetailView):
     model = Region
