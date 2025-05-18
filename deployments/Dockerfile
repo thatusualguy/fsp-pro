@@ -10,10 +10,7 @@ COPY ./requirements.txt requirements.txt
 COPY . /app
 
 RUN pip install -r requirements.txt
-RUN python manage.py collectstatic --noinput
-
-CMD ["gunicorn", "src.wsgi:application", "--bind", "0.0.0.0:9090"]
-
+ENTRYPOINT ["/deployments/entrypoint.sh"]
 
 
 
