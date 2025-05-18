@@ -29,7 +29,7 @@ class CustomRegisterForm(UserCreationForm):
         return user
 
 
-class RegisterUser(FormView):
+class UserRegister(FormView):
     template_name = 'core/login/register.html'
     form_class = CustomRegisterForm
     success_url = reverse_lazy('/app/login')

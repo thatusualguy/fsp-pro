@@ -97,8 +97,8 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
-LOGIN_URL = '/app/login/'
-LOGIN_REDIRECT_URL = '/app/'
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -132,15 +132,15 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",
+    BASE_DIR / "staticfiles",  # Directory for your static files during development
 ]
 
-STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "static_collected"  # Directory for collected static files in production
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-X_FRAME_OPTIONS = "SAMEORIGIN"  # allows you to use modals insated of popups
+X_FRAME_OPTIONS = "SAMEORIGIN"  # allows you to use modals instead of popups
 SILENCED_SYSTEM_CHECKS = ["security.W019"]  # ignores redundant warning messages

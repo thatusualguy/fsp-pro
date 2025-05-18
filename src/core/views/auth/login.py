@@ -7,8 +7,7 @@ from django.urls import reverse_lazy
 from src.core.models import Profile
 
 
-class LoginUser(LoginView):
-    template_name = 'core/login/login.html'
+class UserLogin(LoginView):
     form_class = AuthenticationForm
     # redirect_authenticated_user = True
     success_url = reverse_lazy('/app/profile/')
