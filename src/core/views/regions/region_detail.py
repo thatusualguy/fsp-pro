@@ -5,7 +5,7 @@ from src.core.models import Region
 
 class RegionDetailView(DetailView):
     model = Region
-    template_name = 'core/region_detail.html'
+    template_name = 'core/region/region_detail.html'
     context_object_name = 'region'
     pk_url_kwarg = 'id'
 
