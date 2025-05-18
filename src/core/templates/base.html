@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru" class="h-100">
 <head>
@@ -9,14 +10,28 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
         /* Удалены избыточные отступы, используется системный подход Bootstrap 5 */
+        html {
+            height: 100%;
+        }
+        
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
         .navbar-custom {
             z-index: 1030;
         }
         
         main.content-wrapper {
+            flex: 1 0 auto;
             position: relative;
-            min-height: calc(100vh - 56px); /* Минимальная высота с учетом верхнего навбара */
             margin-top: 56px; /* Высота навбара в Bootstrap 5 */
+        }
+        
+        footer.footer {
+            flex-shrink: 0; /* Запрещаем футеру сжиматься */
         }
         
         @media (max-width: 992px) {
