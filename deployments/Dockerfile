@@ -8,8 +8,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 COPY ./requirements.txt requirements.txt
 COPY . /app
-RUN python manage.py collectstatic --noinput
+
 RUN pip install -r requirements.txt
+RUN python manage.py collectstatic --noinput
 
 CMD ["gunicorn", "src.wsgi:application", "--bind", "0.0.0.0:9090"]
 
