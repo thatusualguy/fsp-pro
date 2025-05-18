@@ -7,10 +7,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app
 
 COPY ./requirements.txt requirements.txt
-RUN pip install -r requirements.txt
-RUN python manage.py collectstatic --noinput
-
 COPY . /app
+RUN python manage.py collectstatic --noinput
+RUN pip install -r requirements.txt
 
 CMD ["gunicorn", "src.wsgi:application", "--bind", "0.0.0.0:9090"]
 
