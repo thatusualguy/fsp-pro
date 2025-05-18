@@ -21,9 +21,8 @@ from django.urls import path, include
 from src import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('app/', include("src.core.urls")),
+    # path('app/', include("src.core.urls")),
     path('regions/', include('src.core.views.regions.urls')),  # Подключение приложения
-
 ]
 
 if settings.DEBUG:
