@@ -12,7 +12,7 @@ COPY . /app
 RUN pip install -r requirements.txt
 RUN chmod +x /app/deployments/entrypoint.sh
 
-ENTRYPOINT ["/app/deployments/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/app/deployments/entrypoint.sh"]
 
 
 
