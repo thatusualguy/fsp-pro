@@ -42,6 +42,7 @@ CSRF_TRUSTED_ORIGINS = [f"http://{host}:4443" if host != "localhost" else f"http
 INSTALLED_APPS = [
     "admin_interface",
     "colorfield",
+    'widget_tweaks',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
