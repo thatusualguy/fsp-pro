@@ -30,7 +30,7 @@
                     <span><i class="bi bi-geo-alt me-2"></i>{{ region.code }}</span>
                     <span><i class="bi bi-people me-2"></i>{{ region.population }}</span>
                 </div>
-                <a href="{% url 'regions:detail' code=region.code %}" 
+                <a href="{% url 'regions:detail' id=region.id %}" 
                    class="btn btn-outline-primary w-100 stretched-link">
                     Подробнее
                 </a>

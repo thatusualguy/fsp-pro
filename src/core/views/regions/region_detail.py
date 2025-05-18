@@ -7,8 +7,7 @@ class RegionDetailView(DetailView):
     model = Region
     template_name = 'core/region_detail.html'
     context_object_name = 'region'
-    slug_field = 'code'  # Поле модели для поиска
-    slug_url_kwarg = 'code'
+    pk_url_kwarg = 'id'
 
-    def get_object(self, queryset=None):
-        return get_object_or_404(Region, code=self.kwargs['code'])
+    def get_queryset(self):
+        return Region.objects.all()
