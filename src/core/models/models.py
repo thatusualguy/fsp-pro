@@ -24,9 +24,15 @@ class Region(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100, verbose_name="Название региона")
     federal_district = models.CharField(
-        max_length=20,
+        max_length=100,
         choices=FEDERAL_DISTRICT_CHOICES,
         verbose_name="Федеральный округ"
+    )
+    region_type =models.CharField(
+        max_length=100,
+        choices=REGION_TYPE_CHOICES,
+        verbose_name="Тип региона",
+        default='resp'
     )
     timezone = models.CharField(
         max_length=10,
