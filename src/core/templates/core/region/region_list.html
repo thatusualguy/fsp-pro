@@ -9,7 +9,10 @@
         <h2 class="fw-bold">Регионы</h2>
         <p class="text-muted">Каталог географических регионов с основными характеристиками</p>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-4 d-flex align-items-center justify-content-end">
+        <a href="{% url 'regions:create' %}" class="btn btn-success me-2">
+            <i class="bi bi-plus-circle me-1"></i> Добавить регион
+        </a>
         <form class="input-group">
             <input type="text" class="form-control" placeholder="Поиск региона..." aria-label="Поиск">
             <button class="btn btn-primary" type="submit">
@@ -30,9 +33,14 @@
                     <span><i class="bi bi-geo-alt me-2"></i>{{ region.code }}</span>
                     <span><i class="bi bi-people me-2"></i>{{ region.population }}</span>
                 </div>
-                <a href="{% url 'regions:detail' id=region.id %}" 
-                   class="btn btn-outline-primary w-100 stretched-link">
+                <a href="{% url 'regions:detail' pk=region.id %}" 
+                   class="btn btn-outline-primary w-100">
                     Подробнее
+                </a>
+                
+                <a href="{% url 'regions:edit' pk=region.id %}" 
+                   class="btn btn-outline-secondary w-100">
+                    Редактировать
                 </a>
             </div>
         </div>
