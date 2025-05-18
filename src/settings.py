@@ -35,7 +35,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "5.129.199.72"
 ]
-CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
+CSRF_TRUSTED_ORIGINS = [f"http://{host}:4443" if host != "localhost" else f"http://{host}:8000" for host in ALLOWED_HOSTS]
 
 # Application definition
 
